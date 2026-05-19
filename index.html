@@ -23,7 +23,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{overscroll-behavior:none;-webkit-overflow-scrolling:touch}
-body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Hiragino Kaku Gothic ProN',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;
+body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Hiragino Kaku Gothic ProN',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;font-size:12px;
   /* セーフエリア対応(iPhoneノッチ等) */
   padding-top:env(safe-area-inset-top);
   padding-bottom:env(safe-area-inset-bottom);
@@ -31,14 +31,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Hiragino Kaku
   padding-right:env(safe-area-inset-right);
 }
 #root{min-height:100vh}
-/* タッチターゲット最小44px(iOS HIG) */
-button,select,input[type="number"],input[type="text"],input[type="date"]{min-height:36px}
-.btn-sm{min-height:30px}
+/* タッチターゲット - スマホ最適化(縦圧縮) */
+button{min-height:28px}
+.btn-sm{min-height:24px}
 @media (max-width:520px){
-  .screen{padding:12px !important}
-  button{font-size:13px}
+  .screen{padding:8px !important;padding-bottom:24px !important}
 }
-.btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;padding:8px 16px;transition:all .15s;user-select:none;font-family:inherit}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;padding:6px 12px;transition:all .15s;user-select:none;font-family:inherit}
 .btn:active{transform:scale(.95)}
 .btn-primary{background:#3b82f6;color:#fff}
 .btn-primary:hover{background:#2563eb}
@@ -46,13 +45,13 @@ button,select,input[type="number"],input[type="text"],input[type="date"]{min-hei
 .btn-secondary:hover{background:#475569}
 .btn-danger{background:#ef4444;color:#fff}
 .btn-success{background:#22c55e;color:#fff}
-.btn-sm{font-size:12px;padding:5px 10px}
-.btn-lg{font-size:16px;padding:12px 24px}
-.card{background:#1e293b;border-radius:12px;padding:16px}
-.screen{min-height:100vh;padding:16px;max-width:500px;margin:0 auto;padding-bottom:40px}
-.header{display:flex;align-items:center;gap:8px;margin-bottom:16px}
-.header h2{flex:1;font-size:18px}
-input,select,textarea{background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:8px;padding:8px 12px;font-size:14px;width:100%;font-family:inherit}
+.btn-sm{font-size:11px;padding:3px 8px}
+.btn-lg{font-size:14px;padding:10px 18px}
+.card{background:#1e293b;border-radius:10px;padding:10px}
+.screen{min-height:100vh;padding:10px;max-width:520px;margin:0 auto;padding-bottom:30px}
+.header{display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.header h2{flex:1;font-size:15px}
+input,select,textarea{background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:6px 9px;font-size:12px;width:100%;font-family:inherit}
 input:focus,select:focus{outline:none;border-color:#3b82f6}
 .count-dot{width:12px;height:12px;border-radius:50%;border:2px solid #64748b;background:transparent;flex-shrink:0}
 .count-dot.filled{background:#e2e8f0;border-color:#e2e8f0}
@@ -166,6 +165,15 @@ const RESULT_CATS=[
      {id:'bunt_fly',   label:'バントフライ'},
      {id:'safety_out', label:'セーフティバント（アウト）'},
      {id:'def_int',    label:'守備妨害（打者）', noDir:true},
+     // ── ダブルプレー（noDir）── 詳細はサブメニュー
+     {id:'dp_643',     label:'ゲッツー 6-4-3', noDir:true},
+     {id:'dp_463',     label:'ゲッツー 4-6-3', noDir:true},
+     {id:'dp_543',     label:'ゲッツー 5-4-3', noDir:true},
+     {id:'dp_163',     label:'ゲッツー 1-6-3', noDir:true},
+     {id:'dp_363',     label:'ゲッツー 3-6-3', noDir:true},
+     {id:'dp_liner',   label:'ライナーDP',     noDir:true},
+     {id:'dp_so_steal',label:'三振+盗塁刺',    noDir:true},
+     {id:'dp_other',   label:'その他DP',       noDir:true},
    ]},
   {id:'sac',    label:'犠打・犠飛',   color:'#a78bfa', cls:'sac',
    items:[
@@ -178,6 +186,12 @@ const RESULT_CATS=[
      {id:'if_fly_err', label:'内野フライエラー'},
      {id:'of_fly_err', label:'外野フライエラー'},
      {id:'bunt_err',   label:'バントエラー'},
+   ]},
+  {id:'advance',label:'進塁',         color:'#06b6d4', cls:'adv',
+   items:[
+     {id:'steal', label:'盗塁', noDir:true, isAdvance:true},
+     {id:'pb',    label:'PB',   noDir:true, isAdvance:true},
+     {id:'wp',    label:'WP',   noDir:true, isAdvance:true},
    ]},
   {id:'bb',     label:'四死球',       color:'#f97316', cls:'bb',
    items:[
@@ -438,6 +452,18 @@ function nextState(result,g){
   // ── 出塁（エラー）──
   } else if(r==='if_go_err'||r==='if_fly_err'||r==='of_fly_err'||r==='bunt_err'){
     addRun(advance(1)); runners.first=true; atEnd=true; balls=0; strikes=0;
+  // ── ダブルプレー（2アウト・1塁ランナー消滅・打者アウト）──
+  } else if(r&&r.startsWith('dp_')){
+    outs+=2;
+    if(runners.first) runners.first=false;
+    atEnd=true; balls=0; strikes=0;
+  // ── 進塁イベント（盗塁・PB・WP）──
+  // 打席継続、カウント維持、走者1つ進める
+  } else if(r==='steal'||r==='pb'||r==='wp'){
+    if(runners.third){ addRun(1); runners.third=false; }
+    if(runners.second){ runners.third=true; runners.second=false; }
+    if(runners.first){ runners.second=true; runners.first=false; }
+    atEnd=false; // 打席継続
   }
 
   // 3アウトで攻守交替
@@ -1037,6 +1063,7 @@ function getResultColor(resultId){
   if(cat==='bb')               return '#f97316'; // 橙: 四死球
   if(cat==='sac')              return '#a78bfa'; // 紫: 犠打犠飛
   if(cat==='reached')          return '#14b8a6'; // 青緑: 出塁(エラー)
+  if(cat==='advance')          return '#06b6d4'; // シアン: 進塁
   return '#94a3b8';
 }
 
@@ -1053,7 +1080,8 @@ const COLOR_LEGEND=[
 // ZoneChart: 選択モード（onChange あり）/ 表示モード（onChange なし）兼用
 function ZoneChart({value, onChange, batterHand='R', atBatPitches=[]}){
   const flip=batterHand==='L';
-  const SZ=44; // セルサイズ(px)
+  // スマホサイズに最適化(36px) - 5×5=180px+gap
+  const SZ=36; // セルサイズ(px)
   const GAP=2;
 
   // ゾーンごとの投球リスト（現打席分）
@@ -1168,7 +1196,7 @@ function BatterSvg({hand}){
   // isL=false → R打者 → チャート左側配置 → バットは右（チャート側）へ伸びる
   const isL=hand==='L';
   return (
-    <svg width="52" height="230" viewBox="0 0 52 230"
+    <svg width="42" height="190" viewBox="0 0 52 230"
       style={{flexShrink:0,alignSelf:'center',overflow:'visible'}}>
       {/* 地面の影 */}
       <ellipse cx="26" cy="200" rx="16" ry="5" fill="rgba(0,0,0,.3)"/>
@@ -1274,78 +1302,180 @@ function FieldDiagram({value,onChange}){
 }
 
 // ── Line Score (イニング別スコアボード) ──
-function LineScore({pitches, game, gs, compact=false}){
+function LineScore({pitches, game, gs, compact=false, editable=false, onSaveManual}){
   const {innings,maxInn}=useMemo(()=>computeLineScore(pitches),[pitches]);
+  const manualMap=game?.lineScoreManual||{};
+  // セル値取得: 手動値があれば優先、なければ自動計算
+  const getCell=(i,side,type)=>{
+    const m=manualMap[i]?.[side]?.[type];
+    if(m!=null&&m!=='') return m;
+    return innings[i]?.[side]?.[type];
+  };
+  const [editMode,setEditMode]=useState(false);
+  const [draft,setDraft]=useState({});
+  const startEdit=()=>{
+    setDraft(JSON.parse(JSON.stringify(manualMap||{})));
+    setEditMode(true);
+  };
+  const cancelEdit=()=>{
+    setDraft({});
+    setEditMode(false);
+  };
+  const saveEdit=()=>{
+    // 空欄→null扱いにクレンジング
+    const clean={};
+    Object.entries(draft).forEach(([i,sides])=>{
+      Object.entries(sides||{}).forEach(([sd,vals])=>{
+        Object.entries(vals||{}).forEach(([tp,v])=>{
+          if(v!==''&&v!=null&&!isNaN(+v)){
+            if(!clean[i]) clean[i]={};
+            if(!clean[i][sd]) clean[i][sd]={};
+            clean[i][sd][tp]=+v;
+          }
+        });
+      });
+    });
+    onSaveManual?.(clean);
+    setEditMode(false);
+  };
+  const updateDraft=(i,sd,tp,v)=>{
+    setDraft(d=>{
+      const n={...d};
+      if(!n[i]) n[i]={};
+      if(!n[i][sd]) n[i][sd]={};
+      n[i][sd]={...n[i][sd],[tp]:v};
+      return n;
+    });
+  };
+  const getDraft=(i,sd,tp)=>{
+    const v=draft[i]?.[sd]?.[tp];
+    if(v!=null) return v;
+    return manualMap[i]?.[sd]?.[tp] ?? '';
+  };
+  // 編集中は draftMap を、それ以外は manualMap を見る
+  const activeMap=editMode?draft:manualMap;
+  const getDisplay=(i,sd,tp)=>{
+    const m=activeMap[i]?.[sd]?.[tp];
+    if(m!=null&&m!=='') return m;
+    return innings[i]?.[sd]?.[tp];
+  };
   // 表示は最大maxInnか9のいずれか大きい方
   const cols=[];
   for(let i=1;i<=maxInn;i++) cols.push(i);
-  const aTotal=cols.reduce((s,i)=>s+(innings[i]?.top.r||0),0)+(gs?.scoreAdj?.away||0);
-  const hTotal=cols.reduce((s,i)=>s+(innings[i]?.bottom.r||0),0)+(gs?.scoreAdj?.home||0);
-  const aH=cols.reduce((s,i)=>s+(innings[i]?.top.h||0),0);
-  const hH=cols.reduce((s,i)=>s+(innings[i]?.bottom.h||0),0);
+  const sumR=(side)=>cols.reduce((s,i)=>{
+    const v=getDisplay(i,side,'r');
+    return s+(typeof v==='number'?v:0);
+  },0);
+  const sumH=(side)=>cols.reduce((s,i)=>{
+    const v=getDisplay(i,side,'h');
+    return s+(typeof v==='number'?v:0);
+  },0);
+  const aTotal=sumR('top')+(gs?.scoreAdj?.away||0);
+  const hTotal=sumR('bottom')+(gs?.scoreAdj?.home||0);
+  const aH=sumH('top'), hH=sumH('bottom');
   const curInn=gs?.inning||1;
   const curTB=gs?.topBottom||'top';
   const cell={padding:compact?'3px 5px':'4px 6px',fontSize:compact?10:12,
-    textAlign:'center',borderRight:'1px solid #0f172a',minWidth:compact?20:26};
+    textAlign:'center',borderRight:'1px solid #0f172a',minWidth:compact?22:28};
   const team=(name,col)=>({
     ...cell,textAlign:'left',fontWeight:700,color:col,minWidth:compact?54:80,
     paddingLeft:compact?6:10,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'
   });
+  const editInput=(i,sd,tp,col)=>(
+    <input value={getDraft(i,sd,tp)}
+      onChange={e=>updateDraft(i,sd,tp,e.target.value.replace(/[^0-9-]/g,''))}
+      placeholder="-"
+      style={{width:compact?22:28,padding:'2px 1px',fontSize:11,fontWeight:700,
+        textAlign:'center',background:'#1e293b',color:col,
+        border:`1px solid ${col}55`,borderRadius:3}}/>
+  );
+
   return (
-    <div style={{overflowX:'auto',border:'1px solid #334155',borderRadius:8,background:'#0f172a'}}>
-      <table style={{borderCollapse:'collapse',width:'100%',fontFamily:'inherit'}}>
-        <thead>
-          <tr style={{background:'#1e293b'}}>
-            <th style={{...cell,textAlign:'left',color:'#64748b',minWidth:compact?54:80}}>　</th>
-            {cols.map(i=>(
-              <th key={i} style={{...cell,color:i===curInn?'#3b82f6':'#94a3b8',
-                background:i===curInn?'rgba(59,130,246,.1)':'transparent'}}>{i}</th>
-            ))}
-            <th style={{...cell,color:'#e2e8f0',fontWeight:800,borderLeft:'2px solid #334155'}}>R</th>
-            <th style={{...cell,color:'#94a3b8'}}>H</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr style={{borderTop:'1px solid #334155'}}>
-            <td style={team(game?.teamAway||'先攻','#f97316')}>
-              {(game?.teamAway||'先攻').slice(0,compact?6:10)}
-            </td>
-            {cols.map(i=>{
-              const r=innings[i]?.top.r;
-              const isCur=i===curInn&&curTB==='top';
-              return <td key={i} style={{...cell,
-                fontWeight:isCur?800:600,
-                color:isCur?'#f97316':'#e2e8f0',
-                background:isCur?'rgba(249,115,22,.15)':'transparent'}}>
-                {r==null?'-':r}
-              </td>;
-            })}
-            <td style={{...cell,fontWeight:900,color:'#f97316',fontSize:compact?13:16,
-              borderLeft:'2px solid #334155'}}>{aTotal}</td>
-            <td style={{...cell,color:'#94a3b8'}}>{aH}</td>
-          </tr>
-          <tr style={{borderTop:'1px solid #1e293b'}}>
-            <td style={team(game?.teamHome||'後攻','#3b82f6')}>
-              {(game?.teamHome||'後攻').slice(0,compact?6:10)}
-            </td>
-            {cols.map(i=>{
-              const r=innings[i]?.bottom.r;
-              const isCur=i===curInn&&curTB==='bottom';
-              // 表攻撃中は裏未着手なので空欄
-              const showDash=(i>curInn)||(i===curInn&&curTB==='top');
-              return <td key={i} style={{...cell,
-                fontWeight:isCur?800:600,
-                color:isCur?'#3b82f6':'#e2e8f0',
-                background:isCur?'rgba(59,130,246,.15)':'transparent'}}>
-                {showDash&&r===0?'-':(r==null?'-':r)}
-              </td>;
-            })}
-            <td style={{...cell,fontWeight:900,color:'#3b82f6',fontSize:compact?13:16,
-              borderLeft:'2px solid #334155'}}>{hTotal}</td>
-            <td style={{...cell,color:'#94a3b8'}}>{hH}</td>
-          </tr>
-        </tbody>
-      </table>
+    <div style={{border:'1px solid #334155',borderRadius:8,background:'#0f172a'}}>
+      {editable&&(
+        <div style={{display:'flex',justifyContent:'flex-end',gap:4,padding:4,
+          background:'#1e293b',borderBottom:'1px solid #334155'}}>
+          {editMode?(
+            <>
+              <button onClick={cancelEdit} className="btn btn-secondary btn-sm"
+                style={{fontSize:10,padding:'3px 8px'}}>キャンセル</button>
+              <button onClick={saveEdit} className="btn btn-primary btn-sm"
+                style={{fontSize:10,padding:'3px 8px'}}>保存</button>
+            </>
+          ):(
+            <button onClick={startEdit} className="btn btn-secondary btn-sm"
+              style={{fontSize:10,padding:'3px 8px'}}>✏ 手動編集</button>
+          )}
+        </div>
+      )}
+      <div style={{overflowX:'auto'}}>
+        <table style={{borderCollapse:'collapse',width:'100%',fontFamily:'inherit'}}>
+          <thead>
+            <tr style={{background:'#1e293b'}}>
+              <th style={{...cell,textAlign:'left',color:'#64748b',minWidth:compact?54:80}}>　</th>
+              {cols.map(i=>(
+                <th key={i} style={{...cell,color:i===curInn?'#3b82f6':'#94a3b8',
+                  background:i===curInn?'rgba(59,130,246,.1)':'transparent'}}>{i}</th>
+              ))}
+              <th style={{...cell,color:'#e2e8f0',fontWeight:800,borderLeft:'2px solid #334155'}}>R</th>
+              <th style={{...cell,color:'#94a3b8'}}>H</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style={{borderTop:'1px solid #334155'}}>
+              <td style={team(game?.teamAway||'先攻','#f97316')}>
+                {(game?.teamAway||'先攻').slice(0,compact?6:10)}
+              </td>
+              {cols.map(i=>{
+                const r=getDisplay(i,'top','r');
+                const isCur=i===curInn&&curTB==='top';
+                const isManual=manualMap[i]?.top?.r!=null;
+                return <td key={i} style={{...cell,
+                  fontWeight:isCur?800:600,
+                  color:isCur?'#f97316':'#e2e8f0',
+                  background:isCur?'rgba(249,115,22,.15)':(isManual?'rgba(168,85,247,.1)':'transparent')}}>
+                  {editMode?editInput(i,'top','r','#fbbf24'):(r==null?'-':r)}
+                </td>;
+              })}
+              <td style={{...cell,fontWeight:900,color:'#f97316',fontSize:compact?13:16,
+                borderLeft:'2px solid #334155'}}>{aTotal}</td>
+              <td style={{...cell,color:'#94a3b8'}}>{aH}</td>
+            </tr>
+            <tr style={{borderTop:'1px solid #1e293b'}}>
+              <td style={team(game?.teamHome||'後攻','#3b82f6')}>
+                {(game?.teamHome||'後攻').slice(0,compact?6:10)}
+              </td>
+              {cols.map(i=>{
+                const r=getDisplay(i,'bottom','r');
+                const isCur=i===curInn&&curTB==='bottom';
+                const showDash=(i>curInn)||(i===curInn&&curTB==='top');
+                const isManual=manualMap[i]?.bottom?.r!=null;
+                return <td key={i} style={{...cell,
+                  fontWeight:isCur?800:600,
+                  color:isCur?'#3b82f6':'#e2e8f0',
+                  background:isCur?'rgba(59,130,246,.15)':(isManual?'rgba(168,85,247,.1)':'transparent')}}>
+                  {editMode?editInput(i,'bottom','r','#93c5fd'):(showDash&&r===0?'-':(r==null?'-':r))}
+                </td>;
+              })}
+              <td style={{...cell,fontWeight:900,color:'#3b82f6',fontSize:compact?13:16,
+                borderLeft:'2px solid #334155'}}>{hTotal}</td>
+              <td style={{...cell,color:'#94a3b8'}}>{hH}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      {editMode&&(
+        <div style={{padding:'4px 8px',background:'#1e293b',fontSize:9,color:'#94a3b8',
+          borderTop:'1px solid #334155'}}>
+          ※ 各セルの数字を入力→保存。空欄なら投球履歴の自動計算値を使用
+        </div>
+      )}
+      {!editMode&&Object.keys(manualMap).length>0&&(
+        <div style={{padding:'4px 8px',background:'#1e293b',fontSize:9,color:'#a78bfa',
+          borderTop:'1px solid #334155'}}>
+          紫背景=手動入力値
+        </div>
+      )}
     </div>
   );
 }
@@ -2075,7 +2205,7 @@ function LiveCriticalInsights({pitches, pitcherName, batterName, onShowAll}){
 
 // ── DetailResultPicker (詳細モード結果ステップ用クイック式UI) ──
 function DetailResultPicker({pZone, pPt, gs, onBack, onSelect}){
-  const [subMenu,setSubMenu]=useState(null); // 'out'|'hit'|'reached'|'sac'|'int'
+  const [subMenu,setSubMenu]=useState(null); // 'out'|'hit'|'reached'|'sac'|'int'|'dp'|'adv'
   const c=gs?.count||{balls:0,strikes:0};
   const outs=gs?.outs||0;
   const ptInfo=PT.find(x=>x.id===pPt);
@@ -2101,33 +2231,50 @@ function DetailResultPicker({pZone, pPt, gs, onBack, onSelect}){
   ];
   const SAC_ITEMS=[{id:'sac_bunt',l:'犠打'},{id:'sac_fly',l:'犠飛'}];
   const INT_ITEMS=[{id:'bat_int',l:'打撃妨害'},{id:'run_int',l:'走塁妨害'}];
+  // ⑦ DP詳細
+  const DP_ITEMS=[
+    {id:'dp_643',     l:'6-4-3'},
+    {id:'dp_463',     l:'4-6-3'},
+    {id:'dp_543',     l:'5-4-3'},
+    {id:'dp_163',     l:'1-6-3'},
+    {id:'dp_363',     l:'3-6-3'},
+    {id:'dp_liner',   l:'ライナーDP'},
+    {id:'dp_so_steal',l:'三振+盗塁刺'},
+    {id:'dp_other',   l:'その他DP'},
+  ];
+  // ⑥ 進塁イベント
+  const ADV_ITEMS=[
+    {id:'steal',l:'盗塁'},
+    {id:'pb',   l:'PB'},
+    {id:'wp',   l:'WP'},
+  ];
 
   const bigBtn=(color, bgDim, label, sub, onClick)=>(
     <button onClick={onClick}
-      style={{padding:'18px 4px',borderRadius:10,border:`2.5px solid ${color}`,
-        background:bgDim,color:color,fontSize:17,fontWeight:900,cursor:'pointer',
+      style={{padding:'14px 4px',borderRadius:10,border:`2.5px solid ${color}`,
+        background:bgDim,color:color,fontSize:15,fontWeight:900,cursor:'pointer',
         fontFamily:'inherit',lineHeight:1.1}}>
       {label}
-      <div style={{fontSize:10,fontWeight:600,opacity:0.8,marginTop:3}}>{sub}</div>
+      <div style={{fontSize:9,fontWeight:600,opacity:0.8,marginTop:2}}>{sub}</div>
     </button>
   );
 
   const subBtn=(label,color,onClick)=>(
     <button onClick={onClick}
-      style={{padding:'9px 2px',borderRadius:6,border:`1.5px solid ${color}`,
-        background:'transparent',color:color,fontSize:11,fontWeight:700,
+      style={{padding:'7px 2px',borderRadius:6,border:`1.5px solid ${color}`,
+        background:'transparent',color:color,fontSize:10,fontWeight:700,
         cursor:'pointer',fontFamily:'inherit',lineHeight:1.2}}>
       {label}
     </button>
   );
 
   const renderSub=(items, color, getLabel)=>(
-    <div style={{marginBottom:8,padding:8,background:`${color}10`,borderRadius:8,
+    <div style={{marginBottom:6,padding:6,background:`${color}10`,borderRadius:8,
       border:`1px dashed ${color}55`}}>
       <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:4}}>
         {items.map(it=>(
           <button key={it.id} onClick={()=>{onSelect(it.id);setSubMenu(null);}}
-            style={{padding:'8px 2px',borderRadius:6,border:`1.5px solid ${color}`,
+            style={{padding:'6px 2px',borderRadius:6,border:`1.5px solid ${color}`,
               background:'#0f172a',color:color,fontSize:10,fontWeight:700,
               cursor:'pointer',fontFamily:'inherit',lineHeight:1.2}}>
             {getLabel(it)}
@@ -2138,16 +2285,16 @@ function DetailResultPicker({pZone, pPt, gs, onBack, onSelect}){
   );
 
   return (
-    <div className="card" style={{padding:'12px'}}>
+    <div className="card" style={{padding:'10px'}}>
       {/* ヘッダー: 戻る + 選択中状態 */}
-      <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:10}}>
+      <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:6}}>
         <button className="btn btn-secondary btn-sm" onClick={onBack}>← 戻る</button>
-        <span style={{fontSize:11,color:'#94a3b8'}}>③ 結果</span>
+        <span style={{fontSize:10,color:'#94a3b8'}}>③ 結果</span>
         <span style={{flex:1}}/>
-        <span style={{fontSize:11,padding:'3px 7px',background:'#0f172a',borderRadius:5,
+        <span style={{fontSize:10,padding:'2px 6px',background:'#0f172a',borderRadius:4,
           color:'#cbd5e1'}}>Z{pZone}</span>
         {ptInfo&&(
-          <span style={{fontSize:11,padding:'3px 7px',borderRadius:5,
+          <span style={{fontSize:10,padding:'2px 6px',borderRadius:4,
             background:`${ptInfo.color}22`,color:ptInfo.color,fontWeight:700}}>
             {ptInfo.label}
           </span>
@@ -2155,7 +2302,7 @@ function DetailResultPicker({pZone, pPt, gs, onBack, onSelect}){
       </div>
 
       {/* カウント表示 */}
-      <div style={{display:'flex',justifyContent:'center',gap:14,fontSize:11,marginBottom:10,
+      <div style={{display:'flex',justifyContent:'center',gap:12,fontSize:10,marginBottom:6,
         color:'#94a3b8'}}>
         <span><span style={{color:'#eab308',fontWeight:800}}>S{c.strikes}</span></span>
         <span><span style={{color:'#3b82f6',fontWeight:800}}>B{c.balls}</span></span>
@@ -2163,18 +2310,18 @@ function DetailResultPicker({pZone, pPt, gs, onBack, onSelect}){
       </div>
 
       {/* 3メインカウントボタン */}
-      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:6,marginBottom:6}}>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:5,marginBottom:5}}>
         {bigBtn('#eab308','#3f2e06',
           c.strikes>=2?'三振':'ストライク',
-          c.strikes>=2?'見逃し→打席終了':'見逃しS +1',
+          c.strikes>=2?'見逃→打席終了':'見逃S+1',
           handleStrike)}
         {bigBtn('#3b82f6','#0a1f44',
           c.balls>=3?'四球':'ボール',
-          c.balls>=3?'打席終了':'B +1',
+          c.balls>=3?'打席終了':'B+1',
           ()=>onSelect('ball'))}
         {bigBtn('#ef4444','#3f0a0a',
           'アウト',
-          subMenu==='out'?'閉じる':'種類選択 ▼',
+          subMenu==='out'?'閉じる':'種類 ▼',
           ()=>setSubMenu(s=>s==='out'?null:'out'))}
       </div>
 
@@ -2183,6 +2330,8 @@ function DetailResultPicker({pZone, pPt, gs, onBack, onSelect}){
       {subMenu==='reached'&& renderSub(REACHED_ITEMS,'#14b8a6', it=>it.l)}
       {subMenu==='sac'    && renderSub(SAC_ITEMS,    '#a78bfa', it=>it.l)}
       {subMenu==='int'    && renderSub(INT_ITEMS,    '#f43f5e', it=>it.l)}
+      {subMenu==='dp'     && renderSub(DP_ITEMS,     '#dc2626', it=>it.l)}
+      {subMenu==='adv'    && renderSub(ADV_ITEMS,    '#06b6d4', it=>it.l)}
 
       {/* 2次クイックボタン */}
       <div style={{display:'grid',gridTemplateColumns:'repeat(5,1fr)',gap:4,marginBottom:4}}>
@@ -2192,12 +2341,16 @@ function DetailResultPicker({pZone, pPt, gs, onBack, onSelect}){
         {subBtn('四球','#22c55e',()=>onSelect('walk'))}
         {subBtn('死球','#ec4899',()=>onSelect('hbp'))}
       </div>
-      {/* 3次ボタン: 出塁・犠打飛・妨害 */}
-      <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:4}}>
-        {subBtn(subMenu==='reached'?'出塁(エラー) ▲':'出塁(エラー) ▼','#14b8a6',
+      {/* 3次ボタン: 出塁・進塁・犠打飛・ゲッツー・妨害 */}
+      <div style={{display:'grid',gridTemplateColumns:'repeat(5,1fr)',gap:4}}>
+        {subBtn(subMenu==='reached'?'出塁 ▲':'出塁 ▼','#14b8a6',
           ()=>setSubMenu(s=>s==='reached'?null:'reached'))}
-        {subBtn(subMenu==='sac'?'犠打/犠飛 ▲':'犠打/犠飛 ▼','#a78bfa',
+        {subBtn(subMenu==='adv'?'進塁 ▲':'進塁 ▼','#06b6d4',
+          ()=>setSubMenu(s=>s==='adv'?null:'adv'))}
+        {subBtn(subMenu==='sac'?'犠打飛 ▲':'犠打飛 ▼','#a78bfa',
           ()=>setSubMenu(s=>s==='sac'?null:'sac'))}
+        {subBtn(subMenu==='dp'?'ゲッツー ▲':'ゲッツー ▼','#dc2626',
+          ()=>setSubMenu(s=>s==='dp'?null:'dp'))}
         {subBtn(subMenu==='int'?'妨害 ▲':'妨害 ▼','#f43f5e',
           ()=>setSubMenu(s=>s==='int'?null:'int'))}
       </div>
@@ -2543,191 +2696,325 @@ async function generateScoutingPDF(game, pitches, setProgress){
   const container = document.createElement('div');
   Object.assign(container.style,{
     position:'absolute', left:'-99999px', top:'0',
-    width:'780px', background:'#0f172a', color:'#e2e8f0',
-    padding:'24px', fontFamily:"-apple-system,'Hiragino Sans',sans-serif",
-    fontSize:'13px', lineHeight:'1.4',
+    width:'780px', background:'#fff', color:'#1f2937',
+    padding:'28px', fontFamily:"-apple-system,'Hiragino Sans','Yu Gothic',sans-serif",
+    fontSize:'13px', lineHeight:'1.5',
   });
 
   // ── レポートHTML構築 ──
-  const nonPickoff = pitches.filter(p=>!p.isPickoff);
+  const nonPickoff = pitches.filter(p=>!p.isPickoff && !p.isAdvance);
   const pitchersN = [...new Set(nonPickoff.map(p=>p.pitcher).filter(Boolean))];
-  const battersN  = [...new Set(nonPickoff.map(p=>p.batter ).filter(Boolean))];
 
   const escapeHtml = s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const fmtDate = game.date||new Date().toISOString().slice(0,10);
+  const BR_SET = new Set(['st','ts','ct']); // 直球系
+  const COUNT_LIST=['0-0','0-1','1-0','1-1','2-0','2-1','0-2','1-2','2-2','3-0','3-1','3-2'];
+  const RUNNER_LIST=[
+    {k:'none',l:'走者なし'},
+    {k:'first',l:'一塁'},
+    {k:'scoring',l:'得点圏'},
+    {k:'full',l:'満塁'},
+  ];
 
-  // ライン
-  const {innings:lineInn, maxInn:maxI} = computeLineScore(nonPickoff);
-  let lineHtml = `<table style="border-collapse:collapse;font-size:11px;width:100%;color:#e2e8f0">
-    <tr><th style="text-align:left;padding:4px 6px;color:#94a3b8;border-bottom:1px solid #334155">　</th>`;
-  for(let i=1;i<=maxI;i++) lineHtml += `<th style="padding:4px 6px;color:#94a3b8;border-bottom:1px solid #334155">${i}</th>`;
-  lineHtml += `<th style="padding:4px 6px;color:#fff;border-left:2px solid #334155;border-bottom:1px solid #334155">R</th>
-    <th style="padding:4px 6px;color:#94a3b8;border-bottom:1px solid #334155">H</th></tr>`;
-  let ra=0,rh=0,ha=0,hh=0;
-  for(let i=1;i<=maxI;i++){ra+=lineInn[i]?.top.r||0;rh+=lineInn[i]?.bottom.r||0;ha+=lineInn[i]?.top.h||0;hh+=lineInn[i]?.bottom.h||0;}
-  lineHtml += `<tr><td style="padding:4px 8px;color:#f97316;font-weight:700">${escapeHtml(game.teamAway||'先攻')}</td>`;
-  for(let i=1;i<=maxI;i++) lineHtml += `<td style="text-align:center;padding:4px 6px">${lineInn[i]?.top.r??'-'}</td>`;
-  lineHtml += `<td style="text-align:center;padding:4px 6px;color:#f97316;font-weight:800;border-left:2px solid #334155">${ra+(game.gs?.scoreAdj?.away||0)}</td>
-    <td style="text-align:center;padding:4px 6px;color:#94a3b8">${ha}</td></tr>`;
-  lineHtml += `<tr><td style="padding:4px 8px;color:#3b82f6;font-weight:700">${escapeHtml(game.teamHome||'後攻')}</td>`;
-  for(let i=1;i<=maxI;i++) lineHtml += `<td style="text-align:center;padding:4px 6px">${lineInn[i]?.bottom.r??'-'}</td>`;
-  lineHtml += `<td style="text-align:center;padding:4px 6px;color:#3b82f6;font-weight:800;border-left:2px solid #334155">${rh+(game.gs?.scoreAdj?.home||0)}</td>
-    <td style="text-align:center;padding:4px 6px;color:#94a3b8">${hh}</td></tr></table>`;
-
-  // ヘッダー
+  // ── ヘッダー ──
   let html = `
-    <div style="border-bottom:2px solid #3b82f6;padding-bottom:12px;margin-bottom:16px">
-      <div style="font-size:24px;font-weight:900;color:#fff">⚾ スカウティングレポート</div>
-      <div style="font-size:13px;color:#94a3b8;margin-top:4px">
+    <div style="border-bottom:3px solid #1f2937;padding-bottom:14px;margin-bottom:20px">
+      <div style="font-size:26px;font-weight:900;color:#111827;letter-spacing:-.02em">
+        ⚾ 投手スカウティングレポート
+      </div>
+      <div style="font-size:13px;color:#6b7280;margin-top:6px">
         ${escapeHtml(game.name||'試合')} ／ ${fmtDate}
         ${game.stadium?' ／ '+escapeHtml(game.stadium):''}
       </div>
-      <div style="font-size:14px;color:#e2e8f0;margin-top:6px">
-        <span style="color:#f97316">${escapeHtml(game.teamAway||'先攻')}</span>
-         vs
-        <span style="color:#3b82f6">${escapeHtml(game.teamHome||'後攻')}</span>
-        <span style="margin-left:12px;color:#64748b">(総球数 ${nonPickoff.length})</span>
+      <div style="font-size:14px;color:#1f2937;margin-top:8px;font-weight:600">
+        ${escapeHtml(game.teamAway||'先攻')} vs ${escapeHtml(game.teamHome||'後攻')}
+        <span style="margin-left:14px;color:#6b7280;font-weight:400">
+          総投球数: ${nonPickoff.length}球
+        </span>
       </div>
-    </div>
-    <div style="margin-bottom:18px">
-      <div style="font-size:15px;font-weight:800;color:#cbd5e1;margin-bottom:6px">📊 ラインスコア</div>
-      ${lineHtml}
     </div>
   `;
 
-  // 各投手のスカウティング
-  for(const pn of pitchersN){
+  // ── 各投手分析 ──
+  for(let idx=0; idx<pitchersN.length; idx++){
+    const pn = pitchersN[idx];
     const mine = nonPickoff.filter(p=>p.pitcher===pn);
     const tot = mine.length;
-    const s = mine.filter(p=>{const c=RESULT_CAT_MAP[p.result];return c==='strike'||c==='so';}).length;
-    const sRate = tot>0?Math.round(s/tot*100):0;
+    if(tot===0) continue;
+
+    // 基本指標
+    const sCnt = mine.filter(p=>{const c=RESULT_CAT_MAP[p.result];return c==='strike'||c==='so';}).length;
+    const sRate = tot>0?Math.round(sCnt/tot*100):0;
     const so = mine.filter(p=>RESULT_CAT_MAP[p.result]==='so').length;
     const hit = mine.filter(p=>RESULT_CAT_MAP[p.result]==='hit').length;
     const bb = mine.filter(p=>RESULT_CAT_MAP[p.result]==='bb').length;
+    const speeds=mine.map(p=>p.speed).filter(x=>x>0);
+    const avgS=speeds.length?Math.round(speeds.reduce((a,b)=>a+b,0)/speeds.length):null;
+    const maxS=speeds.length?Math.max(...speeds):null;
+
+    // 1) 球種割合
     const ptC={}; mine.forEach(p=>{if(p.pt)ptC[p.pt]=(ptC[p.pt]||0)+1;});
     const ptList = PT.filter(p=>ptC[p.id]>0).sort((a,b)=>ptC[b.id]-ptC[a.id]);
 
-    // 5×5 ゾーンヒート
+    // 2) コース割合 5×5
     const zoneC={};
     for(let z=1;z<=25;z++) zoneC[z]=0;
     mine.forEach(p=>{if(p.zone)zoneC[p.zone]++;});
     const maxZ=Math.max(...Object.values(zoneC),1);
-    let zoneHtml = '<table style="border-collapse:separate;border-spacing:1px;margin:6px 0">';
+
+    // 3) 球種別ストライク率
+    const ptSR={};
+    mine.forEach(p=>{
+      if(!p.pt) return;
+      if(!ptSR[p.pt]) ptSR[p.pt]={t:0,k:0};
+      ptSR[p.pt].t++;
+      const c=RESULT_CAT_MAP[p.result];
+      if(c==='strike'||c==='so') ptSR[p.pt].k++;
+    });
+
+    // 4) カウント別球種割合
+    const countMix={};
+    COUNT_LIST.forEach(c=>{countMix[c]={t:0,pt:{}};});
+    mine.forEach(p=>{
+      const k=`${p.balls||0}-${p.strikes||0}`;
+      if(!countMix[k]||!p.pt) return;
+      countMix[k].t++;
+      countMix[k].pt[p.pt]=(countMix[k].pt[p.pt]||0)+1;
+    });
+
+    // 5) 走者状況別球種割合
+    const runnerMix={};
+    RUNNER_LIST.forEach(r=>{runnerMix[r.k]={t:0,pt:{}};});
+    mine.forEach(p=>{
+      const k=classifyRunners(p);
+      if(!runnerMix[k]||!p.pt) return;
+      runnerMix[k].t++;
+      runnerMix[k].pt[p.pt]=(runnerMix[k].pt[p.pt]||0)+1;
+    });
+
+    // ── HTML組み立て ──
+    // 投手見出し+主要指標
+    html += `
+      <div style="${idx>0?'page-break-before:always;':''}margin-bottom:18px">
+        <div style="font-size:20px;font-weight:900;color:#111827;
+          padding-bottom:6px;border-bottom:2px solid #3b82f6;margin-bottom:10px">
+          🔥 ${escapeHtml(pn)}
+        </div>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:14px;
+          background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px">
+          <tr>
+            ${[
+              {l:'総球数',v:tot,c:'#111827'},
+              {l:'S率',v:sRate+'%',c:'#ca8a04'},
+              {l:'三振',v:so,c:'#dc2626'},
+              {l:'被安打',v:hit,c:'#2563eb'},
+              {l:'四死球',v:bb,c:'#ea580c'},
+              {l:'平均km/h',v:avgS??'–',c:'#7c3aed'},
+              {l:'最速km/h',v:maxS??'–',c:'#9333ea'},
+            ].map(d=>`
+              <td style="padding:10px 6px;text-align:center;border-right:1px solid #e5e7eb">
+                <div style="font-size:18px;font-weight:900;color:${d.c};line-height:1">${d.v}</div>
+                <div style="font-size:9px;color:#6b7280;margin-top:3px">${d.l}</div>
+              </td>`).join('')}
+          </tr>
+        </table>
+    `;
+
+    // ① 球種割合
+    const ptMixRows = ptList.map(p=>{
+      const c=ptC[p.id], pct=Math.round(c/tot*100);
+      return `
+        <tr style="border-bottom:1px solid #f3f4f6">
+          <td style="padding:5px 8px;font-size:12px">
+            <span style="display:inline-block;width:9px;height:9px;border-radius:50%;
+              background:${p.color};margin-right:6px;vertical-align:middle"></span>
+            <span style="color:#1f2937;font-weight:600;vertical-align:middle">${p.label}</span>
+          </td>
+          <td style="padding:5px 6px;text-align:right">
+            <div style="display:inline-block;width:80px;height:8px;background:#e5e7eb;
+              border-radius:4px;overflow:hidden;vertical-align:middle;margin-right:6px">
+              <div style="width:${pct}%;height:100%;background:${p.color}"></div>
+            </div>
+            <span style="font-weight:700;color:#111827;display:inline-block;min-width:34px">
+              ${pct}%
+            </span>
+          </td>
+          <td style="padding:5px 6px;text-align:right;color:#6b7280;font-size:11px">${c}球</td>
+        </tr>`;
+    }).join('');
+
+    // ② コース割合 5×5
+    let zoneTable = '<table style="border-collapse:separate;border-spacing:2px;margin:4px auto">';
     ZONE_GRID.forEach(row=>{
-      zoneHtml += '<tr>';
+      zoneTable += '<tr>';
       row.forEach(z=>{
         const cnt=zoneC[z]||0;
         const heat=cnt/maxZ;
         const isSZ=STRIKE_ZONES.has(z);
-        const bg=`rgba(239,68,68,${heat*0.85+(isSZ?0.05:0.01)})`;
-        const border=isSZ?'1.5px solid #cbd5e1':'1px solid #334155';
-        zoneHtml += `<td style="width:32px;height:32px;background:${bg};border:${border};text-align:center;color:#fff;font-weight:700;font-size:11px">${cnt||''}</td>`;
+        const pct=tot>0?Math.round(cnt/tot*100):0;
+        const bg=cnt>0?`rgba(59,130,246,${heat*0.7+0.1})`:'#f3f4f6';
+        const border=isSZ?'2px solid #1f2937':'1px solid #d1d5db';
+        const txt=cnt>0?`<div style="font-size:11px;font-weight:800;color:#111827;line-height:1">${pct}%</div>
+          <div style="font-size:8px;color:#374151">${cnt}</div>`:'';
+        zoneTable += `<td style="width:42px;height:42px;background:${bg};border:${border};
+          border-radius:3px;text-align:center;vertical-align:middle">${txt}</td>`;
       });
-      zoneHtml += '</tr>';
+      zoneTable += '</tr>';
     });
-    zoneHtml += '</table>';
+    zoneTable += '</table>';
 
-    // 球種一覧
-    const ptHtml = ptList.map(p=>{
-      const c=ptC[p.id], pct=Math.round(c/tot*100);
-      const ps=mine.filter(x=>x.pt===p.id);
-      const sk=ps.filter(x=>{const c=RESULT_CAT_MAP[x.result];return c==='strike'||c==='so';}).length;
-      const sr=ps.length?Math.round(sk/ps.length*100):0;
-      return `<tr>
-        <td style="padding:3px 6px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${p.color};vertical-align:middle"></span> ${p.label}</td>
-        <td style="padding:3px 6px;text-align:right;color:#e2e8f0">${pct}%</td>
-        <td style="padding:3px 6px;text-align:right;color:#94a3b8">${c}球</td>
-        <td style="padding:3px 6px;text-align:right;color:#eab308">S率${sr}%</td>
+    html += `
+      <div style="display:flex;gap:18px;margin-bottom:16px;align-items:flex-start">
+        <div style="flex:1;background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:10px">
+          <div style="font-size:13px;font-weight:800;color:#111827;margin-bottom:8px;
+            border-left:3px solid #3b82f6;padding-left:6px">
+            ① 球種割合
+          </div>
+          <table style="width:100%;border-collapse:collapse;font-size:11px">
+            ${ptMixRows||'<tr><td style="padding:10px;color:#9ca3af">データなし</td></tr>'}
+          </table>
+        </div>
+        <div style="background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:10px">
+          <div style="font-size:13px;font-weight:800;color:#111827;margin-bottom:8px;
+            border-left:3px solid #3b82f6;padding-left:6px">
+            ② コース割合（5×5）
+          </div>
+          ${zoneTable}
+          <div style="font-size:9px;color:#6b7280;text-align:center;margin-top:4px">
+            太枠＝ストライクゾーン
+          </div>
+        </div>
+      </div>
+    `;
+
+    // ③ 球種別ストライク率
+    const ptSRRows = ptList.map(p=>{
+      const r=ptSR[p.id];
+      if(!r||r.t===0) return '';
+      const sr=Math.round(r.k/r.t*100);
+      const barColor=sr>=70?'#16a34a':sr>=50?'#ca8a04':sr>=30?'#ea580c':'#dc2626';
+      return `
+        <tr style="border-bottom:1px solid #f3f4f6">
+          <td style="padding:5px 8px;font-size:12px">
+            <span style="display:inline-block;width:9px;height:9px;border-radius:50%;
+              background:${p.color};margin-right:6px;vertical-align:middle"></span>
+            <span style="color:#1f2937;font-weight:600;vertical-align:middle">${p.label}</span>
+          </td>
+          <td style="padding:5px 6px;text-align:right">
+            <div style="display:inline-block;width:120px;height:8px;background:#e5e7eb;
+              border-radius:4px;overflow:hidden;vertical-align:middle;margin-right:6px">
+              <div style="width:${sr}%;height:100%;background:${barColor}"></div>
+            </div>
+            <span style="font-weight:800;color:${barColor};display:inline-block;min-width:34px">
+              ${sr}%
+            </span>
+          </td>
+          <td style="padding:5px 6px;text-align:right;color:#6b7280;font-size:11px">${r.t}球</td>
+        </tr>`;
+    }).filter(Boolean).join('');
+
+    html += `
+      <div style="background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:10px;margin-bottom:16px">
+        <div style="font-size:13px;font-weight:800;color:#111827;margin-bottom:8px;
+          border-left:3px solid #ca8a04;padding-left:6px">
+          ③ 球種別ストライク率
+        </div>
+        <table style="width:100%;border-collapse:collapse;font-size:11px">
+          ${ptSRRows||'<tr><td style="padding:10px;color:#9ca3af">データなし</td></tr>'}
+        </table>
+      </div>
+    `;
+
+    // ④ カウント別球種割合 (使われた球種だけ列に)
+    const usedPts = ptList.slice(0,8); // 上位8球種
+    const activeCounts = COUNT_LIST.filter(c=>countMix[c].t>0);
+    let countTable=`<table style="width:100%;border-collapse:collapse;font-size:11px">
+      <thead>
+        <tr style="background:#f9fafb;border-bottom:2px solid #e5e7eb">
+          <th style="padding:6px;text-align:left;color:#374151;font-weight:700">カウント</th>
+          <th style="padding:6px;text-align:right;color:#374151;font-weight:700">球数</th>
+          ${usedPts.map(p=>`
+            <th style="padding:6px;text-align:right;color:${p.color};font-weight:700">${p.short}</th>
+          `).join('')}
+        </tr>
+      </thead><tbody>`;
+    activeCounts.forEach(c=>{
+      const v=countMix[c];
+      countTable+=`<tr style="border-bottom:1px solid #f3f4f6">
+        <td style="padding:5px 6px;font-weight:700;color:#1f2937">${c}</td>
+        <td style="padding:5px 6px;text-align:right;color:#6b7280">${v.t}</td>
+        ${usedPts.map(p=>{
+          const cnt=v.pt[p.id]||0;
+          const pct=v.t>0?Math.round(cnt/v.t*100):0;
+          const isHigh=pct>=50;
+          return `<td style="padding:5px 6px;text-align:right;
+            color:${pct>0?p.color:'#d1d5db'};
+            font-weight:${isHigh?900:600};
+            ${isHigh?'background:#fef3c7':''}">${pct?pct+'%':'–'}</td>`;
+        }).join('')}
       </tr>`;
-    }).join('');
-
-    html += `
-      <div style="margin-bottom:20px;padding:14px;background:#1e293b;border-radius:10px;border-left:4px solid #3b82f6;page-break-inside:avoid">
-        <div style="font-size:16px;font-weight:800;color:#60a5fa;margin-bottom:8px">🔥 投手: ${escapeHtml(pn)}</div>
-        <div style="display:flex;gap:10px;margin-bottom:10px">
-          <div style="flex:1;text-align:center;padding:8px;background:#0f172a;border-radius:6px">
-            <div style="font-size:20px;font-weight:900;color:#eab308">${sRate}%</div>
-            <div style="font-size:10px;color:#64748b">S率</div>
-          </div>
-          <div style="flex:1;text-align:center;padding:8px;background:#0f172a;border-radius:6px">
-            <div style="font-size:20px;font-weight:900;color:#fff">${tot}</div>
-            <div style="font-size:10px;color:#64748b">総球数</div>
-          </div>
-          <div style="flex:1;text-align:center;padding:8px;background:#0f172a;border-radius:6px">
-            <div style="font-size:20px;font-weight:900;color:#ef4444">${so}</div>
-            <div style="font-size:10px;color:#64748b">三振</div>
-          </div>
-          <div style="flex:1;text-align:center;padding:8px;background:#0f172a;border-radius:6px">
-            <div style="font-size:20px;font-weight:900;color:#60a5fa">${hit}</div>
-            <div style="font-size:10px;color:#64748b">被安打</div>
-          </div>
-          <div style="flex:1;text-align:center;padding:8px;background:#0f172a;border-radius:6px">
-            <div style="font-size:20px;font-weight:900;color:#f97316">${bb}</div>
-            <div style="font-size:10px;color:#64748b">四死球</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div>
-            <div style="font-size:11px;color:#94a3b8;font-weight:700;margin-bottom:3px">コース分布 (5×5)</div>
-            ${zoneHtml}
-          </div>
-          <div style="flex:1">
-            <div style="font-size:11px;color:#94a3b8;font-weight:700;margin-bottom:3px">球種別</div>
-            <table style="border-collapse:collapse;width:100%;font-size:11px">
-              <thead><tr style="border-bottom:1px solid #334155">
-                <th style="text-align:left;padding:3px 6px;color:#94a3b8;font-weight:600">球種</th>
-                <th style="text-align:right;padding:3px 6px;color:#94a3b8;font-weight:600">割合</th>
-                <th style="text-align:right;padding:3px 6px;color:#94a3b8;font-weight:600">球数</th>
-                <th style="text-align:right;padding:3px 6px;color:#94a3b8;font-weight:600">S率</th>
-              </tr></thead>
-              <tbody>${ptHtml}</tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  // 各打者のスカウト
-  for(const bn of battersN){
-    const st=getBatterStats(nonPickoff, bn);
-    if(st.abs.length===0) continue;
-    const abList = st.abs.filter(a=>a.result).map(a=>{
-      const r=ALL_RESULTS.find(x=>x.id===a.result)?.label||a.result;
-      return `<span style="display:inline-block;font-size:10px;padding:2px 6px;margin:2px 3px 2px 0;border-radius:3px;background:#0f172a;color:#cbd5e1">${a.inning}回${a.tb==='top'?'表':'裏'} ${r}</span>`;
-    }).join('');
-    // ホット/コールド 3×3
-    let hcHtml='<table style="border-collapse:separate;border-spacing:1px;margin:4px 0">';
-    [1,2,3,4,5,6,7,8,9].forEach(z=>{
-      if(z%3===1) hcHtml+='<tr>';
-      const d=st.zone[z];
-      const sc=d?d.h-d.o*0.5:0;
-      const bg=!d||d.t===0?'#1e293b':sc>0.5?'#dc2626':sc>0?'#f97316':sc<0?'#1d4ed8':'#475569';
-      hcHtml+=`<td style="width:26px;height:26px;background:${bg};text-align:center;color:#fff;font-size:10px;font-weight:700;border-radius:3px">${d?.h>0?d.h:''}</td>`;
-      if(z%3===0) hcHtml+='</tr>';
     });
-    hcHtml+='</table>';
+    countTable+='</tbody></table>';
+
     html += `
-      <div style="margin-bottom:14px;padding:12px;background:#1e293b;border-radius:10px;border-left:4px solid #22c55e;page-break-inside:avoid">
-        <div style="font-size:15px;font-weight:800;color:#4ade80;margin-bottom:6px">📊 打者: ${escapeHtml(bn)}</div>
-        <div style="font-size:11px;color:#94a3b8;margin-bottom:6px">
-          ${st.abCount}打席 ／ ${st.hits}安打 ／ ${st.so}三振 ／ ${st.bb}四死球
+      <div style="background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:10px;margin-bottom:16px">
+        <div style="font-size:13px;font-weight:800;color:#111827;margin-bottom:8px;
+          border-left:3px solid #16a34a;padding-left:6px">
+          ④ カウント別 球種割合
         </div>
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div>
-            <div style="font-size:10px;color:#94a3b8;margin-bottom:2px">ホット/コールド</div>
-            ${hcHtml}
-          </div>
-          <div style="flex:1">
-            <div style="font-size:10px;color:#94a3b8;margin-bottom:2px">打席結果</div>
-            <div>${abList||'<span style="color:#475569;font-size:10px">記録なし</span>'}</div>
-          </div>
+        ${countTable}
+        <div style="font-size:9px;color:#6b7280;margin-top:4px">
+          ※ 黄色背景=50%超え（その状況で頻用）
         </div>
+      </div>
+    `;
+
+    // ⑤ 走者状況別球種割合
+    const activeRunners=RUNNER_LIST.filter(r=>runnerMix[r.k].t>=2);
+    let runnerTable=`<table style="width:100%;border-collapse:collapse;font-size:11px">
+      <thead>
+        <tr style="background:#f9fafb;border-bottom:2px solid #e5e7eb">
+          <th style="padding:6px;text-align:left;color:#374151;font-weight:700">走者状況</th>
+          <th style="padding:6px;text-align:right;color:#374151;font-weight:700">球数</th>
+          ${usedPts.map(p=>`
+            <th style="padding:6px;text-align:right;color:${p.color};font-weight:700">${p.short}</th>
+          `).join('')}
+        </tr>
+      </thead><tbody>`;
+    activeRunners.forEach(r=>{
+      const v=runnerMix[r.k];
+      runnerTable+=`<tr style="border-bottom:1px solid #f3f4f6">
+        <td style="padding:5px 6px;font-weight:700;color:#1f2937">${r.l}</td>
+        <td style="padding:5px 6px;text-align:right;color:#6b7280">${v.t}</td>
+        ${usedPts.map(p=>{
+          const cnt=v.pt[p.id]||0;
+          const pct=v.t>0?Math.round(cnt/v.t*100):0;
+          const isHigh=pct>=50;
+          return `<td style="padding:5px 6px;text-align:right;
+            color:${pct>0?p.color:'#d1d5db'};
+            font-weight:${isHigh?900:600};
+            ${isHigh?'background:#fef3c7':''}">${pct?pct+'%':'–'}</td>`;
+        }).join('')}
+      </tr>`;
+    });
+    runnerTable+='</tbody></table>';
+
+    html += `
+      <div style="background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:10px">
+        <div style="font-size:13px;font-weight:800;color:#111827;margin-bottom:8px;
+          border-left:3px solid #06b6d4;padding-left:6px">
+          ⑤ 走者状況別 球種割合
+        </div>
+        ${runnerTable}
+        <div style="font-size:9px;color:#6b7280;margin-top:4px">
+          ※ 黄色背景=50%超え / 得点圏=2塁または3塁
+        </div>
+      </div>
       </div>
     `;
   }
 
-  html += `<div style="margin-top:18px;padding-top:10px;border-top:1px solid #334155;font-size:9px;color:#64748b;text-align:right">
+  html += `<div style="margin-top:18px;padding-top:10px;border-top:1px solid #d1d5db;font-size:9px;color:#9ca3af;text-align:right">
     生成: ${new Date().toLocaleString('ja-JP')} ／ 配球アナリストPRO
   </div>`;
 
@@ -2737,7 +3024,7 @@ async function generateScoutingPDF(game, pitches, setProgress){
   try {
     setProgress?.('レンダリング中…');
     const canvas = await window.html2canvas(container, {
-      backgroundColor:'#0f172a', scale:2, useCORS:true, logging:false,
+      backgroundColor:'#ffffff', scale:2, useCORS:true, logging:false,
     });
     setProgress?.('PDF生成中…');
     const imgData = canvas.toDataURL('image/jpeg', 0.92);
@@ -4578,13 +4865,19 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate}){
   const persistPitch=useCallback(async(zone,pt,result,dir=null)=>{
     const ns=nextState(result,gs);
     const speedNum=currentSpeed?parseInt(currentSpeed,10):null;
+    // 進塁イベントは投球扱いしない（球数加算しない・pt保存しない）
+    const isAdvance = result==='steal'||result==='pb'||result==='wp';
     const pitch={
-      id:genId(),gid:game.id,pt,zone,result,dir,
-      speed:isFinite(speedNum)?speedNum:null,
+      id:genId(),gid:game.id,
+      pt:isAdvance?null:pt,
+      zone:isAdvance?null:zone,
+      result,dir,
+      speed:isAdvance?null:(isFinite(speedNum)?speedNum:null),
       batter:activeBatter?.name||'',bh,
       pitcher:currentPitcher?.name||'',pitcherNum:currentPitcher?.number||'',
       pitcherHand:currentPitcher?.hand||'R',
       isPickoff:false,
+      isAdvance, // 進塁イベントフラグ
       atBat:gs.currentAtBat,pab:gs.pitchCount,
       balls:gs.count.balls,strikes:gs.count.strikes,
       inning:gs.inning,topBottom:gs.topBottom,outs:gs.outs,
@@ -4599,7 +4892,8 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate}){
     const ac=lineup.length||9;
     const newGs={
       ...gs,...ns,
-      pitchCount:(gs.pitchCount||0)+1,
+      // 進塁イベントは球数加算しない
+      pitchCount:isAdvance?(gs.pitchCount||0):(gs.pitchCount||0)+1,
       scoreAdj:gs.scoreAdj||{home:0,away:0},
       currentAtBat:ns.atEnd?genId():gs.currentAtBat,
       currentBatterOrder:ns.atEnd?(((gs.currentBatterOrder||1)-1+1)%ac)+1:gs.currentBatterOrder,
@@ -4732,61 +5026,67 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate}){
       onTouchStart={e=>{touchX.current=e.touches[0].clientX;}}
       onTouchEnd={e=>{if(touchX.current!==null&&e.changedTouches[0].clientX-touchX.current>80)undo();touchX.current=null;}}>
 
-      {/* Top bar */}
-      <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8}}>
+      {/* Top bar - スマホ縦圧縮 */}
+      <div style={{display:'flex',alignItems:'center',gap:4,marginBottom:5}}>
         <button className="btn btn-secondary btn-sm" onClick={()=>onNav('home')}>⌂</button>
         {Cloud.roomId&&(
-          <span style={{fontSize:10,fontWeight:700,padding:'3px 7px',
-            background:'rgba(34,197,94,.15)',color:'#4ade80',borderRadius:10,
+          <span style={{fontSize:9,fontWeight:700,padding:'2px 5px',
+            background:'rgba(34,197,94,.15)',color:'#4ade80',borderRadius:8,
             border:'1px solid rgba(34,197,94,.35)'}}
             title="クラウド同期中"
             onClick={()=>onNav('share')}>
             ☁ {Cloud.roomId}
           </span>
         )}
-        <div style={{flex:1,display:'flex',justifyContent:'center',alignItems:'center',gap:8}}>
-          <span style={{fontSize:20,fontWeight:800}}>{awayScore}</span>
+        <div style={{flex:1,display:'flex',justifyContent:'center',alignItems:'center',gap:6}}>
+          <span style={{fontSize:17,fontWeight:800}}>{awayScore}</span>
           <div style={{textAlign:'center'}}>
-            <div style={{fontSize:12,color:'#64748b',lineHeight:1}}>{gs.inning}回</div>
-            <div style={{fontSize:11,color:'#64748b',lineHeight:1}}>{gs.topBottom==='top'?'表':'裏'}</div>
+            <div style={{fontSize:10,color:'#64748b',lineHeight:1}}>{gs.inning}回</div>
+            <div style={{fontSize:9,color:'#64748b',lineHeight:1}}>{gs.topBottom==='top'?'表':'裏'}</div>
           </div>
-          <span style={{fontSize:20,fontWeight:800}}>{homeScore}</span>
+          <span style={{fontSize:17,fontWeight:800}}>{homeScore}</span>
         </div>
         <button className="btn btn-secondary btn-sm" onClick={()=>setShowScore(true)}>修正</button>
       </div>
 
-      {/* State card */}
-      <div className="card" style={{marginBottom:8,padding:'10px 12px'}}>
-        <div style={{display:'flex',alignItems:'center',gap:10,justifyContent:'space-between'}}>
+      {/* State card - スマホ縦圧縮 */}
+      <div className="card" style={{marginBottom:6,padding:'6px 8px'}}>
+        <div style={{display:'flex',alignItems:'center',gap:6,justifyContent:'space-between'}}>
           <CountDisplay gs={gs} onGsChange={updateGsManually}/>
           <BaseDiamond runners={gs.runners} onRunnersChange={r=>updateGsManually({...gs,runners:r})}/>
-          <div style={{textAlign:'right'}}>
-            <div style={{fontSize:10,color:'#64748b'}}>打者</div>
-            <div style={{fontSize:15,fontWeight:700}}>{activeBatter?.name||'-'}</div>
-            <div style={{fontSize:11,color:'#94a3b8'}}>{bh}打 #{activeBatter?.number||'-'}</div>
+          <div style={{textAlign:'right',minWidth:60}}>
+            <div style={{fontSize:9,color:'#64748b',lineHeight:1}}>打者</div>
+            <div style={{fontSize:13,fontWeight:700,lineHeight:1.2}}>{activeBatter?.name||'-'}</div>
+            <div style={{fontSize:10,color:'#94a3b8',lineHeight:1}}>{bh}打 #{activeBatter?.number||'-'}</div>
           </div>
         </div>
-        <div style={{display:'flex',gap:6,marginTop:8,flexWrap:'wrap'}}>
-          <span style={{fontSize:11,color:'#64748b'}}>総球:{gs.pitchCount||0}</span>
+        <div style={{display:'flex',gap:4,marginTop:5,flexWrap:'wrap'}}>
+          <span style={{fontSize:10,color:'#64748b',alignSelf:'center'}}>{gs.pitchCount||0}球</span>
           <button onClick={undo} className="btn btn-secondary btn-sm"
-            style={{fontSize:11,padding:'2px 8px',opacity:undoStack.length?1:.4}}
-            disabled={!undoStack.length}>↩ 取消</button>
+            style={{fontSize:10,padding:'2px 6px',opacity:undoStack.length?1:.4}}
+            disabled={!undoStack.length}>↩取消</button>
           <button onClick={()=>setShowLineScore(s=>!s)} className="btn btn-secondary btn-sm"
-            style={{fontSize:11,padding:'2px 8px',
+            style={{fontSize:10,padding:'2px 6px',
               background:showLineScore?'rgba(59,130,246,.25)':undefined,
               color:showLineScore?'#93c5fd':undefined}}>
-            📊 ライン{showLineScore?'▲':'▼'}
+            📊{showLineScore?'▲':'▼'}
           </button>
-          {[['edit','試合編集'],['lineup','打順'],['history','履歴'],['analysis','分析'],['replay','🎬リプレイ'],['share','共有']].map(([k,l])=>(
-            <button key={k} className="btn btn-secondary btn-sm" style={{fontSize:11,padding:'2px 8px'}} onClick={()=>onNav(k)}>{l}</button>
+          {[['edit','編集'],['lineup','打順'],['history','履歴'],['analysis','分析'],['replay','再生'],['share','共有']].map(([k,l])=>(
+            <button key={k} className="btn btn-secondary btn-sm" style={{fontSize:10,padding:'2px 6px'}} onClick={()=>onNav(k)}>{l}</button>
           ))}
         </div>
       </div>
 
-      {/* ── ラインスコア（折りたたみ）── */}
+      {/* ── ラインスコア（折りたたみ・手動編集可）── */}
       {showLineScore&&(
         <div style={{marginBottom:8}}>
-          <LineScore pitches={pitches} game={game} gs={gs} compact={true}/>
+          <LineScore pitches={pitches} game={game} gs={gs} compact={true}
+            editable={true}
+            onSaveManual={async(manual)=>{
+              const g={...game,lineScoreManual:manual};
+              await dbPut('games',g);
+              onGameUpdate?.(g);
+            }}/>
         </div>
       )}
 
@@ -4806,24 +5106,24 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate}){
         </div>
       )}
 
-      {/* ── 入力モード切替 + 音声入力 (閲覧モードでは非表示) ── */}
+      {/* ── 入力モード切替 + 音声入力 - スマホ縦圧縮 ── */}
       {!Cloud.isViewer&&(
-        <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8}}>
-          <div style={{display:'flex',background:'#0f172a',borderRadius:8,padding:3,gap:2,
+        <div style={{display:'flex',alignItems:'center',gap:5,marginBottom:5}}>
+          <div style={{display:'flex',background:'#0f172a',borderRadius:7,padding:2,gap:2,
             border:'1px solid #1e293b'}}>
             <button onClick={()=>setInputMode('detail')}
-              style={{padding:'6px 12px',borderRadius:6,border:'none',cursor:'pointer',
-                fontSize:12,fontWeight:800,fontFamily:'inherit',
+              style={{padding:'4px 10px',borderRadius:5,border:'none',cursor:'pointer',
+                fontSize:11,fontWeight:800,fontFamily:'inherit',
                 background:inputMode==='detail'?'#3b82f6':'transparent',
                 color:inputMode==='detail'?'#fff':'#94a3b8'}}>
-              🎯 詳細
+              🎯詳細
             </button>
             <button onClick={()=>setInputMode('quick')}
-              style={{padding:'6px 12px',borderRadius:6,border:'none',cursor:'pointer',
-                fontSize:12,fontWeight:800,fontFamily:'inherit',
+              style={{padding:'4px 10px',borderRadius:5,border:'none',cursor:'pointer',
+                fontSize:11,fontWeight:800,fontFamily:'inherit',
                 background:inputMode==='quick'?'#3b82f6':'transparent',
                 color:inputMode==='quick'?'#fff':'#94a3b8'}}>
-              ⚡ クイック
+              ⚡クイック
             </button>
           </div>
           <div style={{flex:1}}/>
@@ -4872,10 +5172,10 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate}){
 
       {/* ── 詳細モード ── */}
       {!Cloud.isViewer&&inputMode==='detail'&&(<>
-      {/* Step indicators */}
-      <div style={{display:'flex',gap:3,marginBottom:10}}>
-        {[['zone','①ゾーン'],['pt','②球種'],['result','③結果'],['detail','④詳細']].map(([s,l])=>(
-          <div key={s} style={{flex:1,padding:'4px 2px',borderRadius:6,textAlign:'center',fontSize:11,
+      {/* Step indicators - スマホ圧縮 */}
+      <div style={{display:'flex',gap:2,marginBottom:5}}>
+        {[['zone','①ゾーン'],['pt','②球種'],['result','③結果'],['detail','④打球']].map(([s,l])=>(
+          <div key={s} style={{flex:1,padding:'2px 2px',borderRadius:5,textAlign:'center',fontSize:10,
             background:step===s?'#1d4ed8':'#1e293b',color:step===s?'#fff':'#475569',
             fontWeight:step===s?700:400}}>
             {l}
@@ -4883,64 +5183,46 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate}){
         ))}
       </div>
 
-      {/* Step: zone */}
+      {/* Step: zone - スマホ縦圧縮 */}
       {step==='zone'&&(
         <div>
-          <div className="card" style={{marginBottom:8}}>
-            {/* ヘッダー行: タイトル + 牽制・交代ボタン */}
-            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10}}>
-              <span style={{fontSize:13,fontWeight:700,color:'#94a3b8'}}>① コース選択（タップ）</span>
-              <div style={{display:'flex',gap:5}}>
+          <div className="card" style={{marginBottom:6,padding:'8px'}}>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6}}>
+              <span style={{fontSize:11,fontWeight:700,color:'#94a3b8'}}>① コース選択</span>
+              <div style={{display:'flex',gap:4}}>
                 <button className="btn btn-sm"
-                  style={{fontSize:11,padding:'4px 10px',background:'rgba(59,130,246,.15)',
-                    border:'1px solid #3b82f6',color:'#93c5fd',borderRadius:6}}
-                  onClick={recordPickoff}>
-                  🏃 牽制
-                </button>
+                  style={{fontSize:10,padding:'3px 8px',background:'rgba(59,130,246,.15)',
+                    border:'1px solid #3b82f6',color:'#93c5fd',borderRadius:5}}
+                  onClick={recordPickoff}>🏃牽制</button>
                 <button className="btn btn-secondary btn-sm"
-                  style={{fontSize:11,padding:'4px 10px'}}
-                  onClick={()=>setShowSub(true)}>
-                  🔄 交代
-                </button>
+                  style={{fontSize:10,padding:'3px 8px'}}
+                  onClick={()=>setShowSub(true)}>🔄交代</button>
               </div>
             </div>
-            {/* 投手情報 */}
             {currentPitcher?.name&&(
-              <div style={{fontSize:11,color:'#64748b',marginBottom:8,textAlign:'center'}}>
+              <div style={{fontSize:10,color:'#64748b',marginBottom:5,textAlign:'center'}}>
                 投手: {currentPitcher.number?`#${currentPitcher.number} `:''}{currentPitcher.name}（{currentPitcher.hand}投）
               </div>
             )}
-            {/* 5×5 ゾーンチャート */}
             <ZoneChart value={pZone} onChange={z=>{setPZone(z);setStep('pt');}}
               batterHand={bh} atBatPitches={atBatPitches}/>
           </div>
-          {/* 1球戻す（目立つボタン） */}
-          <button onClick={undo} className="btn"
-            style={{width:'100%',fontSize:14,fontWeight:700,padding:'11px',borderRadius:10,
-              background:undoStack.length?'#7f1d1d':'#1e293b',
-              border:undoStack.length?'2px solid #ef4444':'2px solid #334155',
-              color:undoStack.length?'#fca5a5':'#475569',
-              opacity:undoStack.length?1:0.5,cursor:undoStack.length?'pointer':'not-allowed',
-              transition:'all .15s'}}
-            disabled={!undoStack.length}>
-            ↩ 1球戻す{undoStack.length?` （残${undoStack.length}球）`:''}
-          </button>
         </div>
       )}
 
-      {/* Step: pt */}
+      {/* Step: pt - スマホ縦圧縮 */}
       {step==='pt'&&(
-        <div className="card">
-          <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:10}}>
+        <div className="card" style={{padding:'8px'}}>
+          <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:6}}>
             <button className="btn btn-secondary btn-sm" onClick={()=>setStep('zone')}>← 戻る</button>
-            <span style={{fontSize:13,fontWeight:700,color:'#94a3b8'}}>② 球種選択（ゾーン:{pZone}）</span>
+            <span style={{fontSize:11,fontWeight:700,color:'#94a3b8'}}>② 球種（Z:{pZone}）</span>
           </div>
-          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:6}}>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr 1fr',gap:4}}>
             {PT.map(p=>(
               <button key={p.id}
                 onClick={()=>{setPPt(p.id);setStep('result');}}
-                style={{padding:'12px 4px',borderRadius:8,border:`2px solid ${p.color}`,
-                  background:'#0f172a',color:p.color,fontSize:13,fontWeight:700,cursor:'pointer',
+                style={{padding:'10px 2px',borderRadius:7,border:`2px solid ${p.color}`,
+                  background:'#0f172a',color:p.color,fontSize:11,fontWeight:700,cursor:'pointer',
                   transition:'all .1s',fontFamily:'inherit'}}>
                 {p.label}
               </button>
