@@ -301,7 +301,8 @@ async function dbDel(store,id){
 // ── Engine ──
 function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 
-function nextState(result,g){
+// extra: {runnerKey:'first'|'second'|'third'} - 走者選択(盗塁/刺殺等で使用)
+function nextState(result,g,extra={}){
   let balls=g.count.balls, strikes=g.count.strikes, outs=g.outs;
   let runners={...g.runners};
   let score={...g.score};
@@ -383,23 +384,44 @@ function nextState(result,g){
   // ── 刺殺・盗塁死（走者1人アウト・打席継続・カウント維持）──
   } else if(r==='tag_out'||r==='caught_stealing'){
     outs++;
-    // 走者を1人除去（1塁→2塁→3塁の順で代表的に）
-    if(runners.first) runners.first=false;
-    else if(runners.second) runners.second=false;
-    else if(runners.third) runners.third=false;
+    // ② extra.runnerKeyで指定された走者を優先、なければ既存ロジック
+    const k=extra.runnerKey;
+    if(k && runners[k]){
+      runners[k]=false;
+    } else {
+      // フォールバック: 1塁→2塁→3塁の順
+      if(runners.first) runners.first=false;
+      else if(runners.second) runners.second=false;
+      else if(runners.third) runners.third=false;
+    }
     atEnd=false; // 打席継続（カウントも維持）
   // ── ダブルプレー（2アウト・1塁ランナー消滅・打者アウト）──
   } else if(r&&r.startsWith('dp_')){
     outs+=2;
     if(runners.first) runners.first=false;
     atEnd=true; balls=0; strikes=0;
-  // ── 進塁イベント（盗塁・ディレード・PB・WP）──
-  // 打席継続、カウント維持、走者1つ進める
-  } else if(r==='steal'||r==='delayed'||r==='pb'||r==='wp'){
+  // ── 盗塁・ディレード（走者選択あり）──
+  } else if(r==='steal'||r==='delayed'){
+    // ② runnerKey で指定された走者だけ進塁
+    const k=extra.runnerKey;
+    if(k && runners[k]){
+      runners[k]=false;
+      if(k==='third'){ addRun(1); }
+      else if(k==='second'){ runners.third=true; }
+      else if(k==='first'){ runners.second=true; }
+    } else {
+      // フォールバック: 走者なしか未指定の場合は全員進塁
+      if(runners.third){ addRun(1); runners.third=false; }
+      if(runners.second){ runners.third=true; runners.second=false; }
+      if(runners.first){ runners.second=true; runners.first=false; }
+    }
+    atEnd=false; // 打席継続
+  // ── PB/WP（投手のミス・全走者進塁）──
+  } else if(r==='pb'||r==='wp'){
     if(runners.third){ addRun(1); runners.third=false; }
     if(runners.second){ runners.third=true; runners.second=false; }
     if(runners.first){ runners.second=true; runners.first=false; }
-    atEnd=false; // 打席継続
+    atEnd=false;
   // ── エンドラン（作戦記録のみ・走者状態は手動調整）──
   } else if(r==='hitrun'){
     atEnd=false; // 打席継続・状態変化なし
@@ -1869,46 +1891,46 @@ function SpeedEditor({value, onChange}){
   const display=value||'–––';
   const numVal=value?parseInt(value,10):null;
   const valid=numVal!=null&&numVal>=60&&numVal<=180;
-  const padBtnStyle={padding:'6px 0',borderRadius:6,border:'1px solid #475569',
-    background:'#0f172a',color:'#e2e8f0',fontSize:15,fontWeight:800,
+  const padBtnStyle={padding:'3px 0',borderRadius:5,border:'1px solid #475569',
+    background:'#0f172a',color:'#e2e8f0',fontSize:13,fontWeight:800,
     cursor:'pointer',fontFamily:'inherit',userSelect:'none',minHeight:0};
   return (
-    <div style={{padding:'6px',background:'#1e293b',borderRadius:8,
-      border:'1px solid #334155',marginBottom:6}}>
+    <div style={{padding:'4px',background:'#1e293b',borderRadius:7,
+      border:'1px solid #334155',marginBottom:5}}>
       {/* 表示エリア */}
       <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',
-        marginBottom:4,padding:'3px 8px',background:'#0f172a',borderRadius:6}}>
-        <span style={{fontSize:10,fontWeight:700,color:'#94a3b8'}}>球速</span>
+        marginBottom:3,padding:'2px 6px',background:'#0f172a',borderRadius:5}}>
+        <span style={{fontSize:9,fontWeight:700,color:'#94a3b8'}}>球速</span>
         <div style={{flex:1,textAlign:'center'}}>
-          <span style={{fontSize:22,fontWeight:900,
+          <span style={{fontSize:18,fontWeight:900,
             color:value?(valid?'#a78bfa':'#ef4444'):'#475569',
-            letterSpacing:'.04em',fontVariantNumeric:'tabular-nums'}}>
+            letterSpacing:'.03em',fontVariantNumeric:'tabular-nums'}}>
             {display}
           </span>
-          <span style={{fontSize:10,color:'#64748b',marginLeft:3}}>km/h</span>
+          <span style={{fontSize:9,color:'#64748b',marginLeft:2}}>km/h</span>
         </div>
         {value&&(
-          <span style={{fontSize:8,padding:'1px 5px',borderRadius:6,
+          <span style={{fontSize:8,padding:'1px 4px',borderRadius:5,
             background:valid?'rgba(34,197,94,.15)':'rgba(239,68,68,.15)',
             color:valid?'#4ade80':'#fca5a5',whiteSpace:'nowrap'}}>
             {valid?'OK':'範囲外'}
           </span>
         )}
       </div>
-      {/* 数字パッド 3列×4行 - コンパクト */}
-      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:3}}>
+      {/* 数字パッド 3列×4行 - さらに小型 */}
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:2}}>
         {[1,2,3,4,5,6,7,8,9].map(d=>(
           <button key={d} onClick={()=>handleDigit(String(d))} style={padBtnStyle}>
             {d}
           </button>
         ))}
         <button onClick={handleBackspace}
-          style={{...padBtnStyle,background:'#334155',fontSize:13}}>
+          style={{...padBtnStyle,background:'#334155',fontSize:11}}>
           ←
         </button>
         <button onClick={()=>handleDigit('0')} style={padBtnStyle}>0</button>
         <button onClick={handleClear}
-          style={{...padBtnStyle,background:'#7f1d1d',color:'#fca5a5',fontSize:10}}>
+          style={{...padBtnStyle,background:'#7f1d1d',color:'#fca5a5',fontSize:9}}>
           クリア
         </button>
       </div>
@@ -5759,6 +5781,10 @@ function SubstitutionModal({game,gs,onConfirm,onClose}){
   const isTop=gs.topBottom==='top';
   // 攻撃側のラインアップ（表=先攻Away、裏=後攻Home）
   const offLineup=isTop?(game.lineupAway||[]):(game.lineupHome||[]);
+  // 守備側のラインアップ（守備交代用）
+  const defLineup=isTop?(game.lineupHome||[]):(game.lineupAway||[]);
+  // 守備交代は守備側、それ以外は攻撃側
+  const targetLineup = type==='defense' ? defLineup : offLineup;
   // 守備側の現投手
   const curPitcher=isTop?game.pitcherHome:game.pitcherAway;
   return (
@@ -5812,12 +5838,18 @@ function SubstitutionModal({game,gs,onConfirm,onClose}){
         )}
         {type!=='pitcher'&&(
           <div>
+            <div style={{fontSize:11,color:'#64748b',marginBottom:6}}>
+              {type==='defense'
+                ? `守備側（${isTop?(game.homeTeam||'後攻'):(game.awayTeam||'先攻')}）のラインナップを変更`
+                : `攻撃側（${isTop?(game.awayTeam||'先攻'):(game.homeTeam||'後攻')}）のラインナップを変更`}
+            </div>
             <div style={{marginBottom:8}}>
               <div style={{fontSize:12,color:'#94a3b8',fontWeight:600,marginBottom:4}}>対象打順</div>
               <select value={targetOrder} onChange={e=>setTargetOrder(+e.target.value)} style={{fontSize:12}}>
-                {[1,2,3,4,5,6,7,8,9].map(n=>(
-                  <option key={n} value={n}>{n}番 {offLineup.find(p=>p.order===n)?.name||''}</option>
-                ))}
+                {[1,2,3,4,5,6,7,8,9].map(n=>{
+                  const cur=targetLineup.find(p=>p.order===n);
+                  return <option key={n} value={n}>{n}番 {cur?.name||''}{cur?.pos?`(${cur.pos})`:''}</option>;
+                })}
               </select>
             </div>
             <div style={{fontSize:12,color:'#94a3b8',fontWeight:600,marginBottom:4}}>交代選手</div>
@@ -5831,6 +5863,17 @@ function SubstitutionModal({game,gs,onConfirm,onClose}){
                 <option value="R">右</option><option value="L">左</option><option value="S">両</option>
               </select>
             </div>
+            {type==='defense'&&(
+              <div style={{display:'flex',gap:6,alignItems:'center',marginTop:4}}>
+                <span style={{fontSize:11,color:'#64748b'}}>守備位置</span>
+                <select value={newPlayer.pos} onChange={e=>setNewPlayer(p=>({...p,pos:e.target.value}))}
+                  style={{flex:1,fontSize:12,padding:'5px 4px'}}>
+                  {['投手','捕手','一塁','二塁','三塁','遊撃','左翼','中堅','右翼','DH'].map(pos=>(
+                    <option key={pos} value={pos}>{pos}</option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
         )}
         <div style={{display:'flex',gap:8,marginTop:14}}>
@@ -5853,6 +5896,7 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate}){
   const [pResult,setPResult]=useState(null);
   // showScore は廃止（LineScoreの手動編集に統合）
   const [showTactics,setShowTactics]=useState(false); // 作戦ボタン展開
+  const [runnerSelector,setRunnerSelector]=useState(null); // ② 走者選択モーダル {tactic, runners}
   const [showSub,setShowSub]=useState(false);
   const [showLineScore,setShowLineScore]=useState(false);
   const [inputMode,setInputMode]=useState('detail'); // 'detail' | 'quick'
@@ -5864,11 +5908,16 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate}){
     if(gs.topBottom==='top') return game.lineupAway||game.lineup||[];
     return game.lineupHome||game.lineup||[];
   },[game,gs.topBottom]);
+  // ③ 攻撃チームに応じた打順を取得（先攻/後攻別に管理）
+  const currentBatterOrder=useMemo(()=>{
+    return gs.topBottom==='top'
+      ? (gs.currentBatterOrderAway ?? gs.currentBatterOrder ?? 1)
+      : (gs.currentBatterOrderHome ?? gs.currentBatterOrder ?? 1);
+  },[gs.topBottom,gs.currentBatterOrderAway,gs.currentBatterOrderHome,gs.currentBatterOrder]);
   const activeBatter=useMemo(()=>{
     if(!lineup.length) return null;
-    const o=gs.currentBatterOrder||1;
-    return lineup.find(p=>p.order===o)||lineup[0];
-  },[lineup,gs.currentBatterOrder]);
+    return lineup.find(p=>p.order===currentBatterOrder)||lineup[0];
+  },[lineup,currentBatterOrder]);
   const bh=activeBatter?.hand||'R';
 
   // 現打席の投球リスト（ZoneChart 表示用）
@@ -5886,8 +5935,8 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate}){
   const [inningSummary,setInningSummary]=useState(null);
 
   // 低レベル投球保存（zone/pt/result/dirを直接指定）
-  const persistPitch=useCallback(async(zone,pt,result,dir=null,hitType=null)=>{
-    const ns=nextState(result,gs);
+  const persistPitch=useCallback(async(zone,pt,result,dir=null,hitType=null,runnerKey=null)=>{
+    const ns=nextState(result,gs,{runnerKey});
     const speedNum=currentSpeed?parseInt(currentSpeed,10):null;
     // 進塁・刺殺・作戦イベントは投球扱いしない（球数加算しない・pt保存しない）
     const isAdvance = result==='steal'||result==='delayed'||result==='hitrun'||
@@ -5899,6 +5948,7 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate}){
       zone:isAdvance?null:zone,
       result,dir,
       hitType:hitType||null, // ① 安打の打球タイプ
+      runnerKey:runnerKey||null, // ② 走者選択(盗塁等)
       speed:isAdvance?null:(isFinite(speedNum)?speedNum:null),
       batter:activeBatter?.name||'',bh,
       pitcher:currentPitcher?.name||'',pitcherNum:currentPitcher?.number||'',
@@ -5919,13 +5969,24 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate}){
     };
     await dbPut('pitches',pitch);
     const ac=lineup.length||9;
+    // ③ 攻撃チーム(攻守交替前)の打順を進める
+    const attackTeamKey = gs.topBottom==='top' ? 'currentBatterOrderAway' : 'currentBatterOrderHome';
+    const attackCur = gs[attackTeamKey] ?? gs.currentBatterOrder ?? 1;
+    const attackNext = ns.atEnd ? (((attackCur-1+1)%ac)+1) : attackCur;
+    // 表示用legacyフィールド: 攻守交替後のチームの打順
+    const newTeamKey = ns.topBottom==='top' ? 'currentBatterOrderAway' : 'currentBatterOrderHome';
     const newGs={
       ...gs,...ns,
       // 進塁イベントは球数加算しない
       pitchCount:isAdvance?(gs.pitchCount||0):(gs.pitchCount||0)+1,
       scoreAdj:gs.scoreAdj||{home:0,away:0},
       currentAtBat:ns.atEnd?genId():gs.currentAtBat,
-      currentBatterOrder:ns.atEnd?(((gs.currentBatterOrder||1)-1+1)%ac)+1:gs.currentBatterOrder,
+      // 攻撃したチームの打順を保存
+      [attackTeamKey]: attackNext,
+      // 後方互換: 新しい攻撃チームの打順を currentBatterOrder にも反映
+      currentBatterOrder: (attackTeamKey===newTeamKey)
+        ? attackNext
+        : (gs[newTeamKey] ?? 1),
     };
     setUndoStack(s=>[...s.slice(-49),{gs:{...gs},pitchId:pitch.id}]);
     setGs(newGs);
@@ -6023,15 +6084,17 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate}){
   // ⑥ 牽制セーフ/牽制死の選択モーダル制御
   const [showPickoff,setShowPickoff]=useState(false);
 
-  const recordPickoff=useCallback(async(outcome='safe')=>{
+  const recordPickoff=useCallback(async(outcome='safe', runnerKey=null)=>{
     // outcome: 'safe'(セーフ) | 'out'(牽制死)
     let newGs=gs;
     if(outcome==='out'){
       // 牽制死: アウト1追加 + 走者1人除去
       let outs=(gs.outs||0)+1;
       let runners={...gs.runners};
-      // どの走者か手動指定はせず、1塁→2塁→3塁の順で除去
-      if(runners.first) runners.first=false;
+      // ② 走者キー指定があればその走者、なければ1塁→2塁→3塁の順
+      if(runnerKey && runners[runnerKey]){
+        runners[runnerKey]=false;
+      } else if(runners.first) runners.first=false;
       else if(runners.second) runners.second=false;
       else if(runners.third) runners.third=false;
       let inning=gs.inning, topBottom=gs.topBottom;
@@ -6083,8 +6146,11 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate}){
       const key=isTop?'pitcherHome':'pitcherAway';
       g={...g,[key]:sub.pitcher};
     } else {
-      // 攻撃側打順の選手を交代
-      const lk=isTop?'lineupAway':'lineupHome';
+      // 守備交代は守備側のラインアップ、その他（代打/代走）は攻撃側
+      const isDefense=sub.type==='defense';
+      const lk=isDefense
+        ? (isTop?'lineupHome':'lineupAway')   // 守備側
+        : (isTop?'lineupAway':'lineupHome');  // 攻撃側
       const lu=(g[lk]||[]).map(p=>
         p.order===sub.targetOrder?{...p,name:sub.player.name,number:sub.player.number,hand:sub.player.hand||p.hand,pos:sub.player.pos||p.pos}:p
       );
@@ -6103,22 +6169,50 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate}){
     await dbPut('games',{...game,gs:newGs});
   },[game,setGs]);
 
-  // ④ 打者ナビ: 前/次の打者へ移動（カウントとatBatもリセット）
+  // ④ 打者ナビ: 前/次の打者へ移動（カウントとatBatもリセット）③現攻撃チームの打順だけ変更
   const navBatter=useCallback(async(dir)=>{
     const ac=lineup.length||9;
-    const cur=gs.currentBatterOrder||1;
+    const teamKey = gs.topBottom==='top' ? 'currentBatterOrderAway' : 'currentBatterOrderHome';
+    const cur = gs[teamKey] ?? gs.currentBatterOrder ?? 1;
     let next=cur+dir;
     if(next<1) next=ac;
     if(next>ac) next=1;
     const newGs={
       ...gs,
-      currentBatterOrder:next,
+      [teamKey]:next,
+      currentBatterOrder:next, // 後方互換
       currentAtBat:genId(),
       count:{balls:0,strikes:0},
     };
     setGs(newGs);
     await dbPut('games',{...game,gs:newGs});
   },[gs,game,lineup,setGs]);
+
+  // ② 盗塁等の走者選択フロー
+  // 対象走者を選んでから記録（複数走者がいる場合のみモーダル表示）
+  const NEEDS_RUNNER_SEL=new Set(['steal','delayed','tag_out','caught_stealing']);
+  const handleAdvanceWithRunner=useCallback((resultId)=>{
+    if(!NEEDS_RUNNER_SEL.has(resultId)){
+      // 該当しないイベントは即記録
+      persistPitch(null,null,resultId,null,null);
+      return;
+    }
+    const r=gs.runners||{};
+    const present=[];
+    if(r.first)  present.push('first');
+    if(r.second) present.push('second');
+    if(r.third)  present.push('third');
+    if(present.length===0){
+      // 走者なしでも記録（状態変化なし）
+      persistPitch(null,null,resultId,null,null);
+    } else if(present.length===1){
+      // 走者1人: 自動選択
+      persistPitch(null,null,resultId,null,null,present[0]);
+    } else {
+      // 複数: 選択モーダル
+      setRunnerSelector({tactic:resultId, runners:present});
+    }
+  },[gs,persistPitch]);
 
   // ② 試合終了 / 再開
   const endGame=useCallback(async()=>{
@@ -6222,7 +6316,7 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate}){
           <BaseDiamond runners={gs.runners} onRunnersChange={r=>updateGsManually({...gs,runners:r})}/>
           <div style={{textAlign:'right',minWidth:60,maxWidth:90,flexShrink:1}}>
             <div style={{fontSize:9,color:'#64748b',lineHeight:1,marginBottom:2}}>
-              {gs.currentBatterOrder||1}番 {bh}打 #{activeBatter?.number||'-'}
+              {currentBatterOrder}番 {bh}打 #{activeBatter?.number||'-'}
             </div>
             <div style={{fontSize:13,fontWeight:700,lineHeight:1.1,
               overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>
@@ -6244,7 +6338,7 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate}){
             background:'rgba(59,130,246,.1)',borderRadius:6,
             border:'1px solid rgba(59,130,246,.3)',
             fontSize:10,color:'#94a3b8',textAlign:'center',whiteSpace:'nowrap'}}>
-            <span style={{fontSize:13,fontWeight:800,color:'#93c5fd'}}>{gs.currentBatterOrder||1}</span>
+            <span style={{fontSize:13,fontWeight:800,color:'#93c5fd'}}>{currentBatterOrder}</span>
             <span style={{fontSize:9}}>番</span>
           </div>
           <button onClick={()=>navBatter(1)}
@@ -6389,7 +6483,7 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate}){
                   {id:'hitrun', l:'エンドラン'},
                 ].map(t=>(
                   <button key={t.id}
-                    onClick={()=>{persistPitch(null,null,t.id,null,null);setShowTactics(false);}}
+                    onClick={()=>{setShowTactics(false);handleAdvanceWithRunner(t.id);}}
                     style={{padding:'8px 4px',borderRadius:6,border:'1.5px solid #06b6d4',
                       background:'#0f172a',color:'#67e8f9',fontSize:11,fontWeight:700,
                       cursor:'pointer',fontFamily:'inherit',lineHeight:1.2}}>
@@ -6438,6 +6532,11 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate}){
           pZone={pZone} pPt={pPt} gs={gs}
           onBack={()=>setStep('pt')}
           onSelect={(rid)=>{
+            // ② 走者選択が必要な作戦・走塁アウトはハンドラ経由
+            if(NEEDS_RUNNER_SEL.has(rid)){
+              handleAdvanceWithRunner(rid);
+              return;
+            }
             const item=ALL_RESULTS.find(x=>x.id===rid);
             const cat=RESULT_CAT_MAP[rid];
             if(NEEDS_DIR_CATS.has(cat) && !item?.noDir){
@@ -6531,6 +6630,48 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate}){
           onClose={()=>setShowSub(false)}
         />
       )}
+      {/* ② 走者選択モーダル (盗塁/ディレード/刺殺/盗塁死/牽制死) */}
+      {runnerSelector&&(
+        <div className="modal-overlay" onClick={e=>{if(e.target===e.currentTarget)setRunnerSelector(null)}}>
+          <div className="modal" style={{maxWidth:340}}>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}>
+              <h3 style={{fontSize:16}}>
+                {({steal:'盗塁',delayed:'ディレード',tag_out:'刺殺',caught_stealing:'盗塁死',pickoff_out:'牽制死'}[runnerSelector.tactic]||runnerSelector.tactic)}
+                <span style={{fontSize:11,color:'#94a3b8',marginLeft:8}}>対象走者を選択</span>
+              </h3>
+              <button className="btn btn-secondary btn-sm" onClick={()=>setRunnerSelector(null)}>×</button>
+            </div>
+            <div style={{fontSize:11,color:'#94a3b8',marginBottom:12,textAlign:'center'}}>
+              どの走者の {({steal:'盗塁',delayed:'ディレード',tag_out:'刺殺',caught_stealing:'盗塁死',pickoff_out:'牽制死'}[runnerSelector.tactic])} ですか？
+            </div>
+            <div style={{display:'grid',gridTemplateColumns:`repeat(${runnerSelector.runners.length},1fr)`,gap:8}}>
+              {runnerSelector.runners.map(k=>{
+                const labels={first:'1塁走者',second:'2塁走者',third:'3塁走者'};
+                const colors={first:'#f97316',second:'#eab308',third:'#a78bfa'};
+                return (
+                  <button key={k}
+                    onClick={()=>{
+                      if(runnerSelector.tactic==='pickoff_out'){
+                        recordPickoff('out',k);
+                      } else {
+                        persistPitch(null,null,runnerSelector.tactic,null,null,k);
+                      }
+                      setRunnerSelector(null);
+                    }}
+                    style={{padding:'18px 4px',borderRadius:10,
+                      border:`2.5px solid ${colors[k]}`,
+                      background:`${colors[k]}15`,color:colors[k],
+                      fontSize:14,fontWeight:900,cursor:'pointer',fontFamily:'inherit',
+                      lineHeight:1.1}}>
+                    {labels[k]}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ⑥ 牽制セーフ/牽制死 選択モーダル */}
       {showPickoff&&(
         <div className="modal-overlay" onClick={e=>{if(e.target===e.currentTarget)setShowPickoff(false)}}>
@@ -6551,7 +6692,16 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate}){
                 セーフ
                 <div style={{fontSize:9,opacity:.8,marginTop:3,fontWeight:600}}>状態変化なし</div>
               </button>
-              <button onClick={()=>recordPickoff('out')}
+              <button onClick={()=>{
+                const r=gs.runners||{};
+                const present=['first','second','third'].filter(k=>r[k]);
+                if(present.length<=1){
+                  recordPickoff('out',present[0]||null);
+                } else {
+                  setShowPickoff(false);
+                  setRunnerSelector({tactic:'pickoff_out',runners:present});
+                }
+              }}
                 style={{padding:'18px 4px',borderRadius:10,
                   border:'2px solid #ef4444',background:'rgba(239,68,68,.12)',
                   color:'#fca5a5',fontSize:16,fontWeight:900,cursor:'pointer',
@@ -7149,7 +7299,10 @@ function GameSetupScreen({existingGame, onConfirm, onBack}){
       runners:{first:false,second:false,third:false},
       score:{home:0,away:0}, scoreAdj:{home:0,away:0},
       inning:1, topBottom:'top', pitchCount:0,
-      currentAtBat:genId(), currentBatterOrder:1,
+      currentAtBat:genId(),
+      currentBatterOrder:1, // 後方互換
+      currentBatterOrderAway:1, // ③ 先攻チームの現打順
+      currentBatterOrderHome:1, // ③ 後攻チームの現打順
     };
     const id=existingGame?.id||genId();
     const gameData={
