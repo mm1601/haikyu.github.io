@@ -33,7 +33,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Hiragino Kaku
 button{min-height:28px}
 .btn-sm{min-height:24px}
 @media (max-width:520px){
-  .screen{padding:8px !important;padding-bottom:24px !important}
+  .screen{padding:6px !important}
 }
 .btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;padding:6px 12px;transition:all .15s;user-select:none;font-family:inherit}
 .btn:active{transform:scale(.95)}
@@ -2909,6 +2909,33 @@ async function generateScoutingPDF(game, pitches, setProgress){
       runnerMix[k].t++;
       runnerMix[k].pt[p.pt]=(runnerMix[k].pt[p.pt]||0)+1;
     });
+
+    // 7) ⑧⑨⑩ 被安打/四球直後の初球計算
+    const sortedMine=[...mine].sort((a,b)=>a.timestamp-b.timestamp);
+    const abGrpMap={};
+    sortedMine.forEach(p=>{
+      const k=String(p.atBat??p.timestamp);
+      if(!abGrpMap[k]) abGrpMap[k]=[];
+      abGrpMap[k].push(p);
+    });
+    const abSeq=Object.values(abGrpMap)
+      .filter(ab=>ab.length>0)
+      .sort((a,b)=>a[0].timestamp-b[0].timestamp);
+    const HIT_RES=new Set(['single','single_adv2','single_adv3','double','double_adv','triple','hr']);
+    const firstPtAfter=(cond)=>{
+      const ct={};
+      for(let i=0;i<abSeq.length-1;i++){
+        const lastP=abSeq[i][abSeq[i].length-1];
+        if(cond(lastP)){
+          const nf=abSeq[i+1][0];
+          if(nf?.pt) ct[nf.pt]=(ct[nf.pt]||0)+1;
+        }
+      }
+      return ct;
+    };
+    const afterStraightHit=firstPtAfter(p=>HIT_RES.has(p.result)&&BR_SET.has(p.pt));
+    const afterBreakHit=firstPtAfter(p=>HIT_RES.has(p.result)&&p.pt&&!BR_SET.has(p.pt));
+    const afterWalk=firstPtAfter(p=>p.result==='walk');
 
     // ── HTML組み立て ──
     // 投手見出し + 主要指標（投球数・ストライク率）
@@ -6670,24 +6697,24 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
 
   // ⑦ 左サイドバー用ナビボタン定義（打順は試合編集に統合済みのため除去）
   const navItems=[
-    {key:'undo', icon:'↩', label:'取消', onClick:undo, disabled:!undoStack.length},
-    {key:'edit', icon:'', label:'編集', onClick:()=>onNav('edit')},
-    {key:'hist', icon:'', label:'履歴', onClick:()=>onNav('history')},
-    {key:'analy', icon:'', label:'分析', onClick:()=>onNav('analysis')},
-    {key:'replay',icon:'', label:'再生', onClick:()=>onNav('replay')},
-    {key:'share', icon:'', label:'共有', onClick:()=>onNav('share')},
+    {key:'undo',  icon:'↩', label:'取消', onClick:undo, disabled:!undoStack.length},
+    {key:'edit',  icon:'✏️', label:'編集', onClick:()=>onNav('edit')},
+    {key:'hist',  icon:'📋', label:'履歴', onClick:()=>onNav('history')},
+    {key:'analy', icon:'📊', label:'分析', onClick:()=>onNav('analysis')},
+    {key:'replay',icon:'▶️', label:'再生', onClick:()=>onNav('replay')},
+    {key:'share', icon:'📤', label:'共有', onClick:()=>onNav('share')},
     {key:'sw',    icon:'⏱', label:'時計', onClick:()=>onNav('stopwatch')},
   ];
 
   return (
-    <div className="screen" style={{display:'flex',gap:5,paddingLeft:4,paddingRight:6,maxWidth:540}}
+    <div className="screen" style={{paddingLeft:6,paddingRight:6,paddingBottom:72,maxWidth:540}}
       onTouchStart={e=>{touchX.current=e.touches[0].clientX;}}
       onTouchEnd={e=>{if(touchX.current!==null&&e.changedTouches[0].clientX-touchX.current>80)undo();touchX.current=null;}}>
 
       {/* 盗塁等 作戦記録後のトースト */}
       {advToast&&(
         <div style={{
-          position:'fixed',bottom:20,left:'50%',transform:'translateX(-50%)',
+          position:'fixed',bottom:72,left:'50%',transform:'translateX(-50%)',
           zIndex:2000,
           background:'#1e293b',border:'1px solid #475569',borderRadius:12,
           padding:'10px 14px',display:'flex',alignItems:'center',gap:10,
@@ -6707,32 +6734,8 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
         </div>
       )}
 
-      {/* ⑦ 左サイドバー縦ナビ - 大型化 */}
-      <div style={{display:'flex',flexDirection:'column',gap:4,
-        width:62,flexShrink:0,padding:'4px',background:'#0c1322',borderRadius:10,
-        border:'1px solid #1e293b',alignSelf:'flex-start',position:'sticky',top:4}}>
-        {navItems.map(it=>(
-          <button key={it.key} onClick={it.onClick} disabled={it.disabled}
-            style={{
-              display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',
-              padding:'10px 2px',borderRadius:7,
-              border:`1.5px solid ${it.active?'#3b82f6':'#1e293b'}`,
-              background:it.active?'rgba(59,130,246,.2)':'rgba(15,23,42,.5)',
-              color:it.disabled?'#475569':(it.active?'#93c5fd':'#e2e8f0'),
-              fontWeight:800,
-              cursor:it.disabled?'not-allowed':'pointer',
-              fontFamily:'inherit',
-              opacity:it.disabled?0.4:1,
-              minHeight:42,lineHeight:1.1,
-            }}>
-            {it.icon&&<span style={{fontSize:15,marginBottom:2}}>{it.icon}</span>}
-            <span style={{fontSize:12,fontWeight:800}}>{it.label}</span>
-          </button>
-        ))}
-      </div>
-
       {/* メインコンテンツ */}
-      <div style={{flex:1,minWidth:0}}>
+      <div>
       {/* Top bar - スマホ縦圧縮 */}
       <div style={{display:'flex',alignItems:'center',gap:4,marginBottom:5}}>
         <button className="btn btn-secondary btn-sm" onClick={()=>onNav('home')}>ホーム</button>
@@ -6807,13 +6810,13 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
             <span style={{fontSize:14}}>→</span>
           </button>
         </div>
-        <div style={{display:'flex',gap:6,marginTop:4,alignItems:'center'}}>
-          <span style={{fontSize:10,color:'#64748b'}}>総球: {gs.pitchCount||0}</span>
+        <div style={{display:'flex',gap:6,marginTop:3,alignItems:'center'}}>
+          <span style={{fontSize:9,color:'#64748b'}}>総球: {gs.pitchCount||0}</span>
         </div>
       </div>
 
       {/* ── ラインスコア（常時表示・手動編集可）── */}
-      <div style={{marginBottom:8}}>
+      <div style={{marginBottom:5}}>
         <LineScore pitches={pitches} game={game} gs={gs} compact={true}
           editable={true}
           onSaveManual={async(manual)=>{
@@ -7176,6 +7179,44 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
           onClose={()=>setInningSummary(null)}/>
       )}
       </div>{/* end メインコンテンツ */}
+
+      {/* ⑦ 下部固定ナビバー - 片手操作用 */}
+      <div style={{
+        position:'fixed',bottom:0,left:0,right:0,
+        display:'flex',alignItems:'stretch',
+        background:'#0a0f1e',
+        borderTop:'1.5px solid #1e293b',
+        paddingBottom:'env(safe-area-inset-bottom,0px)',
+        zIndex:200,
+        height:56,
+      }}>
+        {navItems.map(it=>(
+          <button key={it.key} onClick={it.onClick} disabled={it.disabled}
+            style={{
+              flex:1,
+              display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',
+              padding:'4px 2px',
+              border:'none',
+              background: it.key==='undo'
+                ? (it.disabled?'transparent':'rgba(239,68,68,.12)')
+                : it.key==='edit'
+                  ? 'rgba(59,130,246,.1)'
+                  : 'transparent',
+              borderRight: it.key!=='sw'?'1px solid #1e293b':'none',
+              color: it.disabled?'#334155'
+                : it.key==='undo'?'#f87171'
+                : it.key==='edit'?'#93c5fd'
+                : '#94a3b8',
+              fontFamily:'inherit',
+              cursor:it.disabled?'default':'pointer',
+              opacity:it.disabled?0.35:1,
+              gap:1,
+            }}>
+            <span style={{fontSize:17,lineHeight:1}}>{it.icon||''}</span>
+            <span style={{fontSize:9,fontWeight:800,lineHeight:1.2,marginTop:1}}>{it.label}</span>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
