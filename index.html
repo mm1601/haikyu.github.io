@@ -2271,76 +2271,122 @@ function LiveCriticalInsights({pitches, pitcherName, batterName, onShowAll}){
 
 // ── DetailResultPicker (詳細モード結果ステップ用クイック式UI) ──
 function DetailResultPicker({pZone, pPt, gs, onBack, onSelect}){
-  const [subMenu,setSubMenu]=useState(null); // 'hit'|'reached'|'sac'|'int'|'dp'|'adv'
-  const [strikeStep,setStrikeStep]=useState(false); // ストライク種類選択画面
-  const [outStep,setOutStep]=useState(false);       // アウト種類選択画面
+  const [fullStep,setFullStep]=useState(null); // null|'strike'|'out'|'hit'|'reached'|'adv'|'tactics'|'sac'|'dp'|'int'
   const c=gs?.count||{balls:0,strikes:0};
   const outs=gs?.outs||0;
   const ptInfo=PT.find(x=>x.id===pPt);
 
-  // 2ストライク自動三振変換
-  const handleStrike=()=>{ onSelect(c.strikes>=2?'looking':'called'); };
-  const handleSwing =()=>{ onSelect(c.strikes>=2?'swinging':'swing'); };
+  // 各カテゴリの選択肢定義
+  const STRIKE_CHOICES=[
+    {id:c.strikes>=2?'looking':'called',  l:c.strikes>=2?'見逃し三振':'見逃し',        sub:c.strikes>=2?'S→アウト':'S+1', color:'#eab308',bg:'#3f2e06'},
+    {id:c.strikes>=2?'swinging':'swing',  l:c.strikes>=2?'空振り三振':'空振り',        sub:c.strikes>=2?'S→アウト':'S+1', color:'#f97316',bg:'#3b1506'},
+    {id:'foul',                           l:'ファール',                                sub:c.strikes>=2?'カウント変化なし':'S+1', color:'#94a3b8',bg:'#1e293b'},
+    {id:'bunt_foul',                      l:c.strikes>=2?'バント三振':'バントファール', sub:c.strikes>=2?'S→アウト':'S+1', color:'#c084fc',bg:'#2d1b4e'},
+  ];
+  const OUT_CHOICES=[
+    {id:'if_go',          l:'内野ゴロ',       color:'#ef4444',bg:'#3f0a0a'},
+    {id:'if_fly',         l:'内野フライ',     color:'#f97316',bg:'#3b1506'},
+    {id:'of_fly',         l:'外野フライ',     color:'#f59e0b',bg:'#3f2e06'},
+    {id:'if_liner',       l:'内野ライナー',   color:'#ef4444',bg:'#3f0a0a'},
+    {id:'of_liner',       l:'外野ライナー',   color:'#f97316',bg:'#3b1506'},
+    {id:'looking',        l:'見逃三振',       color:'#eab308',bg:'#3f2e06'},
+    {id:'swinging',       l:'空振三振',       color:'#eab308',bg:'#3f2e06'},
+    {id:'bunt_fly',       l:'バントフライ',   color:'#a78bfa',bg:'#2d1b4e'},
+    {id:'safety_out',     l:'セーフティ凡退', color:'#94a3b8',bg:'#1e293b'},
+    {id:'def_int',        l:'守備妨害',       color:'#94a3b8',bg:'#1e293b'},
+    {id:'tag_out',        l:'刺殺(走塁)',     color:'#06b6d4',bg:'#0c1a2e'},
+    {id:'caught_stealing',l:'盗塁死',         color:'#06b6d4',bg:'#0c1a2e'},
+  ];
+  const HIT_CHOICES=[
+    {id:'single',      l:'単打',         color:'#60a5fa',bg:'#0c1a2e'},
+    {id:'single_adv2', l:'単打(走者+2)', color:'#93c5fd',bg:'#0c1a2e'},
+    {id:'single_adv3', l:'単打(走者+3)', color:'#bfdbfe',bg:'#0c1522'},
+    {id:'double',      l:'二塁打',       color:'#38bdf8',bg:'#0c1a2e'},
+    {id:'triple',      l:'三塁打',       color:'#22d3ee',bg:'#021a1e'},
+    {id:'hr',          l:'本塁打',       color:'#f97316',bg:'#3b1506'},
+  ];
+  const REACHED_CHOICES=[
+    {id:'if_go_err',  l:'内野ゴロエラー',   color:'#14b8a6',bg:'#022c22'},
+    {id:'if_fly_err', l:'内野フライエラー', color:'#14b8a6',bg:'#022c22'},
+    {id:'of_fly_err', l:'外野フライエラー', color:'#14b8a6',bg:'#022c22'},
+    {id:'bunt_err',   l:'バントエラー',     color:'#14b8a6',bg:'#022c22'},
+  ];
+  const ADV_CHOICES=[
+    {id:'steal',l:'盗塁',color:'#06b6d4',bg:'#0c1a2e'},
+    {id:'pb',   l:'PB',  color:'#06b6d4',bg:'#0c1a2e'},
+    {id:'wp',   l:'WP',  color:'#06b6d4',bg:'#0c1a2e'},
+  ];
+  const TACTICS_CHOICES=[
+    {id:'steal',   l:'盗塁',      color:'#67e8f9',bg:'#021a1e'},
+    {id:'delayed', l:'ディレード',color:'#67e8f9',bg:'#021a1e'},
+    {id:'hitrun',  l:'エンドラン',color:'#67e8f9',bg:'#021a1e'},
+  ];
+  const SAC_CHOICES=[
+    {id:'sac_bunt',    l:'犠打',               color:'#a78bfa',bg:'#2d1b4e'},
+    {id:'sac_fly',     l:'犠飛',               color:'#a78bfa',bg:'#2d1b4e'},
+    {id:'squeeze_out', l:'スクイズ(走者アウト)',color:'#c084fc',bg:'#2d1b4e'},
+  ];
+  const DP_CHOICES=[
+    {id:'dp_643',     l:'6-4-3',     color:'#dc2626',bg:'#3f0a0a'},
+    {id:'dp_463',     l:'4-6-3',     color:'#dc2626',bg:'#3f0a0a'},
+    {id:'dp_543',     l:'5-4-3',     color:'#dc2626',bg:'#3f0a0a'},
+    {id:'dp_163',     l:'1-6-3',     color:'#dc2626',bg:'#3f0a0a'},
+    {id:'dp_363',     l:'3-6-3',     color:'#dc2626',bg:'#3f0a0a'},
+    {id:'dp_liner',   l:'ライナーDP',color:'#ef4444',bg:'#3f0a0a'},
+    {id:'dp_so_steal',l:'三振+盗塁刺',color:'#ef4444',bg:'#3f0a0a'},
+    {id:'dp_other',   l:'その他DP',  color:'#f97316',bg:'#3b1506'},
+  ];
+  const INT_CHOICES=[
+    {id:'bat_int',l:'打撃妨害',color:'#f43f5e',bg:'#2a0614'},
+    {id:'run_int',l:'走塁妨害',color:'#f43f5e',bg:'#2a0614'},
+  ];
 
-  const OUT_ITEMS=[
-    {id:'if_go',label:'内野ゴロ'},{id:'if_fly',label:'内野フライ'},
-    {id:'of_fly',label:'外野フライ'},{id:'if_liner',label:'内野ライナー'},
-    {id:'of_liner',label:'外野ライナー'},{id:'looking',label:'見逃三振'},
-    {id:'swinging',label:'空振三振'},{id:'def_int',label:'守備妨害'},
-    {id:'bunt_fly',label:'バントフライ'},{id:'safety_out',label:'セーフティ凡退'},
-    {id:'tag_out', label:'刺殺(走塁)'},
-    {id:'caught_stealing', label:'盗塁死'},
-  ];
-  const HIT_ITEMS=[
-    {id:'single',    l:'単打'},
-    {id:'single_adv2',l:'単打(走者+2)'},
-    {id:'single_adv3',l:'単打(走者+3)'},
-    {id:'double',    l:'二塁打'},
-    {id:'triple',    l:'三塁打'},
-    {id:'hr',        l:'本塁打'},
-  ];
-  const REACHED_ITEMS=[
-    {id:'if_go_err', l:'内野ゴロエラー'},
-    {id:'if_fly_err',l:'内野フライエラー'},
-    {id:'of_fly_err',l:'外野フライエラー'},
-    {id:'bunt_err', l:'バントエラー'},
-  ];
-  const SAC_ITEMS=[
-    {id:'sac_bunt',   l:'犠打'},
-    {id:'sac_fly',    l:'犠飛'},
-    {id:'squeeze_out',l:'スクイズ(走者アウト)'},
-  ];
-  const INT_ITEMS=[{id:'bat_int',l:'打撃妨害'},{id:'run_int',l:'走塁妨害'}];
-  // ⑦ DP詳細
-  const DP_ITEMS=[
-    {id:'dp_643', l:'6-4-3'},
-    {id:'dp_463', l:'4-6-3'},
-    {id:'dp_543', l:'5-4-3'},
-    {id:'dp_163', l:'1-6-3'},
-    {id:'dp_363', l:'3-6-3'},
-    {id:'dp_liner', l:'ライナーDP'},
-    {id:'dp_so_steal',l:'三振+盗塁刺'},
-    {id:'dp_other', l:'その他DP'},
-  ];
-  // ⑥ 進塁イベント
-  const ADV_ITEMS=[
-    {id:'steal',l:'盗塁'},
-    {id:'pb', l:'PB'},
-    {id:'wp', l:'WP'},
-  ];
-  // ③ 作戦アイテム（盗塁/ディレード/エンドラン）
-  const TACTICS_ITEMS=[
-    {id:'steal',  l:'盗塁'},
-    {id:'delayed',l:'ディレード'},
-    {id:'hitrun', l:'エンドラン'},
-  ];
-  // 走塁系アウト
-  const TAGOUT_ITEMS=[
-    {id:'tag_out',         l:'刺殺'},
-    {id:'caught_stealing', l:'盗塁死'},
-  ];
+  // カテゴリ設定マップ
+  const STEP_CFG={
+    strike:{label:'ストライク — 種類を選択', color:'#eab308', items:STRIKE_CHOICES, cols:2, pad:'22px 8px', fs:18, withSub:true},
+    out:   {label:'アウト — 種類を選択',    color:'#ef4444', items:OUT_CHOICES,    cols:3, pad:'18px 4px', fs:15},
+    hit:   {label:'安打 — 種類を選択',      color:'#60a5fa', items:HIT_CHOICES,    cols:2, pad:'22px 8px', fs:18},
+    reached:{label:'出塁(エラー) — 種類を選択',color:'#14b8a6',items:REACHED_CHOICES,cols:2,pad:'20px 8px',fs:16},
+    adv:   {label:'進塁 — 種類を選択',      color:'#06b6d4', items:ADV_CHOICES,    cols:3, pad:'20px 4px', fs:16},
+    tactics:{label:'作戦 — 種類を選択',     color:'#67e8f9', items:TACTICS_CHOICES,cols:3, pad:'20px 4px', fs:16},
+    sac:   {label:'犠打飛 — 種類を選択',    color:'#a78bfa', items:SAC_CHOICES,    cols:3, pad:'20px 4px', fs:16},
+    dp:    {label:'ゲッツー — 種類を選択',  color:'#dc2626', items:DP_CHOICES,     cols:2, pad:'20px 8px', fs:17},
+    int:   {label:'妨害 — 種類を選択',      color:'#f43f5e', items:INT_CHOICES,    cols:2, pad:'20px 8px', fs:17},
+  };
 
-  const bigBtn=(color, bgDim, label, sub, onClick)=>(
+  // 全画面選択UI（全カテゴリ共通）
+  if(fullStep){
+    const cfg=STEP_CFG[fullStep];
+    return (
+      <div className="card" style={{padding:'10px'}}>
+        <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:12}}>
+          <button className="btn btn-secondary btn-sm" onClick={()=>setFullStep(null)}
+            style={{fontSize:11,padding:'5px 10px'}}>← 戻る</button>
+          <span style={{fontSize:13,fontWeight:800,color:cfg.color}}>{cfg.label}</span>
+          <span style={{flex:1}}/>
+          <span style={{fontSize:11,color:'#64748b'}}>S{c.strikes} B{c.balls} O{outs}</span>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:`repeat(${cfg.cols},1fr)`,gap:8}}>
+          {cfg.items.map(ch=>(
+            <button key={ch.id}
+              onClick={()=>{onSelect(ch.id);setFullStep(null);}}
+              style={{padding:cfg.pad,borderRadius:10,
+                border:`2.5px solid ${ch.color}`,background:ch.bg,color:ch.color,
+                fontSize:cfg.fs,fontWeight:900,cursor:'pointer',
+                fontFamily:'inherit',lineHeight:1.25,textAlign:'center',
+                display:'flex',flexDirection:'column',alignItems:'center',gap:4}}>
+              {ch.l}
+              {cfg.withSub&&ch.sub&&(
+                <span style={{fontSize:10,fontWeight:600,opacity:0.75}}>{ch.sub}</span>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  const bigBtn=(color,bgDim,label,sub,onClick)=>(
     <button onClick={onClick}
       style={{padding:'10px 4px',borderRadius:8,border:`2px solid ${color}`,
         background:bgDim,color:color,fontSize:13,fontWeight:900,cursor:'pointer',
@@ -2349,7 +2395,6 @@ function DetailResultPicker({pZone, pPt, gs, onBack, onSelect}){
       <div style={{fontSize:8,fontWeight:600,opacity:0.8,marginTop:1}}>{sub}</div>
     </button>
   );
-
   const subBtn=(label,color,onClick)=>(
     <button onClick={onClick}
       style={{padding:'6px 2px',borderRadius:6,border:`1.5px solid ${color}`,
@@ -2358,113 +2403,6 @@ function DetailResultPicker({pZone, pPt, gs, onBack, onSelect}){
       {label}
     </button>
   );
-
-  // サブメニュー: 5列でコンパクト表示（スワイプ不要で全表示）
-  const renderSub=(items, color, getLabel, cols=5)=>(
-    <div style={{marginBottom:5,padding:5,background:`${color}10`,borderRadius:7,
-      border:`1px dashed ${color}55`}}>
-      <div style={{display:'grid',gridTemplateColumns:`repeat(${cols},1fr)`,gap:3}}>
-        {items.map(it=>(
-          <button key={it.id} onClick={()=>{onSelect(it.id);setSubMenu(null);}}
-            style={{padding:'5px 2px',borderRadius:5,border:`1.5px solid ${color}`,
-              background:'#0f172a',color:color,fontSize:9,fontWeight:700,
-              cursor:'pointer',fontFamily:'inherit',lineHeight:1.15,minHeight:0}}>
-            {getLabel(it)}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-
-  // ストライク種類ボタン定義（カウントで自動ラベル変換）
-  const STRIKE_CHOICES=[
-    {id:c.strikes>=2?'looking':'called',  l:c.strikes>=2?'見逃し三振':'見逃し',   sub:c.strikes>=2?'S→アウト':'S+1', color:'#eab308', bg:'#3f2e06'},
-    {id:c.strikes>=2?'swinging':'swing',  l:c.strikes>=2?'空振り三振':'空振り',   sub:c.strikes>=2?'S→アウト':'S+1', color:'#f97316', bg:'#3b1506'},
-    {id:'foul',                           l:'ファール',                            sub:c.strikes>=2?'カウント変化なし':'S+1', color:'#94a3b8', bg:'#1e293b'},
-    {id:'bunt_foul',                      l:c.strikes>=2?'バント三振':'バントファール', sub:c.strikes>=2?'S→アウト':'S+1', color:'#c084fc', bg:'#2d1b4e'},
-  ];
-
-  // アウト種類ボタン定義（色付き）
-  const OUT_CHOICES=[
-    {id:'if_go',     l:'内野ゴロ',    color:'#ef4444', bg:'#3f0a0a'},
-    {id:'if_fly',    l:'内野フライ',  color:'#f97316', bg:'#3b1506'},
-    {id:'of_fly',    l:'外野フライ',  color:'#f59e0b', bg:'#3f2e06'},
-    {id:'if_liner',  l:'内野ライナー',color:'#ef4444', bg:'#3f0a0a'},
-    {id:'of_liner',  l:'外野ライナー',color:'#f97316', bg:'#3b1506'},
-    {id:'looking',   l:'見逃三振',    color:'#eab308', bg:'#3f2e06'},
-    {id:'swinging',  l:'空振三振',    color:'#eab308', bg:'#3f2e06'},
-    {id:'bunt_fly',  l:'バントフライ',color:'#a78bfa', bg:'#2d1b4e'},
-    {id:'safety_out',l:'セーフティ凡退',color:'#94a3b8',bg:'#1e293b'},
-    {id:'def_int',   l:'守備妨害',    color:'#94a3b8', bg:'#1e293b'},
-    {id:'tag_out',   l:'刺殺(走塁)',  color:'#06b6d4', bg:'#0c1a2e'},
-    {id:'caught_stealing',l:'盗塁死', color:'#06b6d4', bg:'#0c1a2e'},
-  ];
-
-  // アウト種類選択画面
-  if(outStep){
-    return (
-      <div className="card" style={{padding:'10px'}}>
-        <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:12}}>
-          <button className="btn btn-secondary btn-sm" onClick={()=>setOutStep(false)}
-            style={{fontSize:11,padding:'5px 10px'}}>← 戻る</button>
-          <span style={{fontSize:13,fontWeight:800,color:'#ef4444'}}>
-            ③ アウト — 種類を選択
-          </span>
-          <span style={{flex:1}}/>
-          <span style={{fontSize:11,color:'#64748b'}}>
-            S{c.strikes} B{c.balls} O{outs}
-          </span>
-        </div>
-        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:8}}>
-          {OUT_CHOICES.map(ch=>(
-            <button key={ch.id}
-              onClick={()=>{onSelect(ch.id);setOutStep(false);}}
-              style={{padding:'18px 4px',borderRadius:10,
-                border:`2.5px solid ${ch.color}`,
-                background:ch.bg,color:ch.color,
-                fontSize:15,fontWeight:900,cursor:'pointer',
-                fontFamily:'inherit',lineHeight:1.25,textAlign:'center'}}>
-              {ch.l}
-            </button>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  // ストライク種類選択画面
-  if(strikeStep){
-    return (
-      <div className="card" style={{padding:'10px'}}>
-        <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:12}}>
-          <button className="btn btn-secondary btn-sm" onClick={()=>setStrikeStep(false)}
-            style={{fontSize:11,padding:'5px 10px'}}>← 戻る</button>
-          <span style={{fontSize:13,fontWeight:800,color:'#eab308'}}>
-            ③ ストライク — 種類を選択
-          </span>
-          <span style={{flex:1}}/>
-          <span style={{fontSize:11,color:'#64748b'}}>
-            S{c.strikes} B{c.balls} O{outs}
-          </span>
-        </div>
-        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
-          {STRIKE_CHOICES.map(ch=>(
-            <button key={ch.id}
-              onClick={()=>{onSelect(ch.id);setStrikeStep(false);}}
-              style={{padding:'22px 8px',borderRadius:12,
-                border:`2.5px solid ${ch.color}`,
-                background:ch.bg,color:ch.color,
-                fontSize:18,fontWeight:900,cursor:'pointer',
-                fontFamily:'inherit',lineHeight:1.25,
-                display:'flex',flexDirection:'column',alignItems:'center',gap:4}}>
-              {ch.l}
-              <span style={{fontSize:10,fontWeight:600,opacity:0.75}}>{ch.sub}</span>
-            </button>
-          ))}
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="card" style={{padding:'8px'}}>
@@ -2490,64 +2428,37 @@ function DetailResultPicker({pZone, pPt, gs, onBack, onSelect}){
         </span>
       </div>
 
-      {/* Row1: ストライク / ボール / アウト▼ */}
+      {/* Row1: ストライク / ボール / アウト */}
       <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:4,marginBottom:4}}>
         {bigBtn('#eab308','#3f2e06',
-          c.strikes>=2?'ストライク(2S)':'ストライク',
-          '種類を選択 →',
-          ()=>setStrikeStep(true))}
+          c.strikes>=2?'ストライク(2S)':'ストライク','種類を選択 →',
+          ()=>setFullStep('strike'))}
         {bigBtn('#22c55e','#052e16',
-          c.balls>=3?'四球':'ボール',
-          c.balls>=3?'打席終了':'B+1',
+          c.balls>=3?'四球':'ボール',c.balls>=3?'打席終了':'B+1',
           ()=>onSelect('ball'))}
-        {bigBtn('#ef4444','#3f0a0a',
-          'アウト',
-          '種類を選択 →',
-          ()=>setOutStep(true))}
+        {bigBtn('#ef4444','#3f0a0a','アウト','種類を選択 →',
+          ()=>setFullStep('out'))}
       </div>
 
-      {subMenu==='hit'   &&renderSub(HIT_ITEMS,   '#60a5fa',it=>it.l,3)}
-      {subMenu==='reached'&&renderSub(REACHED_ITEMS,'#14b8a6',it=>it.l)}
-      {subMenu==='sac'   &&renderSub(SAC_ITEMS,   '#a78bfa',it=>it.l)}
-      {subMenu==='int'   &&renderSub(INT_ITEMS,   '#f43f5e',it=>it.l)}
-      {subMenu==='dp'    &&renderSub(DP_ITEMS,    '#dc2626',it=>it.l)}
-      {subMenu==='adv'   &&renderSub(ADV_ITEMS,   '#06b6d4',it=>it.l)}
-      {subMenu==='tactics'&&renderSub(TACTICS_ITEMS,'#67e8f9',it=>it.l)}
-
-      {/* Row2: 安打▼ / 四球 / 死球（大きめ） */}
+      {/* Row2: 安打 / 四球 / 死球 */}
       <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:4,marginBottom:4}}>
-        {bigBtn('#60a5fa','#0c1a2e',
-          '安打',
-          subMenu==='hit'?'閉じる ▲':'種類 ▼',
-          ()=>setSubMenu(s=>s==='hit'?null:'hit'))}
-        {bigBtn('#22c55e','#052e16',
-          '四球',
-          '打席終了',
-          ()=>onSelect('walk'))}
-        {bigBtn('#ec4899','#1f0513',
-          '死球',
-          '打席終了',
-          ()=>onSelect('hbp'))}
+        {bigBtn('#60a5fa','#0c1a2e','安打','種類を選択 →',()=>setFullStep('hit'))}
+        {bigBtn('#22c55e','#052e16','四球','打席終了',()=>onSelect('walk'))}
+        {bigBtn('#ec4899','#1f0513','死球','打席終了',()=>onSelect('hbp'))}
       </div>
 
-      {/* Row3: 出塁▼ / 進塁▼ / 作戦▼ / 犠打飛▼ / ゲッツー▼ */}
+      {/* Row3: 出塁 / 進塁 / 作戦 / 犠打飛 / ゲッツー */}
       <div style={{display:'grid',gridTemplateColumns:'repeat(5,1fr)',gap:4,marginBottom:4}}>
-        {subBtn(subMenu==='reached'?'出塁 ▲':'出塁 ▼','#14b8a6',
-          ()=>setSubMenu(s=>s==='reached'?null:'reached'))}
-        {subBtn(subMenu==='adv'?'進塁 ▲':'進塁 ▼','#06b6d4',
-          ()=>setSubMenu(s=>s==='adv'?null:'adv'))}
-        {subBtn(subMenu==='tactics'?'作戦 ▲':'作戦 ▼','#67e8f9',
-          ()=>setSubMenu(s=>s==='tactics'?null:'tactics'))}
-        {subBtn(subMenu==='sac'?'犠打飛 ▲':'犠打飛 ▼','#a78bfa',
-          ()=>setSubMenu(s=>s==='sac'?null:'sac'))}
-        {subBtn(subMenu==='dp'?'ゲッツー ▲':'ゲッツー ▼','#dc2626',
-          ()=>setSubMenu(s=>s==='dp'?null:'dp'))}
+        {subBtn('出塁','#14b8a6',()=>setFullStep('reached'))}
+        {subBtn('進塁','#06b6d4',()=>setFullStep('adv'))}
+        {subBtn('作戦','#67e8f9',()=>setFullStep('tactics'))}
+        {subBtn('犠打飛','#a78bfa',()=>setFullStep('sac'))}
+        {subBtn('ゲッツー','#dc2626',()=>setFullStep('dp'))}
       </div>
 
-      {/* Row4: 妨害▼ */}
+      {/* Row4: 妨害 */}
       <div style={{display:'grid',gridTemplateColumns:'repeat(5,1fr)',gap:4}}>
-        {subBtn(subMenu==='int'?'妨害 ▲':'妨害 ▼','#f43f5e',
-          ()=>setSubMenu(s=>s==='int'?null:'int'))}
+        {subBtn('妨害','#f43f5e',()=>setFullStep('int'))}
       </div>
     </div>
   );
