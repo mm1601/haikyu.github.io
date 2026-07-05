@@ -19,9 +19,25 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
+:root{
+  --bg:#101513;
+  --surface:#18201f;
+  --surface-quiet:#121817;
+  --surface-raised:#1b2523;
+  --border:#2b3734;
+  --border-soft:#22302d;
+  --text:#e8efe9;
+  --muted:#92a09a;
+  --muted-2:#65736e;
+  --primary:#2f7d5a;
+  --primary-strong:#3fa06f;
+  --danger:#d9534f;
+  --success:#35a66a;
+  --warning:#d8a534;
+}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{overscroll-behavior:none;-webkit-overflow-scrolling:touch}
-body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Hiragino Kaku Gothic ProN',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;font-size:12px;
+body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Hiragino Kaku Gothic ProN',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:12px;line-height:1.45;
   /* セーフエリア対応(iPhoneノッチ等) */
   padding-top:env(safe-area-inset-top);
   padding-bottom:env(safe-area-inset-bottom);
@@ -35,47 +51,54 @@ button{min-height:28px}
 @media (max-width:520px){
   .screen{padding:6px !important}
 }
-.btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;padding:6px 12px;transition:all .15s;user-select:none;font-family:inherit}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid transparent;border-radius:7px;cursor:pointer;font-size:12px;font-weight:650;padding:6px 12px;transition:background .15s,border-color .15s,color .15s,transform .15s;user-select:none;font-family:inherit}
 .btn:active{transform:scale(.95)}
-.btn-primary{background:#3b82f6;color:#fff}
-.btn-primary:hover{background:#2563eb}
-.btn-secondary{background:#334155;color:#e2e8f0}
-.btn-secondary:hover{background:#475569}
-.btn-danger{background:#ef4444;color:#fff}
-.btn-success{background:#22c55e;color:#fff}
+.btn-primary{background:var(--primary);color:#fff;border-color:rgba(255,255,255,.08)}
+.btn-primary:hover{background:var(--primary-strong)}
+.btn-secondary{background:#24302d;color:var(--text);border-color:var(--border)}
+.btn-secondary:hover{background:#2b3935}
+.btn-danger{background:var(--danger);color:#fff;border-color:rgba(255,255,255,.08)}
+.btn-success{background:var(--success);color:#fff;border-color:rgba(255,255,255,.08)}
 .btn-sm{font-size:11px;padding:3px 8px}
 .btn-lg{font-size:14px;padding:10px 18px}
-.card{background:#1e293b;border-radius:10px;padding:10px}
-.screen{min-height:100vh;padding:10px;max-width:520px;margin:0 auto;padding-bottom:30px}
+.card{background:var(--surface);border:1px solid var(--border-soft);border-radius:8px;padding:10px;box-shadow:0 1px 0 rgba(255,255,255,.025),0 10px 26px rgba(0,0,0,.10)}
+.card + .card{margin-top:8px}
+.card table{width:100%;border-collapse:separate;border-spacing:0}
+.card th{color:var(--muted);font-size:10px;font-weight:750;letter-spacing:0;text-transform:none}
+.card td{color:var(--text);vertical-align:middle}
+.card tr{border-color:var(--border-soft)}
+.screen{min-height:100vh;padding:10px;max-width:540px;margin:0 auto;padding-bottom:30px}
 .header{display:flex;align-items:center;gap:6px;margin-bottom:10px}
 .header h2{flex:1;font-size:15px}
-input,select,textarea{background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:6px 9px;font-size:12px;width:100%;font-family:inherit}
-input:focus,select:focus{outline:none;border-color:#3b82f6}
+input,select,textarea{background:var(--surface-quiet);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:6px 9px;font-size:12px;width:100%;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary-strong);box-shadow:0 0 0 2px rgba(63,160,111,.16)}
 .count-dot{width:12px;height:12px;border-radius:50%;border:2px solid #64748b;background:transparent;flex-shrink:0}
-.count-dot.filled{background:#22c55e;border-color:#22c55e}
-.count-dot.strike.filled{background:#eab308;border-color:#eab308}
+.count-dot.filled{background:var(--success);border-color:var(--success)}
+.count-dot.strike.filled{background:var(--warning);border-color:var(--warning)}
 .out-dot{width:14px;height:14px;border-radius:50%;border:2px solid #64748b;background:transparent;flex-shrink:0}
-.out-dot.filled{background:#ef4444;border-color:#ef4444}
+.out-dot.filled{background:var(--danger);border-color:var(--danger)}
 .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}
-.modal{background:#1e293b;border-radius:16px;padding:20px;width:100%;max-width:400px;max-height:90vh;overflow-y:auto}
-.tab-bar{display:flex;background:#1e293b;border-radius:10px;padding:4px;gap:4px;margin-bottom:16px}
-.tab{flex:1;padding:8px;border-radius:7px;border:none;background:transparent;color:#94a3b8;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit}
-.tab.active{background:#3b82f6;color:#fff}
-.result-btn{padding:10px;border-radius:8px;border:2px solid #334155;background:#0f172a;color:#e2e8f0;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;text-align:center;font-family:inherit;width:100%}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px;width:100%;max-width:400px;max-height:90vh;overflow-y:auto}
+.tab-bar{display:flex;background:var(--surface-quiet);border:1px solid var(--border-soft);border-radius:8px;padding:3px;gap:3px;margin-bottom:12px}
+.tab{flex:1;padding:8px;border-radius:6px;border:none;background:transparent;color:var(--muted);font-size:13px;font-weight:650;cursor:pointer;transition:background .15s,color .15s;font-family:inherit}
+.tab.active{background:var(--primary);color:#fff}
+.result-btn{padding:10px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface-quiet);color:var(--text);font-size:13px;font-weight:650;cursor:pointer;transition:background .15s,border-color .15s,color .15s,transform .15s;text-align:center;font-family:inherit;width:100%}
 .result-btn:active{transform:scale(.95)}
-.result-btn.strike{border-color:#ef4444;color:#ef4444}
-.result-btn.ball{border-color:#22c55e;color:#22c55e}
-.result-btn.inplay{border-color:#22c55e;color:#22c55e}
-.result-btn.other{border-color:#f97316;color:#f97316}
-.history-item{border-bottom:1px solid #0f172a;padding:10px 0;display:flex;align-items:center;gap:8px}
-.insight-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #0f172a}
+.result-btn.strike{border-color:rgba(217,83,79,.72);color:#f0a09d;background:rgba(217,83,79,.05)}
+.result-btn.ball{border-color:rgba(53,166,106,.72);color:#8ed8ad;background:rgba(53,166,106,.05)}
+.result-btn.inplay{border-color:rgba(53,166,106,.72);color:#8ed8ad;background:rgba(53,166,106,.05)}
+.result-btn.other{border-color:rgba(216,165,52,.72);color:#e5c174;background:rgba(216,165,52,.05)}
+.history-item{border-bottom:1px solid var(--border-soft);padding:10px 0;display:flex;align-items:center;gap:8px}
+.insight-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border-soft)}
+.section-title{font-size:12px;font-weight:800;color:var(--muted);letter-spacing:0;line-height:1.2}
+.quiet-panel{background:var(--surface-quiet);border:1px solid var(--border-soft);border-radius:8px}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
 @keyframes pop{0%{transform:scale(.85);opacity:0}100%{transform:scale(1);opacity:1}}
 @keyframes countFlash{0%{transform:scale(1)}40%{transform:scale(1.55);filter:brightness(1.6)}100%{transform:scale(1);filter:brightness(1)}}
 .count-dot.flash{animation:countFlash .32s ease-out}
 .out-dot.flash{animation:countFlash .32s ease-out}
 @keyframes fadeIn{0%{opacity:0;transform:translateX(-50%) translateY(10px)}100%{opacity:1;transform:translateX(-50%) translateY(0)}}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e293b;border:1px solid #3b82f6;color:#e2e8f0;padding:8px 16px;border-radius:20px;font-size:13px;z-index:200;animation:pop .2s}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--primary);color:var(--text);padding:8px 16px;border-radius:20px;font-size:13px;z-index:200;animation:pop .2s}
 </style>
 </head>
 <body>
@@ -1154,7 +1177,7 @@ const ZONE_GRID=[
 ];
 const STRIKE_ZONES=new Set([1,2,3,4,5,6,7,8,9]);
 
-// 左打者時のゾーン水平反転マップ（キャッチャー視点維持）
+// ゾーン水平反転マップ（保存値はキャッチャー視点のまま、表示だけ反転する時に使う）
 function mirrorZone(z){
   const m={
     1:3,3:1,2:2, 4:6,6:4,5:5, 7:9,9:7,8:8, // ストライクゾーン
@@ -1163,6 +1186,44 @@ function mirrorZone(z){
     21:25,25:21, 22:24,24:22, 23:23, // ボール低め
   };
   return m[z]!==undefined?m[z]:z;
+}
+
+function getZoneGridForPerspective(perspective='catcher'){
+  if(perspective!=='pitcher') return ZONE_GRID;
+  return ZONE_GRID.map(row=>row.map(z=>mirrorZone(z)));
+}
+
+function getInitialZonePerspective(){
+  try{
+    return localStorage.getItem('zoneInputPerspective')==='pitcher'?'pitcher':'catcher';
+  }catch(e){
+    return 'catcher';
+  }
+}
+
+function ZonePerspectiveToggle({value,onChange}){
+  return (
+    <div style={{display:'inline-flex',background:'#121817',border:'1px solid #2b3734',
+      borderRadius:8,padding:2,gap:2}}>
+      {[
+        ['catcher','捕手'],
+        ['pitcher','投手'],
+      ].map(([k,l])=>{
+        const active=value===k;
+        return (
+          <button key={k} type="button" onClick={()=>onChange(k)}
+            title={`${l}目線`}
+            style={{border:'none',borderRadius:6,padding:'4px 9px',
+              background:active?'#2f7d5a':'transparent',
+              color:active?'#fff':'#92a09a',
+              fontSize:10,fontWeight:800,cursor:'pointer',fontFamily:'inherit',
+              minHeight:22,lineHeight:1}}>
+            {l}
+          </button>
+        );
+      })}
+    </div>
+  );
 }
 
 // ストライク扱いの判定
@@ -1242,11 +1303,13 @@ const COLOR_LEGEND=[
 ];
 
 // ZoneChart: 選択モード（onChange あり）/ 表示モード（onChange なし）兼用
-// ② 全打者ともキャッチャー視点で統一（ミラーリングなし）
-function ZoneChart({value, onChange, batterHand='R', atBatPitches=[]}){
+// 保存値はキャッチャー視点で統一し、投手目線は表示とタップ位置だけ左右反転する。
+function ZoneChart({value, onChange, batterHand='R', atBatPitches=[], perspective='catcher'}){
   // スマホサイズに最適化(36px) - 5×5=180px+gap
   const SZ=36; // セルサイズ(px)
   const GAP=2;
+  const isPitcherView=perspective==='pitcher';
+  const displayGrid=getZoneGridForPerspective(perspective);
 
   // ゾーンごとの投球リスト（現打席分）— 打席内通し番号(seqNum)付き
   const zoneData=useMemo(()=>{
@@ -1260,43 +1323,44 @@ function ZoneChart({value, onChange, batterHand='R', atBatPitches=[]}){
     return d;
   },[atBatPitches]);
 
-  // 左打者: 右側にイラスト / 右打者: 左側にイラスト（位置は打席に合わせる）
+  // 捕手目線は従来配置、投手目線は画面全体を左右反転した配置にする。
   const isL=batterHand==='L';
+  const batterOnLeft=isPitcherView?isL:!isL;
+  const perspectiveLabel=isPitcherView?'投手視点':'キャッチャー視点';
 
   return (
     <div>
       <div style={{fontSize:10,color:'#64748b',textAlign:'center',marginBottom:4}}>
-         キャッチャー視点（{isL?'左打者':'右打者'}）
+         {perspectiveLabel}（{isL?'左打者':'右打者'}）
       </div>
       <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:6}}>
-        {/* R打者はチャート左、L打者はチャート右 - ゾーン番号はミラーしない */}
-        {!isL&&<BatterSvg hand="R"/>}
+        {batterOnLeft&&<BatterSvg hand={batterHand} side="left"/>}
 
-        {/* 5×5 グリッド: ゾーン番号は固定（キャッチャー視点） */}
+        {/* 5×5 グリッド: 投手目線時は表示だけ左右反転し、保存値はキャッチャー視点のまま */}
         <div style={{
           display:'grid',
           gridTemplateColumns:`repeat(5,${SZ}px)`,
           gridTemplateRows:`repeat(5,${SZ}px)`,
           gap:`${GAP}px`,
         }}>
-          {ZONE_GRID.map((row,ri)=>row.map((z,ci)=>{
+          {displayGrid.map((row,ri)=>row.map((z,ci)=>{
             const isStrike=STRIKE_ZONES.has(z);
             const selected=value===z;
             const pitches=zoneData[z]||[];
             const clickable=!!onChange;
 
             // ストライクゾーン外周を太線で強調
-            const bTop= isStrike&&ri===1?'2px solid #cbd5e1':'1px solid #1e293b';
-            const bRight= isStrike&&ci===3?'2px solid #cbd5e1':'1px solid #1e293b';
-            const bBottom=isStrike&&ri===3?'2px solid #cbd5e1':'1px solid #1e293b';
-            const bLeft= isStrike&&ci===1?'2px solid #cbd5e1':'1px solid #1e293b';
+            const bTop= isStrike&&ri===1?'2px solid #dbe5df':'1px solid #22302d';
+            const bRight= isStrike&&ci===3?'2px solid #dbe5df':'1px solid #22302d';
+            const bBottom=isStrike&&ri===3?'2px solid #dbe5df':'1px solid #22302d';
+            const bLeft= isStrike&&ci===1?'2px solid #dbe5df':'1px solid #22302d';
 
             return (
               <div key={`${ri}-${ci}`}
                 onClick={()=>clickable&&onChange(z)}
                 style={{
                   width:SZ,height:SZ,position:'relative',overflow:'hidden',
-                  background: selected?'#1d4ed8': isStrike?'#1e293b':'#0c1322',
+                  background: selected?'#2f7d5a': isStrike?'#18201f':'#121817',
                   borderTop:bTop,borderRight:bRight,borderBottom:bBottom,borderLeft:bLeft,
                   borderRadius:3,
                   cursor:clickable?'pointer':'default',
@@ -1309,7 +1373,7 @@ function ZoneChart({value, onChange, batterHand='R', atBatPitches=[]}){
                 <span style={{
                   position:'absolute',top:1,left:3,
                   fontSize:8,fontWeight:700,
-                  color:selected?'rgba(255,255,255,.5)':isStrike?'#334155':'#1e293b',
+                  color:selected?'rgba(255,255,255,.58)':isStrike?'#4b5a55':'#2b3734',
                 }}>
                   {z}
                 </span>
@@ -1346,8 +1410,7 @@ function ZoneChart({value, onChange, batterHand='R', atBatPitches=[]}){
           }))}
         </div>
 
-        {/* L打者はチャート右側 */}
-        {isL&&<BatterSvg hand="L"/>}
+        {!batterOnLeft&&<BatterSvg hand={batterHand} side="right"/>}
       </div>
 
       {/* 色凡例 */}
@@ -1363,18 +1426,18 @@ function ZoneChart({value, onChange, batterHand='R', atBatPitches=[]}){
   );
 }
 
-function BatterSvg({hand}){
-  // isL=true → L打者 → チャート右側配置 → バットは左（チャート側）へ伸びる
-  // isL=false → R打者 → チャート左側配置 → バットは右（チャート側）へ伸びる
-  const isL=hand==='L';
+function BatterSvg({hand, side}){
+  // side='left' ならチャートは右側、side='right' ならチャートは左側。
+  // hand は打席ラベル、side はバットをチャート側へ向ける描画に使う。
+  const batLeft=side?side==='right':hand==='L';
   return (
     <svg width="42" height="190" viewBox="0 0 52 230"
       style={{flexShrink:0,alignSelf:'center',overflow:'visible'}}>
       {/* 地面の影 */}
       <ellipse cx="26" cy="200" rx="16" ry="5" fill="rgba(0,0,0,.3)"/>
       {/* スパイク */}
-      <ellipse cx={isL?19:33} cy="200" rx="13" ry="5" fill="#0f172a"/>
-      <ellipse cx={isL?33:19} cy="198" rx="9" ry="4" fill="#0f172a"/>
+      <ellipse cx={batLeft?19:33} cy="200" rx="13" ry="5" fill="#0f172a"/>
+      <ellipse cx={batLeft?33:19} cy="198" rx="9" ry="4" fill="#0f172a"/>
       {/* 足 */}
       <rect x="14" y="148" width="10" height="52" rx="5" fill="#334155"/>
       <rect x="28" y="148" width="10" height="52" rx="5" fill="#334155"/>
@@ -1383,8 +1446,7 @@ function BatterSvg({hand}){
       {/* 背番号 */}
       <text x="26" y="115" fontSize="20" fill="rgba(255,255,255,.18)" textAnchor="middle" fontWeight="900">7</text>
       {/* バット腕・バット */}
-      {isL ? (
-        // L打者: バットが左（チャート）方向へ伸びる
+      {batLeft ? (
         <>
           {/* 前腕（ゾーン側） */}
           <line x1="14" y1="84" x2="8" y2="72" stroke="#2563eb" strokeWidth="10" strokeLinecap="round"/>
@@ -1396,7 +1458,6 @@ function BatterSvg({hand}){
           <line x1="38" y1="84" x2="44" y2="96" stroke="#2563eb" strokeWidth="10" strokeLinecap="round"/>
         </>
       ) : (
-        // R打者: バットが右（チャート）方向へ伸びる
         <>
           {/* 前腕（ゾーン側） */}
           <line x1="38" y1="84" x2="44" y2="72" stroke="#2563eb" strokeWidth="10" strokeLinecap="round"/>
@@ -1412,12 +1473,12 @@ function BatterSvg({hand}){
       <ellipse cx="26" cy="38" rx="19" ry="21" fill="#1e3a5f"/>
       <ellipse cx="26" cy="45" rx="14" ry="11" fill="#0f172a"/>
       {/* ツバ（ゾーン側） */}
-      {isL
+      {batLeft
         ? <path d="M7 40 Q-4 48 -1 58 L18 50 Z" fill="#1e3a5f"/>
         : <path d="M45 40 Q56 48 53 58 L34 50 Z" fill="#1e3a5f"/>
       }
       {/* イヤーフラップ（ゾーン側） */}
-      {isL
+      {batLeft
         ? <ellipse cx="10" cy="52" rx="6" ry="10" fill="#1e3a5f"/>
         : <ellipse cx="42" cy="52" rx="6" ry="10" fill="#1e3a5f"/>
       }
@@ -1697,14 +1758,14 @@ function LiveDashboard({pitches, currentPitcher}){
              :total>=100?{c:'#f97316',msg:'制限注意'}
              :total>=80 ?{c:'#eab308',msg:'80球到達'}:null;
   return (
-    <div style={{padding:'6px 10px',background:'#1e293b',borderRadius:8,
-      border:'1px solid #334155',marginBottom:6,display:'flex',
+    <div style={{padding:'6px 10px',background:'#121817',borderRadius:8,
+      border:'1px solid #22302d',marginBottom:6,display:'flex',
       alignItems:'center',gap:8}}>
-      <span style={{fontSize:11,color:'#94a3b8'}}>投手</span>
-      <span style={{fontSize:13,fontWeight:700,color:'#e2e8f0'}}>{currentPitcher.name}</span>
+      <span style={{fontSize:11,color:'#92a09a'}}>投手</span>
+      <span style={{fontSize:13,fontWeight:750,color:'#e8efe9'}}>{currentPitcher.name}</span>
       <div style={{flex:1}}/>
-      <span style={{fontSize:11,color:'#94a3b8'}}>球数</span>
-      <span style={{fontSize:18,fontWeight:900,color:alert?.c||'#e2e8f0',lineHeight:1}}>{total}</span>
+      <span style={{fontSize:11,color:'#92a09a'}}>球数</span>
+      <span style={{fontSize:18,fontWeight:900,color:alert?.c||'#e8efe9',lineHeight:1}}>{total}</span>
       {alert&&(
         <span style={{fontSize:10,fontWeight:700,color:alert.c,
           padding:'2px 6px',background:`${alert.c}22`,borderRadius:10}}>
@@ -1973,89 +2034,6 @@ function CountHeatmap({pitches}){
       })}
     </div>
   );
-}
-
-// ── 音声入力ボタン (Web Speech API) ──
-function VoiceInputButton({onCommand,enabled=true}){
-  const [listening,setListening]=useState(false);
-  const [last,setLast]=useState('');
-  const recRef=useRef(null);
-  const supported=typeof window!=='undefined' && ('webkitSpeechRecognition' in window||'SpeechRecognition' in window);
-  const start=()=>{
-    if(!supported||!enabled) return;
-    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-    const r=new SR();
-    r.lang='ja-JP'; r.continuous=false; r.interimResults=false;
-    r.onresult=e=>{
-      const text=e.results[0][0].transcript;
-      setLast(text);
-      onCommand(text);
-    };
-    r.onerror=()=>setListening(false);
-    r.onend=()=>setListening(false);
-    r.start();
-    recRef.current=r;
-    setListening(true);
-  };
-  const stop=()=>{recRef.current?.stop();setListening(false);};
-  if(!supported){
-    return (
-      <button className="btn btn-sm" disabled
-        style={{fontSize:11,padding:'4px 10px',background:'#1e293b',color:'#475569',cursor:'not-allowed'}}>
-         音声非対応
-      </button>
-    );
-  }
-  return (
-    <div style={{display:'flex',alignItems:'center',gap:6}}>
-      <button onClick={listening?stop:start}
-        style={{
-          padding:'4px 10px',borderRadius:6,border:'none',cursor:'pointer',
-          fontSize:11,fontWeight:700,fontFamily:'inherit',
-          background:listening?'#ef4444':'rgba(168,85,247,.2)',
-          color:listening?'#fff':'#c084fc',
-          animation:listening?'pulse 1s infinite':'none'}}>
-         {listening?'録音中…':'音声入力'}
-      </button>
-      {last&&<span style={{fontSize:10,color:'#64748b',maxWidth:120,
-        overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>「{last}」</span>}
-    </div>
-  );
-}
-
-// 音声コマンドを投球データへマッピング（簡易版）
-function parseVoiceCommand(text){
-  const t=text.replace(/\s/g,'');
-  const r={};
-  // 球種
-  const ptMap=[
-    [/ストレート|直球|フォーシーム/,'st'],[/ツーシーム/,'ts'],[/カット/,'ct'],
-    [/スライダー|スラ/,'sl'],[/カーブ/,'cb'],[/チェンジ|チェン/,'ch'],
-    [/フォーク/,'fk'],[/スプリ/,'sp'],[/シンカー/,'sk'],[/シュート/,'sh'],
-    [/ナックル/,'kn'],
-  ];
-  for(const [re,id] of ptMap){if(re.test(t)){r.pt=id;break;}}
-  // 結果
-  const rsMap=[
-    [/見逃[しス]?三振|見逃[しス]?さん/,'looking'],
-    [/空振り三振|空振[りリ]さん/,'swinging'],
-    [/見逃[しス]/,'called'],[/空振[りリ]/,'swing'],
-    [/ファ?ール/,'foul'],[/ボール/,'ball'],
-    [/四球|フォアボール/,'walk'],[/死球|デッドボール/,'hbp'],
-    [/単打|ヒット|シングル/,'single'],[/二塁打|ツーベース/,'double'],
-    [/三塁打|スリーベース/,'triple'],[/本塁打|ホームラン|ホーマー/,'hr'],
-    [/内野ゴロ/,'if_go'],[/内野フライ/,'if_fly'],[/外野フライ/,'of_fly'],
-    [/内野ライナー/,'if_liner'],[/外野ライナー/,'of_liner'],
-    [/送りバント|犠打/,'sac_bunt'],[/犠飛|犠牲フライ/,'sac_fly'],
-  ];
-  for(const [re,id] of rsMap){if(re.test(t)){r.result=id;break;}}
-  // ゾーン番号
-  const m=t.match(/(?:ゾーン|コース)([0-9０-９]+)/)||t.match(/^([0-9]+)番?/);
-  if(m){
-    const n=parseInt(m[1].replace(/[０-９]/g,d=>'0123456789'['０１２３４５６７８９'.indexOf(d)]));
-    if(n>=1&&n<=25) r.zone=n;
-  }
-  return r;
 }
 
 // ── 球速エディタ（テンキー式・コンパクト） ──
@@ -6016,9 +5994,14 @@ function PitchEditModal({pitch, onSave, onClose}){
   const [pResult,setPResult]=useState(pitch.result);
   const [pDir,setPDir]=useState(pitch.dir);
   const [view,setView]=useState('main'); // 'main'|'zone'|'dir'
+  const [zonePerspective,setZonePerspective]=useState(getInitialZonePerspective);
   const currentCat=RESULT_CAT_MAP[pResult];
   const currentItem=ALL_RESULTS.find(r=>r.id===pResult);
   const needsDir=NEEDS_DIR_CATS.has(currentCat) && !currentItem?.noDir;
+
+  useEffect(()=>{
+    try{localStorage.setItem('zoneInputPerspective',zonePerspective);}catch(e){}
+  },[zonePerspective]);
 
   return (
     <div className="modal-overlay" onClick={e=>{if(e.target===e.currentTarget)onClose()}}>
@@ -6111,8 +6094,12 @@ function PitchEditModal({pitch, onSave, onClose}){
 
         {view==='zone'&&(
           <div>
-            <div style={{fontSize:13,fontWeight:700,color:'#94a3b8',marginBottom:10}}>コース選択</div>
-            <ZoneChart value={pZone} onChange={z=>{setPZone(z);setView('main');}} batterHand={pitch.bh||'R'} atBatPitches={[]}/>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:8,marginBottom:10}}>
+              <div style={{fontSize:13,fontWeight:700,color:'#94a3b8'}}>コース選択</div>
+              <ZonePerspectiveToggle value={zonePerspective} onChange={setZonePerspective}/>
+            </div>
+            <ZoneChart value={pZone} onChange={z=>{setPZone(z);setView('main');}}
+              batterHand={pitch.bh||'R'} atBatPitches={[]} perspective={zonePerspective}/>
             <button className="btn btn-secondary" style={{width:'100%',marginTop:10}} onClick={()=>setView('main')}>戻る</button>
           </div>
         )}
@@ -6577,10 +6564,15 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
   const [showSub,setShowSub]=useState(false);
   const [showLineScore,setShowLineScore]=useState(false);
   const [inputMode,setInputMode]=useState('detail'); // 'detail' | 'quick'
+  const [zonePerspective,setZonePerspective]=useState(getInitialZonePerspective);
   const [pendingAdvance,setPendingAdvance]=useState(null); // {type,runnerKey} 盗塁等の保留
   const [advToast,setAdvToast]=useState('');   // 盗塁等の取り消しトースト
   const advToastTimer=useRef(null);
   const touchX=useRef(null);
+
+  useEffect(()=>{
+    try{localStorage.setItem('zoneInputPerspective',zonePerspective);}catch(e){}
+  },[zonePerspective]);
 
   // 攻撃チームに応じてlineupを切り替え（表=先攻Away, 裏=後攻Home）
   const lineup=useMemo(()=>{
@@ -6747,43 +6739,6 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
     const z=pZone||5; // デフォルト: ど真ん中
     const pt=pPt||'st'; // デフォルト: ストレート
     return persistPitch(z,pt,result,null);
-  },[persistPitch,pZone,pPt]);
-
-  // 音声コマンド処理
-  const [voiceToast,setVoiceToast]=useState('');
-  const handleVoice=useCallback((text)=>{
-    const cmd=parseVoiceCommand(text);
-    if(cmd.zone) setPZone(cmd.zone);
-    if(cmd.pt) setPPt(cmd.pt);
-    let msg=[];
-    if(cmd.zone) msg.push(`Z${cmd.zone}`);
-    if(cmd.pt) msg.push(PT.find(p=>p.id===cmd.pt)?.short||cmd.pt);
-    if(cmd.result){
-      const z=cmd.zone??pZone??5;
-      const pt=cmd.pt??pPt??'st';
-      // 2ストライク時の自動三振変換
-      let r=cmd.result;
-      if(r==='called'&&gs.count.strikes>=2) r='looking';
-      else if(r==='swing'&&gs.count.strikes>=2) r='swinging';
-      const resInfo=ALL_RESULTS.find(x=>x.id===r);
-      const item=ALL_RESULTS.find(x=>x.id===r);
-      const cat=RESULT_CAT_MAP[r];
-      msg.push(resInfo?.label||r);
-      // 打球方向必要な結果は確認画面へ（noDirは除く）
-      if(NEEDS_DIR_CATS.has(cat) && !item?.noDir){
-        setPZone(z);setPPt(pt);setPResult(r);setStep('detail');setInputMode('detail');
-      } else {
-        persistPitch(z,pt,r,null);
-      }
-    } else if(cmd.zone||cmd.pt){
-      // 部分入力: 次のステップへ自動遷移
-      if(cmd.pt) setStep('result');
-      else if(cmd.zone) setStep('pt');
-    } else {
-      msg.push('未認識');
-    }
-    setVoiceToast(msg.join(' / '));
-    setTimeout(()=>setVoiceToast(''),2000);
   },[persistPitch,pZone,pPt]);
 
   const undo=useCallback(async()=>{
@@ -7025,7 +6980,7 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
   ];
 
   return (
-    <div className="screen" style={{paddingLeft:6,paddingRight:6,paddingBottom:72,maxWidth:540}}
+    <div className="screen" style={{paddingLeft:8,paddingRight:8,paddingBottom:72,maxWidth:560}}
       onTouchStart={e=>{touchX.current=e.touches[0].clientX;}}
       onTouchEnd={e=>{if(touchX.current!==null&&e.changedTouches[0].clientX-touchX.current>80)undo();touchX.current=null;}}>
 
@@ -7034,7 +6989,7 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
         <div style={{
           position:'fixed',bottom:72,left:'50%',transform:'translateX(-50%)',
           zIndex:2000,
-          background:'#1e293b',border:'1px solid #475569',borderRadius:12,
+          background:'#18201f',border:'1px solid #2b3734',borderRadius:10,
           padding:'10px 14px',display:'flex',alignItems:'center',gap:10,
           boxShadow:'0 4px 20px rgba(0,0,0,.6)',
           animation:'fadeIn .2s ease',
@@ -7055,15 +7010,16 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
       {/* メインコンテンツ */}
       <div>
       {/* Top bar - スマホ縦圧縮 */}
-      <div style={{display:'flex',alignItems:'center',gap:4,marginBottom:5}}>
+      <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:6,
+        padding:'6px 8px',background:'#121817',border:'1px solid #22302d',borderRadius:8}}>
         <button className="btn btn-secondary btn-sm" onClick={()=>onNav('home')}>ホーム</button>
         <div style={{flex:1,display:'flex',justifyContent:'center',alignItems:'center',gap:6}}>
-          <span style={{fontSize:17,fontWeight:800}}>{awayScore}</span>
+          <span style={{fontSize:18,fontWeight:900,color:'#f2f5ef'}}>{awayScore}</span>
           <div style={{textAlign:'center'}}>
-            <div style={{fontSize:10,color:'#64748b',lineHeight:1}}>{gs.inning}回</div>
-            <div style={{fontSize:9,color:'#64748b',lineHeight:1}}>{gs.topBottom==='top'?'表':'裏'}</div>
+            <div style={{fontSize:10,color:'#92a09a',lineHeight:1}}>{gs.inning}回</div>
+            <div style={{fontSize:9,color:'#65736e',lineHeight:1}}>{gs.topBottom==='top'?'表':'裏'}</div>
           </div>
-          <span style={{fontSize:17,fontWeight:800}}>{homeScore}</span>
+          <span style={{fontSize:18,fontWeight:900,color:'#f2f5ef'}}>{homeScore}</span>
         </div>
         <button onClick={endGame}
           style={{fontSize:10,padding:'4px 8px',borderRadius:5,
@@ -7087,13 +7043,13 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
       )}
 
       {/* State card - スマホ縦圧縮 (打者切替は独立行に) */}
-      <div className="card" style={{marginBottom:6,padding:'6px 8px'}}>
+      <div className="card" style={{marginBottom:6,padding:'8px'}}>
         {/* 1行目: カウント・ベース・打者情報(コンパクト) */}
         <div style={{display:'flex',alignItems:'center',gap:6,justifyContent:'space-between'}}>
           <CountDisplay gs={gs} onGsChange={updateGsManually}/>
           <BaseDiamond runners={gs.runners} onRunnersChange={r=>updateGsManually({...gs,runners:r})}/>
           <div style={{textAlign:'right',minWidth:60,maxWidth:90,flexShrink:1}}>
-            <div style={{fontSize:9,color:'#64748b',lineHeight:1,marginBottom:2}}>
+            <div style={{fontSize:9,color:'#65736e',lineHeight:1,marginBottom:2}}>
               {currentBatterOrder}番 {bh}打 #{activeBatter?.number||'-'}
             </div>
             <div style={{fontSize:13,fontWeight:700,lineHeight:1.1,
@@ -7103,33 +7059,33 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
           </div>
         </div>
         {/* 2行目: 打者切替（ゾーン選択中のみ表示） */}
-        {step==='zone'&&(<div style={{display:'flex',alignItems:'center',gap:4,marginTop:5}}>
+        {step==='zone'&&(<div style={{display:'flex',alignItems:'center',gap:5,marginTop:7,paddingTop:7,borderTop:'1px solid #22302d'}}>
           <button onClick={()=>navBatter(-1)}
             style={{flex:1,padding:'6px 4px',borderRadius:6,
-              border:'1px solid #475569',background:'#0f172a',color:'#cbd5e1',
+              border:'1px solid #2b3734',background:'#121817',color:'#d8e1dc',
               fontSize:11,fontWeight:700,cursor:'pointer',fontFamily:'inherit',
               display:'flex',alignItems:'center',justifyContent:'center',gap:4}}>
             <span style={{fontSize:14}}>←</span>
             <span>前打者</span>
           </button>
           <div style={{flex:'0 0 auto',padding:'4px 8px',
-            background:'rgba(59,130,246,.1)',borderRadius:6,
-            border:'1px solid rgba(59,130,246,.3)',
-            fontSize:10,color:'#94a3b8',textAlign:'center',whiteSpace:'nowrap'}}>
-            <span style={{fontSize:13,fontWeight:800,color:'#93c5fd'}}>{currentBatterOrder}</span>
+            background:'rgba(47,125,90,.12)',borderRadius:6,
+            border:'1px solid rgba(63,160,111,.28)',
+            fontSize:10,color:'#92a09a',textAlign:'center',whiteSpace:'nowrap'}}>
+            <span style={{fontSize:13,fontWeight:800,color:'#92d4af'}}>{currentBatterOrder}</span>
             <span style={{fontSize:9}}>番</span>
           </div>
           <button onClick={()=>navBatter(1)}
             style={{flex:1,padding:'6px 4px',borderRadius:6,
-              border:'1px solid #475569',background:'#0f172a',color:'#cbd5e1',
+              border:'1px solid #2b3734',background:'#121817',color:'#d8e1dc',
               fontSize:11,fontWeight:700,cursor:'pointer',fontFamily:'inherit',
               display:'flex',alignItems:'center',justifyContent:'center',gap:4}}>
             <span>次打者</span>
             <span style={{fontSize:14}}>→</span>
           </button>
         </div>)}
-        {step==='zone'&&(<div style={{display:'flex',gap:6,marginTop:3,alignItems:'center'}}>
-          <span style={{fontSize:9,color:'#64748b'}}>総球: {gs.pitchCount||0}</span>
+        {step==='zone'&&(<div style={{display:'flex',gap:6,marginTop:5,alignItems:'center'}}>
+          <span style={{fontSize:9,color:'#65736e'}}>総球: {gs.pitchCount||0}</span>
         </div>)}
       </div>
 
@@ -7158,11 +7114,13 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
       {/* ── 詳細入力 ── */}
       {(<>
       {/* Step indicators - スマホ圧縮 */}
-      <div style={{display:'flex',gap:2,marginBottom:5}}>
+      <div style={{display:'flex',gap:3,marginBottom:6}}>
         {[['zone','①ゾーン'],['pt','②球種'],['result','③結果'],['detail','④打球']].map(([s,l])=>(
-          <div key={s} style={{flex:1,padding:'2px 2px',borderRadius:5,textAlign:'center',fontSize:10,
-            background:step===s?'#1d4ed8':'#1e293b',color:step===s?'#fff':'#475569',
-            fontWeight:step===s?700:400}}>
+          <div key={s} style={{flex:1,padding:'3px 2px',borderRadius:6,textAlign:'center',fontSize:10,
+            background:step===s?'#2f7d5a':'#121817',
+            border:`1px solid ${step===s?'rgba(63,160,111,.55)':'#22302d'}`,
+            color:step===s?'#fff':'#65736e',
+            fontWeight:step===s?800:600}}>
             {l}
           </div>
         ))}
@@ -7187,20 +7145,23 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
       {/* Step: zone - スマホ縦圧縮 */}
       {step==='zone'&&(
         <div>
-          <div className="card" style={{marginBottom:6,padding:'8px'}}>
-            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6}}>
-              <span style={{fontSize:11,fontWeight:700,color:'#94a3b8'}}>コース選択</span>
-              <div style={{display:'flex',gap:4}}>
+          <div className="card" style={{marginBottom:6,padding:'9px'}}>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:6,marginBottom:6}}>
+              <div style={{display:'flex',alignItems:'center',gap:6,flexWrap:'wrap'}}>
+                <span style={{fontSize:11,fontWeight:700,color:'#94a3b8'}}>コース選択</span>
+                <ZonePerspectiveToggle value={zonePerspective} onChange={setZonePerspective}/>
+              </div>
+              <div style={{display:'flex',gap:4,flexShrink:0}}>
                 {/* ① 作戦ボタン */}
                 <button className="btn btn-sm"
-                  style={{fontSize:10,padding:'3px 8px',background:showTactics?'rgba(6,182,212,.25)':'rgba(6,182,212,.12)',
-                    border:'1px solid #06b6d4',color:'#67e8f9',borderRadius:5,fontWeight:700}}
+                  style={{fontSize:10,padding:'3px 8px',background:showTactics?'rgba(47,125,90,.22)':'rgba(47,125,90,.08)',
+                    border:'1px solid rgba(63,160,111,.55)',color:'#92d4af',borderRadius:6,fontWeight:750}}
                   onClick={()=>setShowTactics(s=>!s)}>
                   作戦 {showTactics?'▲':'▼'}
                 </button>
                 <button className="btn btn-sm"
-                  style={{fontSize:10,padding:'3px 8px',background:'rgba(59,130,246,.15)',
-                    border:'1px solid #3b82f6',color:'#93c5fd',borderRadius:5}}
+                  style={{fontSize:10,padding:'3px 8px',background:'rgba(146,160,154,.08)',
+                    border:'1px solid #2b3734',color:'#d8e1dc',borderRadius:6}}
                   onClick={()=>setShowPickoff(true)}>牽制</button>
                 <button className="btn btn-secondary btn-sm"
                   style={{fontSize:10,padding:'3px 8px'}}
@@ -7272,21 +7233,21 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
               </div>
             )}
             {currentPitcher?.name&&(
-              <div style={{fontSize:10,color:'#64748b',marginBottom:5,textAlign:'center'}}>
+              <div style={{fontSize:10,color:'#65736e',marginBottom:5,textAlign:'center'}}>
                 投手: {currentPitcher.number?`#${currentPitcher.number} `:''}{currentPitcher.name}（{currentPitcher.hand}投
                 {currentPitcher.arm&&` / ${PITCHER_ARM_LABELS[currentPitcher.arm]||currentPitcher.arm}`}
                 {currentPitcher.plate&&` / プレート${PITCHER_PLATE_LABELS[currentPitcher.plate]||currentPitcher.plate}`}）
               </div>
             )}
             <ZoneChart value={pZone} onChange={z=>{setPZone(z);setStep('pt');}}
-              batterHand={bh} atBatPitches={atBatPitches}/>
+              batterHand={bh} atBatPitches={atBatPitches} perspective={zonePerspective}/>
           </div>
         </div>
       )}
 
       {/* Step: pt */}
       {step==='pt'&&(
-        <div className="card" style={{padding:'8px'}}>
+        <div className="card" style={{padding:'9px'}}>
           <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:6}}>
             <button className="btn btn-secondary btn-sm" onClick={()=>setStep('zone')}>← 戻る</button>
             <span style={{fontSize:11,fontWeight:700,color:'#94a3b8'}}>② 球種（Z:{pZone}）</span>
@@ -7295,8 +7256,8 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
             {PT.map(p=>(
               <button key={p.id}
                 onClick={()=>{setPPt(p.id);setStep('result');}}
-                style={{padding:'13px 2px',borderRadius:7,border:`2px solid ${p.color}`,
-                  background:'#0f172a',color:p.color,fontSize:13,fontWeight:700,cursor:'pointer',
+                style={{padding:'13px 2px',borderRadius:7,border:`1.5px solid ${p.color}`,
+                  background:'#121817',color:p.color,fontSize:13,fontWeight:750,cursor:'pointer',
                   transition:'all .1s',fontFamily:'inherit'}}>
                 {p.label}
               </button>
@@ -7514,9 +7475,6 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
             </div>
           </div>
         </div>
-      )}
-      {voiceToast&&(
-        <div className="toast"> {voiceToast}</div>
       )}
       {inningSummary&&(
         <InningSummaryModal
@@ -7928,7 +7886,7 @@ function MobileSetupModal({onClose}){
 
 // ── GitHub Pages URL カード ──
 function GitHubUrlCard(){
-  const url='https://boat10000.github.io/ohyabu0116.github.io/';
+  const url='https://mm1601.github.io/haikyu.github.io/';
   const [copied,setCopied]=useState(false);
   const copy=()=>{
     const doCopy=()=>{
