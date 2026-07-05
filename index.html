@@ -4189,6 +4189,111 @@ const RUNNER_GROUPS=[
   {k:'full', l:'満塁'},
 ];
 
+function DonutChart({segments, size=92, stroke=12, centerValue='-', centerLabel='', trackColor='#26322f'}){
+  const cleaned=(segments||[]).filter(s=>Number(s.value)>0);
+  const total=cleaned.reduce((sum,s)=>sum+Number(s.value||0),0);
+  const radius=(size-stroke)/2;
+  const center=size/2;
+  const circumference=2*Math.PI*radius;
+  let offset=0;
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}
+      role="img" aria-label={`${centerLabel} ${centerValue}`}
+      style={{display:'block',overflow:'visible'}}>
+      <circle cx={center} cy={center} r={radius} fill="none"
+        stroke={trackColor} strokeWidth={stroke}/>
+      {total>0&&cleaned.map((seg,idx)=>{
+        const length=(Number(seg.value||0)/total)*circumference;
+        const dash=`${length} ${Math.max(circumference-length,0)}`;
+        const node=(
+          <circle key={`${seg.label||idx}-${idx}`} cx={center} cy={center} r={radius} fill="none"
+            stroke={seg.color||'#94a3b8'} strokeWidth={stroke}
+            strokeDasharray={dash} strokeDashoffset={-offset}
+            strokeLinecap="butt" transform={`rotate(-90 ${center} ${center})`}/>
+        );
+        offset+=length;
+        return node;
+      })}
+      <text x="50%" y={centerLabel?'47%':'54%'} textAnchor="middle"
+        fill="#e8efe9" fontSize={size>=110?21:17} fontWeight="850">{centerValue}</text>
+      {centerLabel&&(
+        <text x="50%" y="63%" textAnchor="middle"
+          fill="#92a09a" fontSize={size>=110?10:9} fontWeight="700">{centerLabel}</text>
+      )}
+    </svg>
+  );
+}
+
+function StrikeRateDonut({label, total, strikes}){
+  const strikeCount=strikes||0;
+  const pitchTotal=total||0;
+  const pct=pitchTotal>0?Math.round(strikeCount/pitchTotal*100):null;
+  const color=pct==null?'#65736e':pct>=65?'#35a66a':pct>=50?'#d8a534':'#d9534f';
+  return (
+    <div style={{
+      minWidth:0,display:'flex',flexDirection:'column',alignItems:'center',
+      justifyContent:'center',gap:5,padding:'8px 4px',
+      background:'var(--surface-quiet)',border:'1px solid var(--border-soft)',borderRadius:8}}>
+      <DonutChart
+        size={82}
+        stroke={11}
+        centerValue={pct==null?'–':`${pct}%`}
+        centerLabel="S率"
+        segments={[
+          {label:'ストライク', value:strikeCount, color},
+          {label:'その他', value:Math.max(pitchTotal-strikeCount,0), color:'#33403d'},
+        ]}
+      />
+      <div style={{fontSize:12,fontWeight:800,color:'#e8efe9',lineHeight:1}}>{label}</div>
+      <div style={{fontSize:10,color:'#92a09a',lineHeight:1.2}}>
+        {pitchTotal>0?`${strikeCount}/${pitchTotal}球`:'データなし'}
+      </div>
+    </div>
+  );
+}
+
+function PitchMixDonut({segments, total}){
+  const pitchTotal=total||0;
+  const typedTotal=(segments||[]).reduce((sum,s)=>sum+Number(s.value||0),0);
+  const chartSegments=[
+    ...(segments||[]).filter(s=>Number(s.value)>0),
+    ...(pitchTotal>typedTotal?[{label:'未入力', short:'未', value:pitchTotal-typedTotal, color:'#65736e'}]:[]),
+  ];
+  if(pitchTotal===0) return null;
+  return (
+    <div style={{
+      display:'grid',gridTemplateColumns:'112px 1fr',gap:12,alignItems:'center',
+      background:'var(--surface-quiet)',border:'1px solid var(--border-soft)',
+      borderRadius:8,padding:10,marginBottom:10}}>
+      <div style={{display:'flex',justifyContent:'center'}}>
+        <DonutChart size={106} stroke={14} centerValue={`${pitchTotal}球`} centerLabel="球種割合"
+          segments={chartSegments}/>
+      </div>
+      <div style={{minWidth:0}}>
+        <div style={{fontSize:11,fontWeight:800,color:'#92a09a',marginBottom:6}}>球種割合</div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(82px,1fr))',gap:'6px 8px'}}>
+          {chartSegments.map(seg=>{
+            const pct=pitchTotal>0?Math.round(Number(seg.value||0)/pitchTotal*100):0;
+            return (
+              <div key={seg.label} style={{minWidth:0}}>
+                <div style={{display:'flex',alignItems:'center',gap:5,minWidth:0}}>
+                  <span style={{width:8,height:8,borderRadius:'50%',background:seg.color,flex:'0 0 auto'}}/>
+                  <span style={{fontSize:11,fontWeight:750,color:'#e8efe9',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
+                    {seg.short||seg.label}
+                  </span>
+                </div>
+                <div style={{fontSize:10,color:'#92a09a',paddingLeft:13}}>
+                  {pct}% <span style={{color:'#65736e'}}>({seg.value})</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 // ── カウント別傾向インサイト ──────────────────────────────────
 function CountInsightCard({pitches}){
@@ -4422,6 +4527,11 @@ function PitcherDetailPanel({allPitches, pitcherName, game}){
   const summaryCard=(
     <div className="card" style={{marginBottom:10}}>
       <div style={{fontSize:14,fontWeight:800,color:'#e2e8f0',marginBottom:8}}>主要指標</div>
+      <div style={{display:'grid',gridTemplateColumns:'repeat(3,minmax(0,1fr))',gap:8,marginBottom:10}}>
+        <StrikeRateDonut label="全体" total={all.total} strikes={all.strikes}/>
+        <StrikeRateDonut label="vs右" total={vsR.total} strikes={vsR.strikes}/>
+        <StrikeRateDonut label="vs左" total={vsL.total} strikes={vsL.strikes}/>
+      </div>
       <table style={tableStyle}>
         <thead>{headRow}</thead>
         <tbody>
@@ -4461,9 +4571,16 @@ function PitcherDetailPanel({allPitches, pitcherName, game}){
     const activePts=PT.filter(pt=>all.ptC[pt.id]>0)
       .sort((a,b)=>(all.ptC[b.id]||0)-(all.ptC[a.id]||0));
     if(activePts.length===0) return null;
+    const pitchMixSegments=activePts.map(pt=>({
+      label:pt.label,
+      short:pt.short,
+      value:all.ptC[pt.id]||0,
+      color:pt.color,
+    }));
     return (
       <div className="card" style={{marginBottom:10}}>
         <div style={{fontSize:14,fontWeight:800,color:'#e2e8f0',marginBottom:8}}>球種別サマリー</div>
+        <PitchMixDonut segments={pitchMixSegments} total={all.total}/>
         <table style={tableStyle}>
           <thead>
             <tr style={{background:'#0f172a'}}>
@@ -4676,6 +4793,9 @@ function PitcherDetailPanel({allPitches, pitcherName, game}){
 
   return (
     <div>
+      {/* ── 主要指標 ── */}
+      {summaryCard}
+
       {/* ── 球種別サマリー（割合・S率・MAX・平均） ── */}
       {ptSummaryCard}
 
@@ -4694,9 +4814,6 @@ function PitcherDetailPanel({allPitches, pitcherName, game}){
 
       {/* ── 打球タイプ ── */}
       <BattedBallTypeCard pitches={mine} role="pitcher"/>
-
-      {/* ── 主要指標 ── */}
-      {summaryCard}
     </div>
   );
 }
