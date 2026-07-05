@@ -5091,6 +5091,11 @@ function ZoneRatioCard({zoneC, total, pitches=[]}){
     <div className="card" style={{marginBottom:10}}>
       <div style={{display:'flex',alignItems:'center',marginBottom:6}}>
         <span style={{fontSize:14,fontWeight:800,color:'#e2e8f0'}}>コース割合（{total}球）</span>
+        <span style={{fontSize:10,fontWeight:800,color:'#67e8f9',marginLeft:7,
+          padding:'2px 6px',borderRadius:999,background:'rgba(6,182,212,.12)',
+          border:'1px solid rgba(6,182,212,.35)',whiteSpace:'nowrap'}}>
+          捕手目線
+        </span>
         <InfoBadge title="コース割合(内/外)"
           body={'打者視点での内コース・外コースの割合。\n真ん中(中央列)は集計から除外し、内外のみで比較。\n• 内角に集中→攻める投球\n• 外角に集中→慎重な投球\n• 打者の左右に応じて自動判定'}/>
       </div>
@@ -5165,7 +5170,7 @@ function ZoneRatioCard({zoneC, total, pitches=[]}){
         ))}
       </div>
       <div style={{fontSize:10,color:'#64748b',marginTop:4,textAlign:'center'}}>
-        太枠=ストライクゾーン　内/外は打者の左右で自動判定
+        ヒートマップ=捕手目線　太枠=ストライクゾーン　内/外は打者の左右で自動判定
       </div>
     </div>
   );
