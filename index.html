@@ -7,7 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="配球PRO"/>
-<meta name="theme-color" content="#0f172a"/>
+<meta name="theme-color" content="#ffffff"/>
 <meta name="description" content="高校野球の配球記録・分析アプリ"/>
 <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjQwIiBmaWxsPSIjMGYxNzJhIi8+PGNpcmNsZSBjeD0iOTAiIGN5PSI3OCIgcj0iNDIiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNNDggNzhRNTQgNTYgOTAgNTBROTAgNzggOTAgMTA2IiBzdHJva2U9IiNjYzMzMzMiIHN0cm9rZS13aWR0aD0iMS44IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTEzMiA3OFExMjYgNTYgOTAgNTAiIHN0cm9rZT0iI2NjMzMzMyIgc3Ryb2tlLXdpZHRoPSIxLjgiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNNDggNzhRNTQgMTAwIDkwIDEwNlExMjYgMTAwIDEzMiA3OCIgc3Ryb2tlPSIjY2MzMzMzIiBzdHJva2Utd2lkdGg9IjEuOCIgZmlsbD0ibm9uZSIvPjx0ZXh0IHg9IjkwIiB5PSIxNTAiIGZvbnQtc2l6ZT0iMjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM2MGE1ZmEiIGZvbnQtd2VpZ2h0PSI4MDAiIGZvbnQtZmFtaWx5PSItYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiPumFjeeQg1BSTzwvdGV4dD48L3N2Zz4="/>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjQwIiBmaWxsPSIjMGYxNzJhIi8+PGNpcmNsZSBjeD0iOTAiIGN5PSI3OCIgcj0iNDIiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNNDggNzhRNTQgNTYgOTAgNTBROTAgNzggOTAgMTA2IiBzdHJva2U9IiNjYzMzMzMiIHN0cm9rZS13aWR0aD0iMS44IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTEzMiA3OFExMjYgNTYgOTAgNTAiIHN0cm9rZT0iI2NjMzMzMyIgc3Ryb2tlLXdpZHRoPSIxLjgiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNNDggNzhRNTQgMTAwIDkwIDEwNlExMjYgMTAwIDEzMiA3OCIgc3Ryb2tlPSIjY2MzMzMzIiBzdHJva2Utd2lkdGg9IjEuOCIgZmlsbD0ibm9uZSIvPjx0ZXh0IHg9IjkwIiB5PSIxNTAiIGZvbnQtc2l6ZT0iMjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM2MGE1ZmEiIGZvbnQtd2VpZ2h0PSI4MDAiIGZvbnQtZmFtaWx5PSItYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiPumFjeeQg1BSTzwvdGV4dD48L3N2Zz4="/>
@@ -20,20 +20,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 :root{
-  --bg:#101513;
-  --surface:#18201f;
-  --surface-quiet:#121817;
-  --surface-raised:#1b2523;
-  --border:#2b3734;
-  --border-soft:#22302d;
-  --text:#e8efe9;
-  --muted:#92a09a;
-  --muted-2:#65736e;
+  --bg:#ffffff;
+  --surface:#ffffff;
+  --surface-quiet:#f4f7f5;
+  --surface-raised:#ffffff;
+  --border:#d7e2dd;
+  --border-soft:#e5ece8;
+  --text:#17231f;
+  --muted:#5d6b65;
+  --muted-2:#87938d;
   --primary:#2f7d5a;
-  --primary-strong:#3fa06f;
-  --danger:#d9534f;
-  --success:#35a66a;
-  --warning:#d8a534;
+  --primary-strong:#256b4d;
+  --danger:#c73532;
+  --success:#16864d;
+  --warning:#c77d0a;
+  --chart-track:#e4ece8;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{overscroll-behavior:none;-webkit-overflow-scrolling:touch}
@@ -55,13 +56,13 @@ button{min-height:28px}
 .btn:active{transform:scale(.95)}
 .btn-primary{background:var(--primary);color:#fff;border-color:rgba(255,255,255,.08)}
 .btn-primary:hover{background:var(--primary-strong)}
-.btn-secondary{background:#24302d;color:var(--text);border-color:var(--border)}
-.btn-secondary:hover{background:#2b3935}
+.btn-secondary{background:#edf3f0;color:var(--text);border-color:var(--border)}
+.btn-secondary:hover{background:#e3ebe7}
 .btn-danger{background:var(--danger);color:#fff;border-color:rgba(255,255,255,.08)}
 .btn-success{background:var(--success);color:#fff;border-color:rgba(255,255,255,.08)}
 .btn-sm{font-size:11px;padding:3px 8px}
 .btn-lg{font-size:14px;padding:10px 18px}
-.card{background:var(--surface);border:1px solid var(--border-soft);border-radius:8px;padding:10px;box-shadow:0 1px 0 rgba(255,255,255,.025),0 10px 26px rgba(0,0,0,.10)}
+.card{background:var(--surface);border:1px solid var(--border-soft);border-radius:8px;padding:10px;box-shadow:0 1px 0 rgba(255,255,255,.7),0 8px 24px rgba(28,45,38,.08)}
 .card + .card{margin-top:8px}
 .card table{width:100%;border-collapse:separate;border-spacing:0}
 .card th{color:var(--muted);font-size:10px;font-weight:750;letter-spacing:0;text-transform:none}
@@ -72,10 +73,10 @@ button{min-height:28px}
 .header h2{flex:1;font-size:15px}
 input,select,textarea{background:var(--surface-quiet);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:6px 9px;font-size:12px;width:100%;font-family:inherit}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary-strong);box-shadow:0 0 0 2px rgba(63,160,111,.16)}
-.count-dot{width:12px;height:12px;border-radius:50%;border:2px solid #64748b;background:transparent;flex-shrink:0}
+.count-dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--muted-2);background:transparent;flex-shrink:0}
 .count-dot.filled{background:var(--success);border-color:var(--success)}
 .count-dot.strike.filled{background:var(--warning);border-color:var(--warning)}
-.out-dot{width:14px;height:14px;border-radius:50%;border:2px solid #64748b;background:transparent;flex-shrink:0}
+.out-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--muted-2);background:transparent;flex-shrink:0}
 .out-dot.filled{background:var(--danger);border-color:var(--danger)}
 .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}
 .modal{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px;width:100%;max-width:400px;max-height:90vh;overflow-y:auto}
@@ -116,8 +117,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary-
       scope:'./',
       display:'standalone',
       orientation:'portrait',
-      background_color:'#0f172a',
-      theme_color:'#0f172a',
+      background_color:'#ffffff',
+      theme_color:'#ffffff',
       icons:[
         {src:icon,sizes:'180x180',type:'image/svg+xml',purpose:'any maskable'},
         {src:icon,sizes:'192x192',type:'image/svg+xml',purpose:'any maskable'},
@@ -1043,14 +1044,14 @@ function InfoBadge({title, body}){
         }}>ⓘ</button>
       {open&&(
         <div style={{position:'absolute',top:22,left:'50%',transform:'translateX(-50%)',
-          background:'#0f172a',border:'1px solid #3b82f6',borderRadius:8,
+          background:'var(--surface-quiet)',border:'1px solid #3b82f6',borderRadius:8,
           padding:'8px 10px',zIndex:50,width:240,
           boxShadow:'0 4px 14px rgba(0,0,0,.4)'}}>
           {title&&<div style={{fontSize:11,fontWeight:800,color:'#93c5fd',marginBottom:4}}>{title}</div>}
-          <div style={{fontSize:11,color:'#cbd5e1',lineHeight:1.5,whiteSpace:'pre-line'}}>{body}</div>
+          <div style={{fontSize:11,color:'var(--text)',lineHeight:1.5,whiteSpace:'pre-line'}}>{body}</div>
           <button onClick={()=>setOpen(false)}
             style={{position:'absolute',top:2,right:5,background:'transparent',border:'none',
-              color:'#64748b',fontSize:14,cursor:'pointer',fontFamily:'inherit',padding:2}}>×</button>
+              color:'var(--muted)',fontSize:14,cursor:'pointer',fontFamily:'inherit',padding:2}}>×</button>
         </div>
       )}
     </span>
@@ -1095,7 +1096,7 @@ function BaseDiamond({runners, onRunnersChange}){
         </g>
       </svg>
       {ia&&<div style={{position:'absolute',bottom:-8,left:'50%',transform:'translateX(-50%)',
-        fontSize:9,color:'#475569',whiteSpace:'nowrap'}}>タップ切替</div>}
+        fontSize:9,color:'var(--muted-2)',whiteSpace:'nowrap'}}>タップ切替</div>}
     </div>
   );
 }
@@ -1132,9 +1133,9 @@ function CountDisplay({gs, onGsChange}){
   const dotStyle=ia?{cursor:'pointer',WebkitTapHighlightColor:'transparent'}:{};
   return (
     <div style={{display:'flex',alignItems:'center',gap:8}}>
-      {ia&&<span style={{fontSize:9,color:'#475569',marginRight:2}}>↕</span>}
+      {ia&&<span style={{fontSize:9,color:'var(--muted-2)',marginRight:2}}>↕</span>}
       <div style={{display:'flex',gap:4,alignItems:'center'}}>
-        <span style={{fontSize:10,color:'#64748b',marginRight:1}}>B</span>
+        <span style={{fontSize:10,color:'var(--muted)',marginRight:1}}>B</span>
         {[0,1,2].map(i=>(
           <div key={i}
             className={`count-dot ${i<gs.count.balls?'filled':''} ${i===flashB?'flash':''}`}
@@ -1142,7 +1143,7 @@ function CountDisplay({gs, onGsChange}){
         ))}
       </div>
       <div style={{display:'flex',gap:4,alignItems:'center'}}>
-        <span style={{fontSize:10,color:'#64748b',marginRight:1}}>S</span>
+        <span style={{fontSize:10,color:'var(--muted)',marginRight:1}}>S</span>
         {[0,1].map(i=>(
           <div key={i}
             className={`count-dot strike ${i<gs.count.strikes?'filled':''} ${i===flashS?'flash':''}`}
@@ -1150,7 +1151,7 @@ function CountDisplay({gs, onGsChange}){
         ))}
       </div>
       <div style={{display:'flex',gap:4,alignItems:'center'}}>
-        <span style={{fontSize:10,color:'#64748b',marginRight:1}}>O</span>
+        <span style={{fontSize:10,color:'var(--muted)',marginRight:1}}>O</span>
         {[0,1,2].map(i=>(
           <div key={i}
             className={`out-dot ${i<gs.outs?'filled':''} ${i===flashO?'flash':''}`}
@@ -1330,7 +1331,7 @@ function ZoneChart({value, onChange, batterHand='R', atBatPitches=[], perspectiv
 
   return (
     <div>
-      <div style={{fontSize:10,color:'#64748b',textAlign:'center',marginBottom:4}}>
+      <div style={{fontSize:10,color:'var(--muted)',textAlign:'center',marginBottom:4}}>
          {perspectiveLabel}（{isL?'左打者':'右打者'}）
       </div>
       <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:6}}>
@@ -1397,7 +1398,7 @@ function ZoneChart({value, onChange, batterHand='R', atBatPitches=[], perspectiv
                     </div>
                   ))}
                   {pitches.length>6&&(
-                    <span style={{fontSize:8,color:'#94a3b8',lineHeight:1}}>+{pitches.length-6}</span>
+                    <span style={{fontSize:8,color:'var(--muted)',lineHeight:1}}>+{pitches.length-6}</span>
                   )}
                 </div>
                 {/* 選択時 ✓ */}
@@ -1418,7 +1419,7 @@ function ZoneChart({value, onChange, batterHand='R', atBatPitches=[], perspectiv
         {COLOR_LEGEND.map(({color,label})=>(
           <div key={label} style={{display:'flex',alignItems:'center',gap:3}}>
             <div style={{width:8,height:8,borderRadius:'50%',background:color,flexShrink:0}}/>
-            <span style={{fontSize:9,color:'#64748b'}}>{label}</span>
+            <span style={{fontSize:9,color:'var(--muted)'}}>{label}</span>
           </div>
         ))}
       </div>
@@ -1620,12 +1621,12 @@ function LineScore({pitches, game, gs, compact=false, editable=false, onSaveManu
   };
 
   return (
-    <div style={{border:'1px solid #334155',borderRadius:8,background:'#0f172a'}}>
+    <div style={{border:'1px solid var(--border)',borderRadius:8,background:'var(--surface-quiet)'}}>
       <div style={{overflowX:'auto'}}>
         <table style={{borderCollapse:'collapse',width:'100%',fontFamily:'inherit'}}>
           <thead>
-            <tr style={{background:'#1e293b'}}>
-              <th style={{...cell,textAlign:'left',color:'#64748b',minWidth:compact?54:80}}>
+            <tr style={{background:'var(--surface-quiet)'}}>
+              <th style={{...cell,textAlign:'left',color:'var(--muted)',minWidth:compact?54:80}}>
                 {editable?'R/H':'　'}
               </th>
               {cols.map(i=>(
@@ -1635,11 +1636,11 @@ function LineScore({pitches, game, gs, compact=false, editable=false, onSaveManu
                     background:i===curInn?'rgba(59,130,246,.1)':'transparent',
                     cursor:onInningSelect?'pointer':'default',
                     position:'relative',userSelect:'none'}}>{i}
-                  {onInningSelect&&<span style={{fontSize:7,color:'#475569',display:'block',lineHeight:1}}>▼</span>}
+                  {onInningSelect&&<span style={{fontSize:7,color:'var(--muted-2)',display:'block',lineHeight:1}}>▼</span>}
                 </th>
               ))}
-              <th style={{...cell,color:'#e2e8f0',fontWeight:800,borderLeft:'2px solid #334155'}}>R</th>
-              <th style={{...cell,color:'#94a3b8'}}>H</th>
+              <th style={{...cell,color:'var(--text)',fontWeight:800,borderLeft:'2px solid var(--border)'}}>R</th>
+              <th style={{...cell,color:'var(--muted)'}}>H</th>
             </tr>
           </thead>
           <tbody>
@@ -1657,8 +1658,8 @@ function LineScore({pitches, game, gs, compact=false, editable=false, onSaveManu
                 </td>;
               })}
               <td style={{...cell,fontWeight:900,color:'#f97316',fontSize:compact?13:16,
-                borderLeft:'2px solid #334155'}}>{aTotal}</td>
-              <td style={{...cell,color:'#94a3b8',padding:editable?'2px 1px':cell.padding}}>
+                borderLeft:'2px solid var(--border)'}}>{aTotal}</td>
+              <td style={{...cell,color:'var(--muted)',padding:editable?'2px 1px':cell.padding}}>
                 {editable?(
                   <input type="text" inputMode="numeric"
                     value={manualAH!=null?manualAH:''}
@@ -1678,7 +1679,7 @@ function LineScore({pitches, game, gs, compact=false, editable=false, onSaveManu
               </td>
             </tr>
             {/* 後攻 R行 */}
-            <tr style={{borderTop:'1px solid #1e293b'}}>
+            <tr style={{borderTop:'1px solid var(--border-soft)'}}>
               <td style={team(game?.teamHome||'後攻','#3b82f6')}>
                 {(game?.teamHome||'後攻').slice(0,compact?6:10)}
                 {editable&&<span style={{fontSize:8,color:'#93c5fd',marginLeft:4}}>R</span>}
@@ -1691,8 +1692,8 @@ function LineScore({pitches, game, gs, compact=false, editable=false, onSaveManu
                 </td>;
               })}
               <td style={{...cell,fontWeight:900,color:'#3b82f6',fontSize:compact?13:16,
-                borderLeft:'2px solid #334155'}}>{hTotal}</td>
-              <td style={{...cell,color:'#94a3b8',padding:editable?'2px 1px':cell.padding}}>
+                borderLeft:'2px solid var(--border)'}}>{hTotal}</td>
+              <td style={{...cell,color:'var(--muted)',padding:editable?'2px 1px':cell.padding}}>
                 {editable?(
                   <input type="text" inputMode="numeric"
                     value={manualHH!=null?manualHH:''}
@@ -1731,12 +1732,12 @@ function LineScore({pitches, game, gs, compact=false, editable=false, onSaveManu
               cursor:'pointer',fontFamily:'inherit'}}>裏</button>
           <button onClick={()=>setInningPopup(null)}
             style={{padding:'4px 10px',borderRadius:6,border:'1px solid #475569',
-              background:'transparent',color:'#64748b',fontSize:11,
+              background:'transparent',color:'var(--muted)',fontSize:11,
               cursor:'pointer',fontFamily:'inherit',marginLeft:'auto'}}>✕</button>
         </div>
       )}
       {editable&&(
-        <div style={{padding:'4px 8px',background:'#1e293b',fontSize:9,color:'#94a3b8',
+        <div style={{padding:'4px 8px',background:'var(--surface-quiet)',fontSize:9,color:'var(--muted)',
           borderTop:'1px solid #334155'}}>
            得点(R)は各イニングをタップ入力。安打(H)は右端の合計欄で入力。空欄に戻すと自動値に戻ります
         </div>
@@ -1785,9 +1786,9 @@ function BatterScoutingCard({pitches, batterName, batterHand, atBatPitches}){
   if(!batterName||!stats) return null;
   if(stats.abs.length===0) {
     return (
-      <div style={{padding:'6px 10px',background:'#1e293b',
+      <div style={{padding:'6px 10px',background:'var(--surface-quiet)',
         borderRadius:8,border:'1px dashed #334155',marginBottom:6,
-        fontSize:10,color:'#64748b',textAlign:'center'}}>
+        fontSize:10,color:'var(--muted)',textAlign:'center'}}>
          {batterName} は初打席（過去データなし）
       </div>
     );
@@ -1801,13 +1802,13 @@ function BatterScoutingCard({pitches, batterName, batterHand, atBatPitches}){
   const recentABs=stats.abs.slice(-4);
   const resLabel=r=>ALL_RESULTS.find(x=>x.id===r)?.label||(r||'打席中');
   return (
-    <div style={{padding:'8px 10px',background:'#1e293b',
-      borderRadius:8,border:'1px solid #334155',marginBottom:6}}>
+    <div style={{padding:'8px 10px',background:'var(--surface-quiet)',
+      borderRadius:8,border:'1px solid var(--border)',marginBottom:6}}>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:6}}>
-        <span style={{fontSize:10,fontWeight:700,color:'#94a3b8'}}>
+        <span style={{fontSize:10,fontWeight:700,color:'var(--muted)'}}>
            スカウト • {batterName} ({batterHand}打)
         </span>
-        <span style={{fontSize:10,color:'#64748b'}}>
+        <span style={{fontSize:10,color:'var(--muted)'}}>
           {stats.abCount}打席 {stats.hits}安 {stats.so}三振 {stats.bb}四死球
         </span>
       </div>
@@ -1831,7 +1832,7 @@ function BatterScoutingCard({pitches, batterName, batterHand, atBatPitches}){
         </div>
         {/* 直近の打席結果 */}
         <div style={{flex:1,minWidth:0}}>
-          <div style={{fontSize:9,color:'#64748b',marginBottom:2}}>直近の打席</div>
+          <div style={{fontSize:9,color:'var(--muted)',marginBottom:2}}>直近の打席</div>
           <div style={{display:'flex',gap:3,flexWrap:'wrap'}}>
             {recentABs.map((a,i)=>{
               const r=a.result;
@@ -1851,7 +1852,7 @@ function BatterScoutingCard({pitches, batterName, batterHand, atBatPitches}){
         </div>
       </div>
       {atBatPitches?.length>0&&(
-        <div style={{marginTop:5,fontSize:9,color:'#64748b'}}>
+        <div style={{marginTop:5,fontSize:9,color:'var(--muted)'}}>
           今打席: {atBatPitches.length}球 / {atBatPitches.map(p=>PT.find(x=>x.id===p.pt)?.short||'-').join('→')}
         </div>
       )}
@@ -1903,13 +1904,13 @@ function SprayChart({pitches}){
           );
         })}
       </svg>
-      <div style={{display:'flex',gap:10,justifyContent:'center',marginTop:6,fontSize:11,color:'#94a3b8',flexWrap:'wrap'}}>
+      <div style={{display:'flex',gap:10,justifyContent:'center',marginTop:6,fontSize:11,color:'var(--muted)',flexWrap:'wrap'}}>
         <span><span style={{display:'inline-block',width:9,height:9,borderRadius:'50%',background:'#60a5fa',verticalAlign:'middle',marginRight:3}}/> 安打</span>
         <span><span style={{display:'inline-block',width:9,height:9,borderRadius:'50%',background:'#ef4444',verticalAlign:'middle',marginRight:3}}/> 凡打</span>
         <span><span style={{display:'inline-block',width:9,height:9,borderRadius:'50%',background:'#22c55e',verticalAlign:'middle',marginRight:3}}/> 犠打</span>
         <span><span style={{display:'inline-block',width:9,height:9,borderRadius:'50%',background:'#f97316',verticalAlign:'middle',marginRight:3}}/> 犠飛</span>
       </div>
-      <div style={{fontSize:10,color:'#64748b',textAlign:'center',marginTop:4}}>{dots.length}打球</div>
+      <div style={{fontSize:10,color:'var(--muted)',textAlign:'center',marginTop:4}}>{dots.length}打球</div>
     </div>
   );
 }
@@ -1918,7 +1919,7 @@ function SprayChart({pitches}){
 function PitchSequenceChart({pitches, pitcherName}){
   const seq=useMemo(()=>getPitchSequences(pitches, pitcherName),[pitches,pitcherName]);
   if(!pitcherName||seq.total===0){
-    return <div style={{fontSize:12,color:'#475569',textAlign:'center',padding:20}}>データ不足（投手を指定してください）</div>;
+    return <div style={{fontSize:12,color:'var(--muted-2)',textAlign:'center',padding:20}}>データ不足（投手を指定してください）</div>;
   }
   // 初球分布
   const firstTotal=Object.values(seq.firstPitch).reduce((a,b)=>a+b,0);
@@ -1931,7 +1932,7 @@ function PitchSequenceChart({pitches, pitcherName}){
   return (
     <div>
       <div className="card" style={{marginBottom:10}}>
-        <div style={{fontSize:14,fontWeight:800,color:'#e2e8f0',marginBottom:10}}>初球の球種傾向（{firstTotal}打席）</div>
+        <div style={{fontSize:14,fontWeight:800,color:'var(--text)',marginBottom:10}}>初球の球種傾向（{firstTotal}打席）</div>
         {PT.filter(p=>seq.firstPitch[p.id]>0).sort((a,b)=>seq.firstPitch[b.id]-seq.firstPitch[a.id]).map(p=>{
           const c=seq.firstPitch[p.id];
           const pct=Math.round(c/firstTotal*100);
@@ -1939,27 +1940,27 @@ function PitchSequenceChart({pitches, pitcherName}){
             <div key={p.id} style={{display:'flex',alignItems:'center',gap:6,marginBottom:6}}>
               <PitchDot ptId={p.id} size={13}/>
               <span style={{fontSize:13,color:p.color,minWidth:80}}>{p.label}</span>
-              <div style={{flex:1,height:9,background:'#0f172a',borderRadius:3,overflow:'hidden'}}>
+              <div style={{flex:1,height:9,background:'var(--surface-quiet)',borderRadius:3,overflow:'hidden'}}>
                 <div style={{width:`${pct}%`,height:'100%',background:p.color}}/>
               </div>
               <span style={{fontSize:13,fontWeight:700,color:p.color,minWidth:36,textAlign:'right'}}>{pct}%</span>
             </div>
           );
         })}
-        {firstTotal===0&&<div style={{fontSize:12,color:'#475569',textAlign:'center'}}>記録なし</div>}
+        {firstTotal===0&&<div style={{fontSize:12,color:'var(--muted-2)',textAlign:'center'}}>記録なし</div>}
       </div>
       <div className="card">
-        <div style={{fontSize:14,fontWeight:800,color:'#e2e8f0',marginBottom:10}}>球種遷移（前球→次球）</div>
+        <div style={{fontSize:14,fontWeight:800,color:'var(--text)',marginBottom:10}}>球種遷移（前球→次球）</div>
         {fromList.map(p=>{
           const t=seq.trans[p.id]||{};
           const total=Object.values(t).reduce((a,b)=>a+b,0);
           const tops=PT.filter(x=>t[x.id]>0).sort((a,b)=>t[b.id]-t[a.id]).slice(0,3);
           return (
-            <div key={p.id} style={{marginBottom:10,padding:'8px 10px',background:'#0f172a',borderRadius:6}}>
+            <div key={p.id} style={{marginBottom:10,padding:'8px 10px',background:'var(--surface-quiet)',borderRadius:6}}>
               <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:6}}>
                 <PitchDot ptId={p.id} size={13}/>
                 <span style={{fontSize:13,color:p.color,fontWeight:700}}>{p.label}</span>
-                <span style={{fontSize:11,color:'#64748b'}}>後 ({total}回)</span>
+                <span style={{fontSize:11,color:'var(--muted)'}}>後 ({total}回)</span>
               </div>
               <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
                 {tops.map(np=>{
@@ -1979,7 +1980,7 @@ function PitchSequenceChart({pitches, pitcherName}){
             </div>
           );
         })}
-        {fromList.length===0&&<div style={{fontSize:12,color:'#475569',textAlign:'center'}}>記録なし</div>}
+        {fromList.length===0&&<div style={{fontSize:12,color:'var(--muted-2)',textAlign:'center'}}>記録なし</div>}
       </div>
     </div>
   );
@@ -2008,7 +2009,7 @@ function CountHeatmap({pitches}){
           <div key={k} className="card" style={{padding:8}}>
             <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:4}}>
               <span style={{fontSize:11,fontWeight:700,color:c}}>{l}</span>
-              <span style={{fontSize:11,color:'#64748b'}}>{total}球</span>
+              <span style={{fontSize:11,color:'var(--muted)'}}>{total}球</span>
             </div>
             <div style={{display:'flex',flexDirection:'column',gap:1,alignItems:'center'}}>
               {ZONE_GRID.map((row,ri)=>(
@@ -2051,22 +2052,22 @@ function SpeedEditor({value, onChange, compact=false}){
   const pad=compact?'6px 0':'10px 0';
   const fs=compact?14:18;
   const padBtnStyle={padding:pad,borderRadius:6,border:'1px solid #475569',
-    background:'#0f172a',color:'#e2e8f0',fontSize:fs,fontWeight:800,
+    background:'var(--surface-quiet)',color:'var(--text)',fontSize:fs,fontWeight:800,
     cursor:'pointer',fontFamily:'inherit',userSelect:'none',minHeight:0};
   return (
-    <div style={{padding:'4px',background:'#1e293b',borderRadius:7,
-      border:'1px solid #334155',marginBottom:5}}>
+    <div style={{padding:'4px',background:'var(--surface-quiet)',borderRadius:7,
+      border:'1px solid var(--border)',marginBottom:5}}>
       {/* 表示エリア */}
       <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',
-        marginBottom:3,padding:'2px 6px',background:'#0f172a',borderRadius:5}}>
-        <span style={{fontSize:9,fontWeight:700,color:'#94a3b8'}}>球速</span>
+        marginBottom:3,padding:'2px 6px',background:'var(--surface-quiet)',borderRadius:5}}>
+        <span style={{fontSize:9,fontWeight:700,color:'var(--muted)'}}>球速</span>
         <div style={{flex:1,textAlign:'center'}}>
           <span style={{fontSize:compact?15:18,fontWeight:900,
             color:value?(valid?'#a78bfa':'#ef4444'):'#475569',
             letterSpacing:'.03em',fontVariantNumeric:'tabular-nums'}}>
             {display}
           </span>
-          <span style={{fontSize:9,color:'#64748b',marginLeft:2}}>km/h</span>
+          <span style={{fontSize:9,color:'var(--muted)',marginLeft:2}}>km/h</span>
         </div>
         {value&&(
           <span style={{fontSize:8,padding:'1px 4px',borderRadius:5,
@@ -2106,15 +2107,15 @@ function MatchupCard({pitches, pitcherName, batterName}){
   if(!mu||mu.total===0) return null;
   const topPt=PT.filter(p=>mu.ptC[p.id]>0).sort((a,b)=>mu.ptC[b.id]-mu.ptC[a.id]).slice(0,3);
   return (
-    <div style={{padding:'6px 10px',background:'#1e293b',
-      borderRadius:8,border:'1px solid #334155',marginBottom:6}}>
+    <div style={{padding:'6px 10px',background:'var(--surface-quiet)',
+      borderRadius:8,border:'1px solid var(--border)',marginBottom:6}}>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:4}}>
-        <span style={{fontSize:10,fontWeight:700,color:'#94a3b8'}}>
+        <span style={{fontSize:10,fontWeight:700,color:'var(--muted)'}}>
            対戦履歴 • {pitcherName} vs {batterName}
         </span>
-        <span style={{fontSize:10,color:'#64748b'}}>
+        <span style={{fontSize:10,color:'var(--muted)'}}>
           {mu.abCount}打席 {mu.hits}安 {mu.so}三振 {mu.bb}四死球
-          {mu.avgSpeed&&<span style={{color:'#94a3b8',marginLeft:4}}>平均{mu.avgSpeed}km</span>}
+          {mu.avgSpeed&&<span style={{color:'var(--muted)',marginLeft:4}}>平均{mu.avgSpeed}km</span>}
         </span>
       </div>
       <div style={{display:'flex',gap:4,flexWrap:'wrap'}}>
@@ -2156,7 +2157,7 @@ function RecommendedPitchCard({pitches, pitcherName, count, outs, runners, batte
         <span style={{fontSize:10,fontWeight:700,color:'#22d3ee'}}>
            推奨配球（{count.balls}-{count.strikes} / {outs}out / {batterHand}打 / {ru?'走者あり':'走者なし'}）
         </span>
-        <span style={{fontSize:9,color:'#64748b'}}>{label}</span>
+        <span style={{fontSize:9,color:'var(--muted)'}}>{label}</span>
       </div>
       <div style={{display:'flex',gap:4,flexWrap:'wrap'}}>
         {showSet.list.slice(0,4).map(({pt,c,pct})=>(
@@ -2188,44 +2189,44 @@ function InningSummaryModal({pitches, inning, topBottom, game, onClose}){
           <h3 style={{fontSize:18,color:'#fbbf24'}}> {inning}回{tbLabel} 終了</h3>
           <button className="btn btn-secondary btn-sm" onClick={onClose}>✕</button>
         </div>
-        <div style={{fontSize:12,color:'#94a3b8',marginBottom:10}}>
+        <div style={{fontSize:12,color:'var(--muted)',marginBottom:10}}>
           攻撃: {offTeam} / 投手: {s.pitcher||'-'}
         </div>
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr 1fr',gap:6,marginBottom:14}}>
-          <div style={{textAlign:'center',padding:'8px 4px',background:'#0f172a',borderRadius:8}}>
-            <div style={{fontSize:22,fontWeight:900,color:'#e2e8f0'}}>{s.runs}</div>
-            <div style={{fontSize:10,color:'#64748b'}}>得点</div>
+          <div style={{textAlign:'center',padding:'8px 4px',background:'var(--surface-quiet)',borderRadius:8}}>
+            <div style={{fontSize:22,fontWeight:900,color:'var(--text)'}}>{s.runs}</div>
+            <div style={{fontSize:10,color:'var(--muted)'}}>得点</div>
           </div>
-          <div style={{textAlign:'center',padding:'8px 4px',background:'#0f172a',borderRadius:8}}>
+          <div style={{textAlign:'center',padding:'8px 4px',background:'var(--surface-quiet)',borderRadius:8}}>
             <div style={{fontSize:22,fontWeight:900,color:'#60a5fa'}}>{s.hit}</div>
-            <div style={{fontSize:10,color:'#64748b'}}>安打</div>
+            <div style={{fontSize:10,color:'var(--muted)'}}>安打</div>
           </div>
-          <div style={{textAlign:'center',padding:'8px 4px',background:'#0f172a',borderRadius:8}}>
+          <div style={{textAlign:'center',padding:'8px 4px',background:'var(--surface-quiet)',borderRadius:8}}>
             <div style={{fontSize:22,fontWeight:900,color:'#ef4444'}}>{s.so}</div>
-            <div style={{fontSize:10,color:'#64748b'}}>三振</div>
+            <div style={{fontSize:10,color:'var(--muted)'}}>三振</div>
           </div>
-          <div style={{textAlign:'center',padding:'8px 4px',background:'#0f172a',borderRadius:8}}>
+          <div style={{textAlign:'center',padding:'8px 4px',background:'var(--surface-quiet)',borderRadius:8}}>
             <div style={{fontSize:22,fontWeight:900,color:'#f97316'}}>{s.bb}</div>
-            <div style={{fontSize:10,color:'#64748b'}}>四死球</div>
+            <div style={{fontSize:10,color:'var(--muted)'}}>四死球</div>
           </div>
         </div>
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:6,marginBottom:14}}>
-          <div style={{textAlign:'center',padding:'6px 4px',background:'#0f172a',borderRadius:6}}>
+          <div style={{textAlign:'center',padding:'6px 4px',background:'var(--surface-quiet)',borderRadius:6}}>
             <div style={{fontSize:18,fontWeight:800,color:'#eab308'}}>{s.t}</div>
-            <div style={{fontSize:9,color:'#64748b'}}>投球数</div>
+            <div style={{fontSize:9,color:'var(--muted)'}}>投球数</div>
           </div>
-          <div style={{textAlign:'center',padding:'6px 4px',background:'#0f172a',borderRadius:6}}>
+          <div style={{textAlign:'center',padding:'6px 4px',background:'var(--surface-quiet)',borderRadius:6}}>
             <div style={{fontSize:18,fontWeight:800,color:'#eab308'}}>{s.sRate}%</div>
-            <div style={{fontSize:9,color:'#64748b'}}>S率</div>
+            <div style={{fontSize:9,color:'var(--muted)'}}>S率</div>
           </div>
-          <div style={{textAlign:'center',padding:'6px 4px',background:'#0f172a',borderRadius:6}}>
+          <div style={{textAlign:'center',padding:'6px 4px',background:'var(--surface-quiet)',borderRadius:6}}>
             <div style={{fontSize:18,fontWeight:800,color:'#c084fc'}}>
               {s.maxSpeed?`${s.maxSpeed}`:'–'}
             </div>
-            <div style={{fontSize:9,color:'#64748b'}}>最速km/h</div>
+            <div style={{fontSize:9,color:'var(--muted)'}}>最速km/h</div>
           </div>
         </div>
-        <div style={{fontSize:11,fontWeight:700,color:'#94a3b8',marginBottom:5}}>球種内訳</div>
+        <div style={{fontSize:11,fontWeight:700,color:'var(--muted)',marginBottom:5}}>球種内訳</div>
         <div style={{display:'flex',gap:4,flexWrap:'wrap',marginBottom:14}}>
           {topPt.map(p=>{
             const c=s.ptC[p.id], pct=Math.round(c/s.t*100);
@@ -2239,7 +2240,7 @@ function InningSummaryModal({pitches, inning, topBottom, game, onClose}){
               </span>
             );
           })}
-          {topPt.length===0&&<span style={{fontSize:11,color:'#475569'}}>記録なし</span>}
+          {topPt.length===0&&<span style={{fontSize:11,color:'var(--muted-2)'}}>記録なし</span>}
         </div>
         <button className="btn btn-primary" style={{width:'100%'}} onClick={onClose}>
           次のイニングへ →
@@ -2270,9 +2271,9 @@ function InsightPanel({pitches, compact=false, maxItems=null}){
 
   if(insights.length===0){
     return (
-      <div style={{padding:20,textAlign:'center',color:'#475569',fontSize:12}}>
+      <div style={{padding:20,textAlign:'center',color:'var(--muted-2)',fontSize:12}}>
         まだインサイトはありません<br/>
-        <span style={{fontSize:10,color:'#64748b'}}>投球数が増えると自動で偏りや傾向を検出します</span>
+        <span style={{fontSize:10,color:'var(--muted)'}}>投球数が増えると自動で偏りや傾向を検出します</span>
       </div>
     );
   }
@@ -2314,20 +2315,20 @@ function InsightPanel({pitches, compact=false, maxItems=null}){
                 padding:'1px 5px',background:`${s.color}25`,borderRadius:3}}>
                 {s.label}
               </span>
-              <span style={{fontSize:10,color:'#94a3b8'}}>{ins.target}</span>
+              <span style={{fontSize:10,color:'var(--muted)'}}>{ins.target}</span>
               <span style={{flex:1}}/>
               {sev>=2&&<span style={{fontSize:9,color:s.color,fontWeight:800}}>
                 {'★'.repeat(sev)}
               </span>}
             </div>
-            <div style={{fontSize:12,fontWeight:700,color:'#e2e8f0',marginBottom:2,lineHeight:1.3}}>
+            <div style={{fontSize:12,fontWeight:700,color:'var(--text)',marginBottom:2,lineHeight:1.3}}>
               {ins.title}
             </div>
-            <div style={{fontSize:11,color:'#94a3b8',lineHeight:1.4}}>
+            <div style={{fontSize:11,color:'var(--muted)',lineHeight:1.4}}>
               {ins.body}
             </div>
             {ins.sample&&(
-              <div style={{fontSize:9,color:'#64748b',marginTop:3}}>
+              <div style={{fontSize:9,color:'var(--muted)',marginTop:3}}>
                 サンプル: {ins.sample}
               </div>
             )}
@@ -2335,7 +2336,7 @@ function InsightPanel({pitches, compact=false, maxItems=null}){
         );
       })}
       {filtered.length===0&&(
-        <div style={{padding:16,textAlign:'center',color:'#475569',fontSize:11}}>
+        <div style={{padding:16,textAlign:'center',color:'var(--muted-2)',fontSize:11}}>
           該当するインサイトなし
         </div>
       )}
@@ -2372,7 +2373,7 @@ function LiveCriticalInsights({pitches, pitcherName, batterName, onShowAll}){
                 overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>
                 {ins.title}
               </span>
-              <span style={{fontSize:9,color:'#64748b'}}>{ins.target}</span>
+              <span style={{fontSize:9,color:'var(--muted)'}}>{ins.target}</span>
             </div>
           </div>
         );
@@ -2392,7 +2393,7 @@ function DetailResultPicker({pZone, pPt, gs, onBack, onSelect}){
   const STRIKE_CHOICES=[
     {id:c.strikes>=2?'looking':'called',  l:c.strikes>=2?'見逃し三振':'見逃し',        sub:c.strikes>=2?'S→アウト':'S+1', color:'#eab308',bg:'#3f2e06'},
     {id:c.strikes>=2?'swinging':'swing',  l:c.strikes>=2?'空振り三振':'空振り',        sub:c.strikes>=2?'S→アウト':'S+1', color:'#f97316',bg:'#3b1506'},
-    {id:'foul',                           l:'ファール',                                sub:c.strikes>=2?'カウント変化なし':'S+1', color:'#94a3b8',bg:'#1e293b'},
+    {id:'foul',                           l:'ファール',                                sub:c.strikes>=2?'カウント変化なし':'S+1', color:'var(--muted)',bg:'#1e293b'},
     {id:'bunt_foul',                      l:c.strikes>=2?'バント三振':'バントファール', sub:c.strikes>=2?'S→アウト':'S+1', color:'#c084fc',bg:'#2d1b4e'},
   ];
   const OUT_CHOICES=[
@@ -2404,8 +2405,8 @@ function DetailResultPicker({pZone, pPt, gs, onBack, onSelect}){
     {id:'looking',        l:'見逃三振',         color:'#eab308',bg:'#3f2e06'},
     {id:'swinging',       l:'空振三振',         color:'#eab308',bg:'#3f2e06'},
     {id:'bunt_fly',       l:'バントフライ',     color:'#a78bfa',bg:'#2d1b4e'},
-    {id:'safety_out',     l:'セーフティ凡退',   color:'#94a3b8',bg:'#1e293b'},
-    {id:'def_int',        l:'守備妨害',         color:'#94a3b8',bg:'#1e293b'},
+    {id:'safety_out',     l:'セーフティ凡退',   color:'var(--muted)',bg:'#1e293b'},
+    {id:'def_int',        l:'守備妨害',         color:'var(--muted)',bg:'#1e293b'},
     {id:'infield_fly',    l:'インフィールドF',  color:'#fbbf24',bg:'#2a1800'},
     {id:'force_home',     l:'本塁封殺',         color:'#dc2626',bg:'#3f0a0a'},
     {id:'tag_out',        l:'刺殺(走塁)',       color:'#06b6d4',bg:'#0c1a2e'},
@@ -2508,7 +2509,7 @@ function DetailResultPicker({pZone, pPt, gs, onBack, onSelect}){
             style={{fontSize:11,padding:'5px 10px'}}>← 戻る</button>
           <span style={{fontSize:13,fontWeight:800,color:cfg.color}}>{cfg.label}</span>
           <span style={{flex:1}}/>
-          <span style={{fontSize:11,color:'#64748b'}}>S{c.strikes} B{c.balls} O{outs}</span>
+          <span style={{fontSize:11,color:'var(--muted)'}}>S{c.strikes} B{c.balls} O{outs}</span>
         </div>
         <div style={{display:'grid',gridTemplateColumns:`repeat(${cfg.cols},1fr)`,gap:8}}>
           {cfg.items.map(ch=>(
@@ -2554,8 +2555,8 @@ function DetailResultPicker({pZone, pPt, gs, onBack, onSelect}){
       <div style={{display:'flex',alignItems:'center',gap:5,marginBottom:5,flexWrap:'wrap'}}>
         <button className="btn btn-secondary btn-sm" onClick={onBack}
           style={{fontSize:10,padding:'3px 8px'}}>← 戻る</button>
-        <span style={{fontSize:10,padding:'2px 5px',background:'#0f172a',borderRadius:4,
-          color:'#cbd5e1'}}>Z{pZone}</span>
+        <span style={{fontSize:10,padding:'2px 5px',background:'var(--surface-quiet)',borderRadius:4,
+          color:'var(--text)'}}>Z{pZone}</span>
         {ptInfo&&(
           <span style={{fontSize:10,padding:'2px 5px',borderRadius:4,
             background:`${ptInfo.color}22`,color:ptInfo.color,fontWeight:700}}>
@@ -2563,11 +2564,11 @@ function DetailResultPicker({pZone, pPt, gs, onBack, onSelect}){
           </span>
         )}
         <span style={{flex:1}}/>
-        <span style={{fontSize:9,color:'#94a3b8'}}>
+        <span style={{fontSize:9,color:'var(--muted)'}}>
           <span style={{color:'#eab308',fontWeight:800}}>S{c.strikes}</span>
-          <span style={{color:'#475569',margin:'0 3px'}}>·</span>
+          <span style={{color:'var(--muted-2)',margin:'0 3px'}}>·</span>
           <span style={{color:'#22c55e',fontWeight:800}}>B{c.balls}</span>
-          <span style={{color:'#475569',margin:'0 3px'}}>·</span>
+          <span style={{color:'var(--muted-2)',margin:'0 3px'}}>·</span>
           <span style={{color:'#ef4444',fontWeight:800}}>O{outs}</span>
         </span>
       </div>
@@ -2667,14 +2668,14 @@ function QuickInputBar({onQuickResult, gs}){
 
   return (
     <div className="card" style={{padding:'10px',marginBottom:8,
-      background:'#0c1322',border:'1px solid #1e293b'}}>
+      background:'#0c1322',border:'1px solid var(--border)'}}>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:8}}>
-        <span style={{fontSize:11,fontWeight:700,color:'#94a3b8'}}> クイック入力</span>
-        <span style={{fontSize:11,color:'#64748b'}}>
+        <span style={{fontSize:11,fontWeight:700,color:'var(--muted)'}}> クイック入力</span>
+        <span style={{fontSize:11,color:'var(--muted)'}}>
           <span style={{color:'#eab308'}}>S{c.strikes}</span>
-          <span style={{color:'#475569'}}> · </span>
+          <span style={{color:'var(--muted-2)'}}> · </span>
           <span style={{color:'#60a5fa'}}>B{c.balls}</span>
-          <span style={{color:'#475569'}}> · </span>
+          <span style={{color:'var(--muted-2)'}}> · </span>
           <span style={{color:'#f87171'}}>O{outs}</span>
         </span>
       </div>
@@ -2705,7 +2706,7 @@ function QuickInputBar({onQuickResult, gs}){
             {OUT_ITEMS.map(it=>(
               <button key={it.id} onClick={()=>{onQuickResult(it.id);setSubMenu(null);}}
                 style={{padding:'8px 2px',borderRadius:6,border:'1.5px solid #ef4444',
-                  background:'#0f172a',color:'#fca5a5',fontSize:10,fontWeight:700,
+                  background:'var(--surface-quiet)',color:'#fca5a5',fontSize:10,fontWeight:700,
                   cursor:'pointer',fontFamily:'inherit',lineHeight:1.2}}>
                 {it.label}
               </button>
@@ -2723,7 +2724,7 @@ function QuickInputBar({onQuickResult, gs}){
             {HIT_ITEMS.map(it=>(
               <button key={it.id} onClick={()=>{onQuickResult(it.id);setSubMenu(null);}}
                 style={{padding:'8px 2px',borderRadius:6,border:'1.5px solid #60a5fa',
-                  background:'#0f172a',color:'#93c5fd',fontSize:11,fontWeight:700,
+                  background:'var(--surface-quiet)',color:'#93c5fd',fontSize:11,fontWeight:700,
                   cursor:'pointer',fontFamily:'inherit',lineHeight:1.2}}>
                 {it.label}
               </button>
@@ -2742,7 +2743,7 @@ function QuickInputBar({onQuickResult, gs}){
         </button>
         <button onClick={()=>onQuickResult('foul')}
           style={{padding:'8px 2px',borderRadius:6,border:'1.5px solid #a3a3a3',
-            background:'transparent',color:'#cbd5e1',fontSize:10,fontWeight:700,
+            background:'transparent',color:'var(--text)',fontSize:10,fontWeight:700,
             cursor:'pointer',fontFamily:'inherit',lineHeight:1.2}}>
           ファール
         </button>
@@ -2780,13 +2781,13 @@ function ScoreEditor({gs,onSave,onClose}){
           <h3 style={{fontSize:16}}>得点修正</h3>
           <button className="btn btn-secondary btn-sm" onClick={onClose}>✕</button>
         </div>
-        <div style={{fontSize:12,color:'#64748b',marginBottom:12}}>表示スコア = 記録スコア + 補正値</div>
+        <div style={{fontSize:12,color:'var(--muted)',marginBottom:12}}>表示スコア = 記録スコア + 補正値</div>
         {[{label:'ホーム',val:ha,set:setHa,base:gs.score.home},{label:'アウェイ',val:aa,set:setAa,base:gs.score.away}].map(({label,val,set,base})=>(
           <div key={label} style={{display:'flex',alignItems:'center',gap:10,marginBottom:14}}>
             <span style={{width:56,fontSize:14}}>{label}</span>
-            <span style={{fontSize:13,color:'#64748b'}}>{base}+</span>
+            <span style={{fontSize:13,color:'var(--muted)'}}>{base}+</span>
             <button className="btn btn-secondary btn-sm" onClick={()=>set(v=>v-1)}>－</button>
-            <span style={{width:40,textAlign:'center',fontSize:20,fontWeight:800,color:'#e2e8f0'}}>{val>=0?'+':''}{val}</span>
+            <span style={{width:40,textAlign:'center',fontSize:20,fontWeight:800,color:'var(--text)'}}>{val>=0?'+':''}{val}</span>
             <button className="btn btn-secondary btn-sm" onClick={()=>set(v=>v+1)}>＋</button>
             <span style={{fontSize:16,fontWeight:700,color:'#3b82f6',marginLeft:4}}>{base+val}</span>
           </div>
@@ -2891,15 +2892,15 @@ function LineupScreen({game,onBack,onGameUpdate}){
 
       <div className="card" style={{marginTop:12,marginBottom:12}}>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:8}}>
-          <div style={{fontSize:13,fontWeight:700,color:'#94a3b8'}}>交代記録（両チーム共通）</div>
+          <div style={{fontSize:13,fontWeight:700,color:'var(--muted)'}}>交代記録（両チーム共通）</div>
           <button className="btn btn-secondary btn-sm" onClick={()=>setShowSub(true)}>＋ 追加</button>
         </div>
-        {subs.length===0&&<div style={{fontSize:12,color:'#475569'}}>交代なし</div>}
+        {subs.length===0&&<div style={{fontSize:12,color:'var(--muted-2)'}}>交代なし</div>}
         {subs.map((s,i)=>(
           <div key={s.id||i} style={{display:'flex',gap:6,fontSize:12,padding:'4px 0',borderBottom:'1px solid #0f172a',alignItems:'center'}}>
-            <span style={{color:'#94a3b8',flexShrink:0}}>{s.inning}回{s.tb==='top'?'表':'裏'}</span>
+            <span style={{color:'var(--muted)',flexShrink:0}}>{s.inning}回{s.tb==='top'?'表':'裏'}</span>
             <span style={{fontWeight:700}}>{s.order}番 {s.name}</span>
-            <span style={{color:'#64748b'}}>#{s.number} {s.pos}</span>
+            <span style={{color:'var(--muted)'}}>#{s.number} {s.pos}</span>
             <button className="btn btn-danger btn-sm" style={{marginLeft:'auto',padding:'2px 6px'}}
               onClick={()=>setSubs(ss=>ss.filter((_,j)=>j!==i))}>✕</button>
           </div>
@@ -2926,7 +2927,7 @@ function LineupScreen({game,onBack,onGameUpdate}){
                 {label:'打席',field:'hand',type:'select',opts:[{v:'R',l:'右打'},{v:'L',l:'左打'},{v:'S',l:'両打'}]},
               ].map(({label,field,type,opts})=>(
                 <div key={field}>
-                  <div style={{fontSize:11,color:'#94a3b8',marginBottom:3}}>{label}</div>
+                  <div style={{fontSize:11,color:'var(--muted)',marginBottom:3}}>{label}</div>
                   {type==='select'
                     ? <select value={subForm[field]} onChange={e=>setSubForm(f=>({...f,[field]:e.target.value}))}>
                         {opts.map(o=><option key={o.v} value={o.v}>{o.l}</option>)}
@@ -3488,7 +3489,7 @@ function ShareScreen({game,pitches,onBack}){
     // 簡易レポートDOMを作成
     const c=document.createElement('div');
     Object.assign(c.style,{position:'absolute',left:'-99999px',top:'0',
-      width:'640px',background:'#0f172a',color:'#e2e8f0',padding:'20px',
+      width:'640px',background:'var(--surface-quiet)',color:'var(--text)',padding:'20px',
       fontFamily:"-apple-system,'Hiragino Sans',sans-serif"});
     c.innerText=buildShareText(game,pitches);
     c.style.whiteSpace='pre-wrap';
@@ -3529,13 +3530,13 @@ function ShareScreen({game,pitches,onBack}){
 
       {/* LINE / Web 共有 */}
       <div className="card" style={{marginBottom:12,
-        background:'#1e293b',border:'1px solid #334155'}}>
+        background:'var(--surface-quiet)',border:'1px solid var(--border)'}}>
         <div style={{display:'flex',alignItems:'center',marginBottom:6}}>
-          <span style={{fontSize:13,fontWeight:700,color:'#e2e8f0'}}> LINE・SNS共有</span>
+          <span style={{fontSize:13,fontWeight:700,color:'var(--text)'}}> LINE・SNS共有</span>
           <InfoBadge title="LINE共有について"
             body={'• LINEに送信: LINEアプリを起動してテキストを送る\n• 共有シート: iOS/Androidの共有メニューを開き、LINE・メール・Slack等から選択\n• 画像で共有: スカウト概要を画像化して送信（モバイル推奨）'}/>
         </div>
-        <div style={{fontSize:11,color:'#94a3b8',marginBottom:10}}>
+        <div style={{fontSize:11,color:'var(--muted)',marginBottom:10}}>
           試合のスコア・投手成績の要約をLINE/SNSで送信
         </div>
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:6,marginBottom:6}}>
@@ -3563,13 +3564,13 @@ function ShareScreen({game,pitches,onBack}){
 
       {/* PDF スカウティングレポート */}
       <div className="card" style={{marginBottom:12,
-        background:'#1e293b',border:'1px solid #334155'}}>
+        background:'var(--surface-quiet)',border:'1px solid var(--border)'}}>
         <div style={{display:'flex',alignItems:'center',marginBottom:6}}>
-          <span style={{fontSize:13,fontWeight:700,color:'#e2e8f0'}}> PDFスカウティングレポート</span>
+          <span style={{fontSize:13,fontWeight:700,color:'var(--text)'}}> PDFスカウティングレポート</span>
           <InfoBadge title="PDFレポート"
             body={'投手・打者別のスカウトデータをまとめて印刷可能なPDFに出力。\nラインスコア・コース・球種・打席結果を1冊に。\nLINE/メールに添付したり、紙に印刷して試合中に参照可能。'}/>
         </div>
-        <div style={{fontSize:11,color:'#94a3b8',marginBottom:10}}>
+        <div style={{fontSize:11,color:'var(--muted)',marginBottom:10}}>
           投手・打者別のスカウトデータをまとめて印刷可能なPDFに出力。
         </div>
         <button className="btn btn-danger" style={{width:'100%',padding:'10px'}}
@@ -3584,7 +3585,7 @@ function ShareScreen({game,pitches,onBack}){
         <div style={{fontSize:13,fontWeight:700,color:'#c084fc',marginBottom:6}}>
           途中経過を他の人に渡す(JSONファイル)
         </div>
-        <div style={{fontSize:11,color:'#94a3b8',marginBottom:10,lineHeight:1.5}}>
+        <div style={{fontSize:11,color:'var(--muted)',marginBottom:10,lineHeight:1.5}}>
           試合データをJSONファイルで送信。受け取った人はホーム画面の「JSON取込」から
           インポートして続きを記録できます。
         </div>
@@ -3598,8 +3599,8 @@ function ShareScreen({game,pitches,onBack}){
             ダウンロード
           </button>
         </div>
-        <div style={{fontSize:9,color:'#64748b',marginTop:8,padding:6,
-          background:'#0f172a',borderRadius:5}}>
+        <div style={{fontSize:9,color:'var(--muted)',marginTop:8,padding:6,
+          background:'var(--surface-quiet)',borderRadius:5}}>
           試合データ・全投球・スタメン情報を含みます。受け取った人が「JSON取込」で読み込めば
           そのまま続きを記録可能。
         </div>
@@ -3607,10 +3608,10 @@ function ShareScreen({game,pitches,onBack}){
 
       {/* ① QRコード（アプリURL） */}
       <div className="card" style={{marginBottom:12}}>
-        <div style={{fontSize:13,fontWeight:700,color:'#94a3b8',marginBottom:6}}>
+        <div style={{fontSize:13,fontWeight:700,color:'var(--muted)',marginBottom:6}}>
            QRコード（アプリURL）
         </div>
-        <div style={{fontSize:11,color:'#64748b',marginBottom:8}}>
+        <div style={{fontSize:11,color:'var(--muted)',marginBottom:8}}>
           このQRをスマホでスキャンすると、同じURLでアプリを開けます。
         </div>
         <div ref={qrRef} style={{display:'flex',justifyContent:'center',padding:6}}/>
@@ -3632,15 +3633,15 @@ function BatterSelectableView({batterStatsList, allPitches, game, emptyMsg}){
   },[batterStatsList,selected]);
   if(batterStatsList.length===0){
     return (
-      <div style={{textAlign:'center',color:'#475569',marginTop:40,fontSize:13}}>{emptyMsg}</div>
+      <div style={{textAlign:'center',color:'var(--muted-2)',marginTop:40,fontSize:13}}>{emptyMsg}</div>
     );
   }
   return (
     <div>
       {/* 打者選択タブ */}
       <div style={{display:'flex',gap:4,flexWrap:'wrap',marginBottom:10,
-        padding:8,background:'#0f172a',borderRadius:10,border:'1px solid #334155'}}>
-        <div style={{fontSize:10,color:'#94a3b8',fontWeight:700,
+        padding:8,background:'var(--surface-quiet)',borderRadius:10,border:'1px solid var(--border)'}}>
+        <div style={{fontSize:10,color:'var(--muted)',fontWeight:700,
           width:'100%',marginBottom:2}}>
           打者を選択（タップでデータ表示）
         </div>
@@ -3659,7 +3660,7 @@ function BatterSelectableView({batterStatsList, allPitches, game, emptyMsg}){
               }}>
               {active&&<span style={{fontSize:11}}></span>}
               <span>{bs.name}</span>
-              <span style={{fontSize:8,color:'#64748b'}}>{bs.hand}打</span>
+              <span style={{fontSize:8,color:'var(--muted)'}}>{bs.hand}打</span>
               <span style={{fontSize:9,color:active?'#4ade80':'#64748b',
                 padding:'1px 4px',background:active?'rgba(34,197,94,.2)':'#0f172a',
                 borderRadius:8}}>
@@ -3677,8 +3678,8 @@ function BatterSelectableView({batterStatsList, allPitches, game, emptyMsg}){
             borderRadius:10,
             border:'1px solid rgba(34,197,94,.3)'}}>
             <span style={{fontSize:20}}></span>
-            <span style={{fontSize:17,fontWeight:800,color:'#e2e8f0',flex:1}}>{selected}</span>
-            <span style={{fontSize:11,color:'#64748b'}}>
+            <span style={{fontSize:17,fontWeight:800,color:'var(--text)',flex:1}}>{selected}</span>
+            <span style={{fontSize:11,color:'var(--muted)'}}>
               {batterStatsList.find(b=>b.name===selected)?.abCount||0}打席
             </span>
           </div>
@@ -3697,7 +3698,7 @@ function BatterDetailPanel({allPitches, batterName, game}){
     [game, batterName]
   );
   if(stats.abs.length===0){
-    return <div style={{textAlign:'center',color:'#475569',padding:20,fontSize:12}}>対象データなし</div>;
+    return <div style={{textAlign:'center',color:'var(--muted-2)',padding:20,fontSize:12}}>対象データなし</div>;
   }
   // 打席結果集計
   const abResults=useMemo(()=>{
@@ -3769,7 +3770,7 @@ function BatterDetailPanel({allPitches, batterName, game}){
       {/* 主要指標 */}
       <div className="card" style={{marginBottom:10}}>
         <div style={{display:'flex',alignItems:'center',marginBottom:6}}>
-          <span style={{fontSize:12,fontWeight:700,color:'#94a3b8'}}>主要指標</span>
+          <span style={{fontSize:12,fontWeight:700,color:'var(--muted)'}}>主要指標</span>
           <InfoBadge title="打者の主要指標"
             body={'• 打数=打席数-四死球-犠打犠飛\n• 打率=安打/打数\n• 出塁率の代わりに「打席数」「安打」を併記\n• 二/三/本=長打の内訳'}/>
         </div>
@@ -3786,7 +3787,7 @@ function BatterDetailPanel({allPitches, batterName, game}){
           ].map(({v,l,c})=>(
             <div key={l} style={{padding:'5px 2px'}}>
               <div style={{fontSize:16,fontWeight:900,color:c,lineHeight:1}}>{v}</div>
-              <div style={{fontSize:9,color:'#64748b',marginTop:2}}>{l}</div>
+              <div style={{fontSize:9,color:'var(--muted)',marginTop:2}}>{l}</div>
             </div>
           ))}
         </div>
@@ -3795,7 +3796,7 @@ function BatterDetailPanel({allPitches, batterName, game}){
       {/* ホット/コールドゾーン */}
       <div className="card" style={{marginBottom:10}}>
         <div style={{display:'flex',alignItems:'center',marginBottom:6}}>
-          <span style={{fontSize:12,fontWeight:700,color:'#94a3b8'}}>ホット/コールドゾーン</span>
+          <span style={{fontSize:12,fontWeight:700,color:'var(--muted)'}}>ホット/コールドゾーン</span>
           <InfoBadge title="ホット/コールドゾーン"
             body={'打者がストライクゾーン(3×3)のどこを得意/苦手としているか。\n• 赤=得意(安打多い)\n• 青=苦手(凡退多い)\n• 数字=安打数\n• ボールゾーン(外周)も表示'}/>
         </div>
@@ -3824,14 +3825,14 @@ function BatterDetailPanel({allPitches, batterName, game}){
                       <div style={{fontSize:7,color:'rgba(255,255,255,.6)'}}>{d.t}球</div>
                     </>
                   ):(
-                    <span style={{fontSize:8,color:'#475569'}}>{z}</span>
+                    <span style={{fontSize:8,color:'var(--muted-2)'}}>{z}</span>
                   )}
                 </div>
               );
             })}
           </div>
         </div>
-        <div style={{fontSize:9,color:'#64748b',marginTop:4,textAlign:'center'}}>
+        <div style={{fontSize:9,color:'var(--muted)',marginTop:4,textAlign:'center'}}>
           太枠=ストライクゾーン / 数字=安打数 / 赤=得意 青=苦手
         </div>
       </div>
@@ -3839,13 +3840,13 @@ function BatterDetailPanel({allPitches, batterName, game}){
       {/* 球種別 結果 */}
       <div className="card" style={{marginBottom:10}}>
         <div style={{display:'flex',alignItems:'center',marginBottom:6}}>
-          <span style={{fontSize:12,fontWeight:700,color:'#94a3b8'}}>球種別の対応</span>
+          <span style={{fontSize:12,fontWeight:700,color:'var(--muted)'}}>球種別の対応</span>
           <InfoBadge title="球種別 結果"
             body={'各球種に対する打者の反応。\n• 安打=その球種で打った安打数\n• 三振=その球種が3rdストライクになった数\n• 空振=スイングしたが当たらなかった数\n• スイング率=振った/受けた'}/>
         </div>
         <table style={tableStyle}>
           <thead>
-            <tr style={{background:'#0f172a'}}>
+            <tr style={{background:'var(--surface-quiet)'}}>
               <th style={{...cellHead,textAlign:'left'}}>球種</th>
               <th style={cellHead}>球数</th>
               <th style={cellHead}>安打</th>
@@ -3859,7 +3860,7 @@ function BatterDetailPanel({allPitches, batterName, game}){
               const r=ptResults[pt.id];
               const swPct=r.total>0?Math.round(r.swing/r.total*100):0;
               return (
-                <tr key={pt.id} style={{borderBottom:'1px solid #1e293b'}}>
+                <tr key={pt.id} style={{borderBottom:'1px solid var(--border-soft)'}}>
                   <td style={cellLabel}>
                     <span style={{display:'inline-block',width:8,height:8,borderRadius:'50%',
                       background:pt.color,marginRight:5,verticalAlign:'middle'}}/>
@@ -3867,7 +3868,7 @@ function BatterDetailPanel({allPitches, batterName, game}){
                       {pt.label}
                     </span>
                   </td>
-                  <td style={{...cellVal,color:'#cbd5e1'}}>{r.total}</td>
+                  <td style={{...cellVal,color:'var(--text)'}}>{r.total}</td>
                   <td style={{...cellVal,color:r.hit>0?'#60a5fa':'#475569',fontWeight:r.hit>0?800:400}}>
                     {r.hit||'–'}
                   </td>
@@ -3877,7 +3878,7 @@ function BatterDetailPanel({allPitches, batterName, game}){
                   <td style={{...cellVal,color:r.whiff>0?'#f97316':'#475569',fontWeight:r.whiff>0?800:400}}>
                     {r.whiff||'–'}
                   </td>
-                  <td style={{...cellVal,color:'#94a3b8'}}>{swPct}%</td>
+                  <td style={{...cellVal,color:'var(--muted)'}}>{swPct}%</td>
                 </tr>
               );
             })}
@@ -3889,13 +3890,13 @@ function BatterDetailPanel({allPitches, batterName, game}){
       {vsPitchers.length>0&&(
         <div className="card" style={{marginBottom:10}}>
           <div style={{display:'flex',alignItems:'center',marginBottom:6}}>
-            <span style={{fontSize:12,fontWeight:700,color:'#94a3b8'}}>対戦投手別</span>
+            <span style={{fontSize:12,fontWeight:700,color:'var(--muted)'}}>対戦投手別</span>
             <InfoBadge title="対戦投手別"
               body={'打者が各投手と対戦した結果。\n• 球数=受けた球数\n• 打席=完了した打席数\n• 安打/三振/四死球=その投手から'}/>
           </div>
           <table style={tableStyle}>
             <thead>
-              <tr style={{background:'#0f172a'}}>
+              <tr style={{background:'var(--surface-quiet)'}}>
                 <th style={{...cellHead,textAlign:'left'}}>投手</th>
                 <th style={cellHead}>球</th>
                 <th style={cellHead}>打席</th>
@@ -3906,12 +3907,12 @@ function BatterDetailPanel({allPitches, batterName, game}){
             </thead>
             <tbody>
               {vsPitchers.map(vp=>(
-                <tr key={vp.name} style={{borderBottom:'1px solid #1e293b'}}>
+                <tr key={vp.name} style={{borderBottom:'1px solid var(--border-soft)'}}>
                   <td style={cellLabel}>
-                    <span style={{color:'#e2e8f0',fontSize:11,fontWeight:700}}>{vp.name}</span>
+                    <span style={{color:'var(--text)',fontSize:11,fontWeight:700}}>{vp.name}</span>
                   </td>
-                  <td style={{...cellVal,color:'#cbd5e1'}}>{vp.pitches}</td>
-                  <td style={{...cellVal,color:'#94a3b8'}}>{vp.ab}</td>
+                  <td style={{...cellVal,color:'var(--text)'}}>{vp.pitches}</td>
+                  <td style={{...cellVal,color:'var(--muted)'}}>{vp.ab}</td>
                   <td style={{...cellVal,color:vp.h>0?'#60a5fa':'#475569',fontWeight:vp.h>0?800:400}}>
                     {vp.h||'–'}
                   </td>
@@ -3931,7 +3932,7 @@ function BatterDetailPanel({allPitches, batterName, game}){
       {/* 打球方向（スプレー） */}
       <div className="card" style={{marginBottom:10}}>
         <div style={{display:'flex',alignItems:'center',marginBottom:6}}>
-          <span style={{fontSize:14,fontWeight:800,color:'#e2e8f0'}}>打球方向（スプレーチャート）</span>
+          <span style={{fontSize:14,fontWeight:800,color:'var(--text)'}}>打球方向（スプレーチャート）</span>
           <InfoBadge title="スプレーチャート"
             body={'打球がどの方向に飛んだかをフィールド図にプロット。\n• 青=安打\n• 赤=凡打\n• 紫=犠打犠飛\n• 引っ張り/流し打ちの傾向が分かる'}/>
         </div>
@@ -3947,7 +3948,7 @@ function BatterDetailPanel({allPitches, batterName, game}){
 
       {/* 全打席結果一覧 */}
       <div className="card" style={{marginBottom:10}}>
-        <div style={{fontSize:12,fontWeight:700,color:'#94a3b8',marginBottom:6}}>全打席結果</div>
+        <div style={{fontSize:12,fontWeight:700,color:'var(--muted)',marginBottom:6}}>全打席結果</div>
         <div style={{display:'flex',gap:4,flexWrap:'wrap'}}>
           {stats.abs.filter(a=>a.result).map((a,i)=>{
             const r=ALL_RESULTS.find(x=>x.id===a.result)?.label||a.result;
@@ -3960,7 +3961,7 @@ function BatterDetailPanel({allPitches, batterName, game}){
                 display:'inline-flex',alignItems:'center',gap:4,
                 fontSize:10,padding:'3px 7px',borderRadius:5,
                 background:`${color}15`,border:`1px solid ${color}40`,color}}>
-                <span style={{fontSize:8,color:'#64748b'}}>{a.inning}回{a.tb==='top'?'表':'裏'}</span>
+                <span style={{fontSize:8,color:'var(--muted)'}}>{a.inning}回{a.tb==='top'?'表':'裏'}</span>
                 <span style={{fontWeight:700}}>{r}</span>
               </span>
             );
@@ -3985,15 +3986,15 @@ function BatterDetailPanel({allPitches, batterName, game}){
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:6,textAlign:'center',marginBottom:10}}>
               <div>
                 <div style={{fontSize:18,fontWeight:800,color:'#4ade80',fontFamily:'monospace'}}>{fmtMs(avg)}</div>
-                <div style={{fontSize:9,color:'#64748b',marginTop:2}}>平均</div>
+                <div style={{fontSize:9,color:'var(--muted)',marginTop:2}}>平均</div>
               </div>
               <div>
                 <div style={{fontSize:18,fontWeight:800,color:'#4ade80',fontFamily:'monospace'}}>{fmtMs(mn)}</div>
-                <div style={{fontSize:9,color:'#64748b',marginTop:2}}>最速</div>
+                <div style={{fontSize:9,color:'var(--muted)',marginTop:2}}>最速</div>
               </div>
               <div>
                 <div style={{fontSize:18,fontWeight:800,color:'#f87171',fontFamily:'monospace'}}>{fmtMs(mx)}</div>
-                <div style={{fontSize:9,color:'#64748b',marginTop:2}}>最遅</div>
+                <div style={{fontSize:9,color:'var(--muted)',marginTop:2}}>最遅</div>
               </div>
             </div>
             {[...runTimes].reverse().map((t,i)=>{
@@ -4001,9 +4002,9 @@ function BatterDetailPanel({allPitches, batterName, game}){
               return (
                 <div key={t.id} style={{display:'flex',alignItems:'center',gap:6,
                   padding:'5px 0',borderBottom:i<runTimes.length-1?'1px solid #0f172a':'none'}}>
-                  <span style={{fontSize:11,color:'#64748b',width:24}}>#{runTimes.length-i}</span>
+                  <span style={{fontSize:11,color:'var(--muted)',width:24}}>#{runTimes.length-i}</span>
                   <span style={{flex:1,fontSize:15,fontFamily:'monospace',fontWeight:700,color:c}}>{t.formatted}</span>
-                  <span style={{fontSize:10,color:'#475569'}}>
+                  <span style={{fontSize:10,color:'var(--muted-2)'}}>
                     {new Date(t.timestamp).toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'})}
                   </span>
                 </div>
@@ -4030,7 +4031,7 @@ function PitcherSelectableView({pitcherStats, filtered, game, hasFilter, emptyMs
 
   if(pitcherStats.length===0){
     return (
-      <div style={{textAlign:'center',color:'#475569',marginTop:40,fontSize:13}}>
+      <div style={{textAlign:'center',color:'var(--muted-2)',marginTop:40,fontSize:13}}>
         {emptyMsg}
       </div>
     );
@@ -4039,8 +4040,8 @@ function PitcherSelectableView({pitcherStats, filtered, game, hasFilter, emptyMs
     <div>
       {/* 投手選択タブ */}
       <div style={{display:'flex',gap:4,flexWrap:'wrap',marginBottom:10,
-        padding:8,background:'#0f172a',borderRadius:10,border:'1px solid #334155'}}>
-        <div style={{fontSize:10,color:'#94a3b8',fontWeight:700,
+        padding:8,background:'var(--surface-quiet)',borderRadius:10,border:'1px solid var(--border)'}}>
+        <div style={{fontSize:10,color:'var(--muted)',fontWeight:700,
           width:'100%',marginBottom:2}}>
           投手を選択（タップでデータ表示）
         </div>
@@ -4082,13 +4083,13 @@ function PitcherSelectableView({pitcherStats, filtered, game, hasFilter, emptyMs
             borderRadius:10,
             border:'1px solid rgba(59,130,246,.3)'}}>
             <span style={{fontSize:20}}></span>
-            <span style={{fontSize:17,fontWeight:800,color:'#e2e8f0',flex:1}}>{selected}</span>
+            <span style={{fontSize:17,fontWeight:800,color:'var(--text)',flex:1}}>{selected}</span>
             {(()=>{
               const sp=pitcherStats.find(p=>p.name===selected);
               const sr=sp&&sp.total>0?Math.round(sp.strikes/sp.total*100):0;
               return (<>
                 <span style={{fontSize:14,fontWeight:800,color:'#eab308'}}>S率 {sr}%</span>
-                <span style={{fontSize:12,color:'#64748b'}}>{sp?.total||0}球</span>
+                <span style={{fontSize:12,color:'var(--muted)'}}>{sp?.total||0}球</span>
               </>);
             })()}
           </div>
@@ -4189,7 +4190,7 @@ const RUNNER_GROUPS=[
   {k:'full', l:'満塁'},
 ];
 
-function DonutChart({segments, size=92, stroke=12, centerValue='-', centerLabel='', trackColor='#26322f'}){
+function DonutChart({segments, size=92, stroke=12, centerValue='-', centerLabel='', trackColor='var(--chart-track)'}){
   const cleaned=(segments||[]).filter(s=>Number(s.value)>0);
   const total=cleaned.reduce((sum,s)=>sum+Number(s.value||0),0);
   const radius=(size-stroke)/2;
@@ -4207,7 +4208,7 @@ function DonutChart({segments, size=92, stroke=12, centerValue='-', centerLabel=
         const dash=`${length} ${Math.max(circumference-length,0)}`;
         const node=(
           <circle key={`${seg.label||idx}-${idx}`} cx={center} cy={center} r={radius} fill="none"
-            stroke={seg.color||'#94a3b8'} strokeWidth={stroke}
+            stroke={seg.color||'var(--muted-2)'} strokeWidth={stroke}
             strokeDasharray={dash} strokeDashoffset={-offset}
             strokeLinecap="butt" transform={`rotate(-90 ${center} ${center})`}/>
         );
@@ -4215,10 +4216,10 @@ function DonutChart({segments, size=92, stroke=12, centerValue='-', centerLabel=
         return node;
       })}
       <text x="50%" y={centerLabel?'47%':'54%'} textAnchor="middle"
-        fill="#e8efe9" fontSize={size>=110?21:17} fontWeight="850">{centerValue}</text>
+        fill="var(--text)" fontSize={size>=110?21:17} fontWeight="850">{centerValue}</text>
       {centerLabel&&(
         <text x="50%" y="63%" textAnchor="middle"
-          fill="#92a09a" fontSize={size>=110?10:9} fontWeight="700">{centerLabel}</text>
+          fill="var(--muted)" fontSize={size>=110?10:9} fontWeight="700">{centerLabel}</text>
       )}
     </svg>
   );
@@ -4228,12 +4229,12 @@ function StrikeRateDonut({label, total, strikes}){
   const strikeCount=strikes||0;
   const pitchTotal=total||0;
   const pct=pitchTotal>0?Math.round(strikeCount/pitchTotal*100):null;
-  const color=pct==null?'#65736e':pct>=65?'#35a66a':pct>=50?'#d8a534':'#d9534f';
+  const color=pct==null?'var(--muted-2)':pct>=65?'#15803d':pct>=50?'#d97706':'#dc2626';
   return (
     <div style={{
       minWidth:0,display:'flex',flexDirection:'column',alignItems:'center',
       justifyContent:'center',gap:5,padding:'8px 4px',
-      background:'var(--surface-quiet)',border:'1px solid var(--border-soft)',borderRadius:8}}>
+      background:'#f8fbf9',border:'1px solid var(--border-soft)',borderRadius:8}}>
       <DonutChart
         size={82}
         stroke={11}
@@ -4241,11 +4242,11 @@ function StrikeRateDonut({label, total, strikes}){
         centerLabel="S率"
         segments={[
           {label:'ストライク', value:strikeCount, color},
-          {label:'その他', value:Math.max(pitchTotal-strikeCount,0), color:'#33403d'},
+          {label:'その他', value:Math.max(pitchTotal-strikeCount,0), color:'var(--chart-track)'},
         ]}
       />
-      <div style={{fontSize:12,fontWeight:800,color:'#e8efe9',lineHeight:1}}>{label}</div>
-      <div style={{fontSize:10,color:'#92a09a',lineHeight:1.2}}>
+      <div style={{fontSize:12,fontWeight:800,color:'var(--text)',lineHeight:1}}>{label}</div>
+      <div style={{fontSize:10,color:'var(--muted)',lineHeight:1.2}}>
         {pitchTotal>0?`${strikeCount}/${pitchTotal}球`:'データなし'}
       </div>
     </div>
@@ -4257,20 +4258,20 @@ function PitchMixDonut({segments, total}){
   const typedTotal=(segments||[]).reduce((sum,s)=>sum+Number(s.value||0),0);
   const chartSegments=[
     ...(segments||[]).filter(s=>Number(s.value)>0),
-    ...(pitchTotal>typedTotal?[{label:'未入力', short:'未', value:pitchTotal-typedTotal, color:'#65736e'}]:[]),
+    ...(pitchTotal>typedTotal?[{label:'未入力', short:'未', value:pitchTotal-typedTotal, color:'var(--muted-2)'}]:[]),
   ];
   if(pitchTotal===0) return null;
   return (
     <div style={{
       display:'grid',gridTemplateColumns:'112px 1fr',gap:12,alignItems:'center',
-      background:'var(--surface-quiet)',border:'1px solid var(--border-soft)',
+      background:'#f8fbf9',border:'1px solid var(--border-soft)',
       borderRadius:8,padding:10,marginBottom:10}}>
       <div style={{display:'flex',justifyContent:'center'}}>
         <DonutChart size={106} stroke={14} centerValue={`${pitchTotal}球`} centerLabel="球種割合"
           segments={chartSegments}/>
       </div>
       <div style={{minWidth:0}}>
-        <div style={{fontSize:11,fontWeight:800,color:'#92a09a',marginBottom:6}}>球種割合</div>
+        <div style={{fontSize:11,fontWeight:800,color:'var(--muted)',marginBottom:6}}>球種割合</div>
         <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(82px,1fr))',gap:'6px 8px'}}>
           {chartSegments.map(seg=>{
             const pct=pitchTotal>0?Math.round(Number(seg.value||0)/pitchTotal*100):0;
@@ -4278,12 +4279,12 @@ function PitchMixDonut({segments, total}){
               <div key={seg.label} style={{minWidth:0}}>
                 <div style={{display:'flex',alignItems:'center',gap:5,minWidth:0}}>
                   <span style={{width:8,height:8,borderRadius:'50%',background:seg.color,flex:'0 0 auto'}}/>
-                  <span style={{fontSize:11,fontWeight:750,color:'#e8efe9',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
+                  <span style={{fontSize:11,fontWeight:750,color:'var(--text)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
                     {seg.short||seg.label}
                   </span>
                 </div>
-                <div style={{fontSize:10,color:'#92a09a',paddingLeft:13}}>
-                  {pct}% <span style={{color:'#65736e'}}>({seg.value})</span>
+                <div style={{fontSize:10,color:'var(--muted)',paddingLeft:13}}>
+                  {pct}% <span style={{color:'var(--muted-2)'}}>({seg.value})</span>
                 </div>
               </div>
             );
@@ -4332,10 +4333,10 @@ function CountInsightCard({pitches}){
       {insights.map((ins,i)=>(
         <div key={i} style={{display:'flex',justifyContent:'space-between',alignItems:'center',
           padding:'8px 12px',marginBottom:6,borderRadius:8,
-          background:'#0f172a',borderLeft:`4px solid ${ins.color}`}}>
-          <span style={{fontSize:13,color:'#e2e8f0',fontWeight:700}}>{ins.lbl}</span>
+          background:'var(--surface-quiet)',borderLeft:`4px solid ${ins.color}`}}>
+          <span style={{fontSize:13,color:'var(--text)',fontWeight:700}}>{ins.lbl}</span>
           <div style={{display:'flex',alignItems:'center',gap:6}}>
-            <span style={{fontSize:10,color:'#64748b'}}>{ins.n}球</span>
+            <span style={{fontSize:10,color:'var(--muted)'}}>{ins.n}球</span>
             <span style={{fontSize:18,fontWeight:900,
               color:ins.pct>=80?'#ef4444':'#fbbf24'}}>{ins.pct}%</span>
           </div>
@@ -4377,21 +4378,21 @@ function CrossGameScreen({onBack}){
   },[mine]);
   if(loading) return (
     <div className="screen" style={{display:'flex',alignItems:'center',justifyContent:'center',height:'80vh'}}>
-      <div style={{color:'#64748b',fontSize:14}}>読み込み中...</div>
+      <div style={{color:'var(--muted)',fontSize:14}}>読み込み中...</div>
     </div>
   );
   return (
     <div className="screen" style={{paddingBottom:24}}>
       <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:16,paddingTop:4}}>
         <button onClick={onBack}
-          style={{background:'transparent',border:'none',color:'#94a3b8',
+          style={{background:'transparent',border:'none',color:'var(--muted)',
             fontSize:24,cursor:'pointer',padding:'4px 10px',lineHeight:1}}>←</button>
-        <div style={{fontSize:17,fontWeight:800,color:'#e2e8f0'}}>📊 通算データ（複数試合）</div>
+        <div style={{fontSize:17,fontWeight:800,color:'var(--text)'}}>📊 通算データ（複数試合）</div>
       </div>
       {pitcherList.length===0?(
-        <div className="card" style={{textAlign:'center',color:'#475569',padding:40,fontSize:14}}>
+        <div className="card" style={{textAlign:'center',color:'var(--muted-2)',padding:40,fontSize:14}}>
           投手データが見つかりません<br/>
-          <span style={{fontSize:11,color:'#334155',marginTop:6,display:'block'}}>
+          <span style={{fontSize:11,color:'var(--muted-2)',marginTop:6,display:'block'}}>
             試合を記録すると投手名で集計されます
           </span>
         </div>
@@ -4412,29 +4413,29 @@ function CrossGameScreen({onBack}){
           {selPitcher&&mine.length>0&&(
             <>
               <div className="card" style={{marginBottom:10}}>
-                <div style={{fontSize:12,fontWeight:700,color:'#94a3b8',marginBottom:8}}>
+                <div style={{fontSize:12,fontWeight:700,color:'var(--muted)',marginBottom:8}}>
                   {selPitcher} — 通算
                 </div>
                 <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:6,textAlign:'center'}}>
                   <div>
-                    <div style={{fontSize:22,fontWeight:800,color:'#e2e8f0'}}>{gameCount}</div>
-                    <div style={{fontSize:9,color:'#64748b',marginTop:2}}>試合数</div>
+                    <div style={{fontSize:22,fontWeight:800,color:'var(--text)'}}>{gameCount}</div>
+                    <div style={{fontSize:9,color:'var(--muted)',marginTop:2}}>試合数</div>
                   </div>
                   <div>
-                    <div style={{fontSize:22,fontWeight:800,color:'#e2e8f0'}}>{stats.total}</div>
-                    <div style={{fontSize:9,color:'#64748b',marginTop:2}}>総球数</div>
+                    <div style={{fontSize:22,fontWeight:800,color:'var(--text)'}}>{stats.total}</div>
+                    <div style={{fontSize:9,color:'var(--muted)',marginTop:2}}>総球数</div>
                   </div>
                   <div>
                     <div style={{fontSize:22,fontWeight:800,color:'#22c55e'}}>
                       {stats.sRate}%
                     </div>
-                    <div style={{fontSize:9,color:'#64748b',marginTop:2}}>S率</div>
+                    <div style={{fontSize:9,color:'var(--muted)',marginTop:2}}>S率</div>
                   </div>
                   <div>
                     <div style={{fontSize:22,fontWeight:800,color:'#ef4444'}}>
                       {stats.total>0?Math.round((stats.soC||0)/stats.total*100):0}%
                     </div>
-                    <div style={{fontSize:9,color:'#64748b',marginTop:2}}>奪三振率</div>
+                    <div style={{fontSize:9,color:'var(--muted)',marginTop:2}}>奪三振率</div>
                   </div>
                 </div>
               </div>
@@ -4490,12 +4491,12 @@ function PitcherDetailPanel({allPitches, pitcherName, game}){
   },[mine]);
 
   if(all.total===0){
-    return <div style={{textAlign:'center',color:'#475569',padding:20,fontSize:12}}>対象データなし</div>;
+    return <div style={{textAlign:'center',color:'var(--muted-2)',padding:20,fontSize:12}}>対象データなし</div>;
   }
 
   // 共通: 3列ヘッダ行
   const headRow=(
-    <tr style={{background:'#0f172a'}}>
+    <tr style={{background:'var(--surface-quiet)'}}>
       <th style={cellHead}></th>
       <th style={cellHead}>全打者</th>
       <th style={cellHead}>vs右</th>
@@ -4504,8 +4505,8 @@ function PitcherDetailPanel({allPitches, pitcherName, game}){
   );
 
   // 3列値行（数値）
-  const valueRow=(label, vAll, vR, vL, color='#e2e8f0', emphasize=false)=>(
-    <tr key={label} style={{borderBottom:'1px solid #1e293b'}}>
+  const valueRow=(label, vAll, vR, vL, color='var(--text)', emphasize=false)=>(
+    <tr key={label} style={{borderBottom:'1px solid var(--border-soft)'}}>
       <td style={{...cellLabel}}>{label}</td>
       <td style={{...cellVal,color,fontWeight:emphasize?900:700}}>{vAll??'–'}</td>
       <td style={{...cellVal,color,fontWeight:emphasize?900:700}}>{vR??'–'}</td>
@@ -4526,7 +4527,7 @@ function PitcherDetailPanel({allPitches, pitcherName, game}){
   // 主要指標（+ QT統合）
   const summaryCard=(
     <div className="card" style={{marginBottom:10}}>
-      <div style={{fontSize:14,fontWeight:800,color:'#e2e8f0',marginBottom:8}}>主要指標</div>
+      <div style={{fontSize:14,fontWeight:800,color:'var(--text)',marginBottom:8}}>主要指標</div>
       <div style={{display:'grid',gridTemplateColumns:'repeat(3,minmax(0,1fr))',gap:8,marginBottom:10}}>
         <StrikeRateDonut label="全体" total={all.total} strikes={all.strikes}/>
         <StrikeRateDonut label="vs右" total={vsR.total} strikes={vsR.strikes}/>
@@ -4536,29 +4537,29 @@ function PitcherDetailPanel({allPitches, pitcherName, game}){
         <thead>{headRow}</thead>
         <tbody>
           {valueRow('総球数', all.total, vsR.total, vsL.total)}
-          {valueRow('S率', `${all.sRate}%`, `${vsR.sRate}%`, `${vsL.sRate}%`, '#eab308', true)}
-          {valueRow('三振', all.soC, vsR.soC, vsL.soC, '#ef4444')}
-          {valueRow('安打', all.hitC, vsR.hitC, vsL.hitC, '#60a5fa')}
-          {valueRow('四死球', all.bbC, vsR.bbC, vsL.bbC, '#f97316')}
+          {valueRow('S率', `${all.sRate}%`, `${vsR.sRate}%`, `${vsL.sRate}%`, '#d97706', true)}
+          {valueRow('三振', all.soC, vsR.soC, vsL.soC, '#dc2626')}
+          {valueRow('安打', all.hitC, vsR.hitC, vsL.hitC, '#2563eb')}
+          {valueRow('四死球', all.bbC, vsR.bbC, vsL.bbC, '#ea580c')}
         </tbody>
       </table>
       {quickTimes.length>0&&(
-        <div style={{borderTop:'1px solid #334155',marginTop:10,paddingTop:10}}>
-          <div style={{fontSize:12,fontWeight:700,color:'#94a3b8',marginBottom:6}}>
+        <div style={{borderTop:'1px solid var(--border)',marginTop:10,paddingTop:10}}>
+          <div style={{fontSize:12,fontWeight:700,color:'var(--muted)',marginBottom:6}}>
             ⚡ クイックタイム（{quickTimes.length}件）
           </div>
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:6,textAlign:'center'}}>
-            <div style={{background:'#0f172a',borderRadius:6,padding:'6px 4px'}}>
-              <div style={{fontSize:9,color:'#64748b',marginBottom:2}}>平均</div>
-              <div style={{fontSize:15,fontWeight:800,color:'#fbbf24',fontFamily:'monospace'}}>{qtAvg}</div>
+            <div style={{background:'var(--surface-quiet)',border:'1px solid var(--border-soft)',borderRadius:6,padding:'6px 4px'}}>
+              <div style={{fontSize:9,color:'var(--muted-2)',marginBottom:2}}>平均</div>
+              <div style={{fontSize:15,fontWeight:800,color:'#b7791f',fontFamily:'monospace'}}>{qtAvg}</div>
             </div>
-            <div style={{background:'#0f172a',borderRadius:6,padding:'6px 4px'}}>
-              <div style={{fontSize:9,color:'#64748b',marginBottom:2}}>最速</div>
-              <div style={{fontSize:15,fontWeight:800,color:'#4ade80',fontFamily:'monospace'}}>{qtMin}</div>
+            <div style={{background:'var(--surface-quiet)',border:'1px solid var(--border-soft)',borderRadius:6,padding:'6px 4px'}}>
+              <div style={{fontSize:9,color:'var(--muted-2)',marginBottom:2}}>最速</div>
+              <div style={{fontSize:15,fontWeight:800,color:'#15803d',fontFamily:'monospace'}}>{qtMin}</div>
             </div>
-            <div style={{background:'#0f172a',borderRadius:6,padding:'6px 4px'}}>
-              <div style={{fontSize:9,color:'#64748b',marginBottom:2}}>最遅</div>
-              <div style={{fontSize:15,fontWeight:800,color:'#f87171',fontFamily:'monospace'}}>{qtMax}</div>
+            <div style={{background:'var(--surface-quiet)',border:'1px solid var(--border-soft)',borderRadius:6,padding:'6px 4px'}}>
+              <div style={{fontSize:9,color:'var(--muted-2)',marginBottom:2}}>最遅</div>
+              <div style={{fontSize:15,fontWeight:800,color:'#dc2626',fontFamily:'monospace'}}>{qtMax}</div>
             </div>
           </div>
         </div>
@@ -4579,11 +4580,11 @@ function PitcherDetailPanel({allPitches, pitcherName, game}){
     }));
     return (
       <div className="card" style={{marginBottom:10}}>
-        <div style={{fontSize:14,fontWeight:800,color:'#e2e8f0',marginBottom:8}}>球種別サマリー</div>
+        <div style={{fontSize:14,fontWeight:800,color:'var(--text)',marginBottom:8}}>球種別サマリー</div>
         <PitchMixDonut segments={pitchMixSegments} total={all.total}/>
         <table style={tableStyle}>
           <thead>
-            <tr style={{background:'#0f172a'}}>
+            <tr style={{background:'var(--surface-quiet)'}}>
               <th style={{...cellHead,textAlign:'left'}}>球種</th>
               <th style={cellHead}>割合</th>
               <th style={cellHead}>S率</th>
@@ -4598,25 +4599,25 @@ function PitcherDetailPanel({allPitches, pitcherName, game}){
               const sr=all.ptSR[pt.id];
               const sPct=sr&&sr.t>0?Math.round(sr.k/sr.t*100):null;
               const spd=speedDataMap[pt.id];
-              const sColor=sPct==null?'#475569':sPct>=65?'#22c55e':sPct>=50?'#eab308':'#f87171';
+              const sColor=sPct==null?'var(--muted-2)':sPct>=65?'#15803d':sPct>=50?'#d97706':'#dc2626';
               return (
-                <tr key={pt.id} style={{borderBottom:'1px solid #1e293b'}}>
+                <tr key={pt.id} style={{borderBottom:'1px solid var(--border-soft)'}}>
                   <td style={cellLabel}>
                     <span style={{display:'inline-block',width:8,height:8,borderRadius:'50%',
                       background:pt.color,marginRight:5,verticalAlign:'middle'}}/>
                     <span style={{color:pt.color,fontWeight:700,verticalAlign:'middle'}}>{pt.label}</span>
                   </td>
-                  <td style={{...cellVal,fontWeight:700,color:'#e2e8f0'}}>
+                  <td style={{...cellVal,fontWeight:700,color:'var(--text)'}}>
                     {pct}%
-                    <span style={{fontSize:9,color:'#64748b',marginLeft:2}}>({count})</span>
+                    <span style={{fontSize:9,color:'var(--muted-2)',marginLeft:2}}>({count})</span>
                   </td>
                   <td style={{...cellVal,color:sColor,fontWeight:700}}>
                     {sPct!=null?`${sPct}%`:'–'}
                   </td>
-                  <td style={{...cellVal,color:'#a78bfa',fontWeight:700}}>
+                  <td style={{...cellVal,color:'#6d28d9',fontWeight:700}}>
                     {spd?spd.max:'–'}
                   </td>
-                  <td style={{...cellVal,color:'#c084fc',fontWeight:700}}>
+                  <td style={{...cellVal,color:'#7c3aed',fontWeight:700}}>
                     {spd?spd.avg:'–'}
                   </td>
                 </tr>
@@ -4624,7 +4625,7 @@ function PitcherDetailPanel({allPitches, pitcherName, game}){
             })}
           </tbody>
         </table>
-        <div style={{fontSize:10,color:'#64748b',marginTop:4}}>
+        <div style={{fontSize:10,color:'var(--muted-2)',marginTop:4}}>
           S率：緑=65%以上　黄=50%以上　赤=50%未満
         </div>
       </div>
@@ -4647,8 +4648,8 @@ function PitcherDetailPanel({allPitches, pitcherName, game}){
     if(sortedPts.length===0) return null;
     return (
       <div className="card" style={{marginBottom:10}}>
-        <div style={{fontSize:14,fontWeight:800,color:'#e2e8f0',marginBottom:8}}>{title}</div>
-        {subtitle&&<div style={{fontSize:10,color:'#94a3b8',marginBottom:6}}>{subtitle}</div>}
+        <div style={{fontSize:14,fontWeight:800,color:'var(--text)',marginBottom:8}}>{title}</div>
+        {subtitle&&<div style={{fontSize:10,color:'var(--muted)',marginBottom:6}}>{subtitle}</div>}
         <table style={tableStyle}>
           <thead>{headRow}</thead>
           <tbody>
@@ -4658,7 +4659,7 @@ function PitcherDetailPanel({allPitches, pitcherName, game}){
               const diff = Math.abs((r.pct||0) - (l.pct||0));
               const emphasize = diff >= 20;
               return (
-                <tr key={pt.id} style={{borderBottom:'1px solid #1e293b'}}>
+                <tr key={pt.id} style={{borderBottom:'1px solid var(--border-soft)'}}>
                   <td style={cellLabel}>
                     <span style={{display:'inline-block',width:8,height:8,borderRadius:'50%',
                       background:pt.color,marginRight:5,verticalAlign:'middle'}}/>
@@ -4668,7 +4669,7 @@ function PitcherDetailPanel({allPitches, pitcherName, game}){
                   </td>
                   <td style={{...cellVal,color:pt.color}}>
                     {formatPct?`${a.pct||0}%`:a.pct}
-                    {a.count>0&&<span style={{fontSize:8,color:'#64748b',marginLeft:2}}>({a.count})</span>}
+                    {a.count>0&&<span style={{fontSize:8,color:'var(--muted-2)',marginLeft:2}}>({a.count})</span>}
                   </td>
                   <td style={{...cellVal,color:pt.color,
                     background:emphasize&&(r.pct>l.pct)?'rgba(239,68,68,.08)':'transparent'}}>
@@ -4687,7 +4688,7 @@ function PitcherDetailPanel({allPitches, pitcherName, game}){
           const r=getValue(vsR,pt),l=getValue(vsL,pt);
           return Math.abs((r.pct||0)-(l.pct||0))>=20;
         })&&(
-          <div style={{fontSize:10,color:'#fca5a5',marginTop:4}}>
+          <div style={{fontSize:10,color:'#b91c1c',marginTop:4}}>
             ※ 赤背景=右打者・左打者で20pt以上の差
           </div>
         )}
@@ -4730,21 +4731,21 @@ function PitcherDetailPanel({allPitches, pitcherName, game}){
   const countCard=(
     <div className="card" style={{marginBottom:10}}>
       <div style={{display:'flex',alignItems:'center',marginBottom:6}}>
-        <span style={{fontSize:14,fontWeight:800,color:'#e2e8f0'}}>カウント別 球種割合</span>
+        <span style={{fontSize:14,fontWeight:800,color:'var(--text)'}}>カウント別 球種割合</span>
         <InfoBadge title="カウント別球種割合"
           body={'各カウント(B-S)ごとに、どの球種を何%投げたかの内訳。\n• 黄色背景=50%以上集中（読みやすい配球）\n• 表示は上位6球種・全打者2球以上のカウントのみ'}/>
       </div>
       <div style={{overflowX:'auto',paddingBottom:4}}>
         <table style={{width:'100%',borderCollapse:'collapse',fontSize:12}}>
           <thead>
-            <tr style={{background:'#0f172a'}}>
-              <th style={{padding:'6px 6px',textAlign:'left',color:'#94a3b8',fontSize:12,
-                borderBottom:'1px solid #334155',minWidth:50}}>カウント</th>
-              <th style={{padding:'6px 6px',textAlign:'right',color:'#94a3b8',fontSize:11,
-                borderBottom:'1px solid #334155'}}>球数</th>
+            <tr style={{background:'var(--surface-quiet)'}}>
+              <th style={{padding:'6px 6px',textAlign:'left',color:'var(--muted)',fontSize:12,
+                borderBottom:'1px solid var(--border)',minWidth:50}}>カウント</th>
+              <th style={{padding:'6px 6px',textAlign:'right',color:'var(--muted)',fontSize:11,
+                borderBottom:'1px solid var(--border)'}}>球数</th>
               {showPts.map(p=>(
                 <th key={p.id} style={{padding:'6px 4px',textAlign:'right',color:p.color,
-                  fontSize:12,fontWeight:700,borderBottom:'1px solid #334155'}}>
+                  fontSize:12,fontWeight:700,borderBottom:'1px solid var(--border)'}}>
                   {p.short}
                 </th>
               ))}
@@ -4753,17 +4754,17 @@ function PitcherDetailPanel({allPitches, pitcherName, game}){
           <tbody>
             {activeCounts.length===0?(
               <tr><td colSpan={showPts.length+2}
-                style={{padding:'10px',textAlign:'center',color:'#475569',fontSize:12}}>
+                style={{padding:'10px',textAlign:'center',color:'var(--muted-2)',fontSize:12}}>
                 データ不足
               </td></tr>
             ):activeCounts.map(c=>{
               const v=all.countPtMix[c];
               return (
-                <tr key={c} style={{borderBottom:'1px solid #1e293b'}}>
-                  <td style={{padding:'6px 6px',fontWeight:700,color:'#cbd5e1',fontSize:13}}>
+                <tr key={c} style={{borderBottom:'1px solid var(--border-soft)'}}>
+                  <td style={{padding:'6px 6px',fontWeight:700,color:'var(--text)',fontSize:13}}>
                     {c}
                   </td>
-                  <td style={{padding:'6px 6px',textAlign:'right',color:'#64748b',fontSize:12}}>
+                  <td style={{padding:'6px 6px',textAlign:'right',color:'var(--muted)',fontSize:12}}>
                     {v.t}
                   </td>
                   {showPts.map(p=>{
@@ -4772,9 +4773,9 @@ function PitcherDetailPanel({allPitches, pitcherName, game}){
                     const isHigh=pct>=50;
                     return (
                       <td key={p.id} style={{padding:'6px 4px',textAlign:'right',
-                        color:pct>0?p.color:'#475569',
+                        color:pct>0?p.color:'var(--muted-2)',
                         fontWeight:isHigh?900:700,fontSize:12,
-                        background:isHigh?'rgba(234,179,8,.12)':'transparent'}}>
+                        background:isHigh?'rgba(217,119,6,.12)':'transparent'}}>
                         {pct>0?`${pct}%`:'–'}
                       </td>
                     );
@@ -4785,7 +4786,7 @@ function PitcherDetailPanel({allPitches, pitcherName, game}){
           </tbody>
         </table>
       </div>
-      <div style={{fontSize:10,color:'#64748b',marginTop:4}}>
+      <div style={{fontSize:10,color:'var(--muted-2)',marginTop:4}}>
         ※ 黄色背景=50%以上集中　上位6球種を表示
       </div>
     </div>
@@ -4840,11 +4841,11 @@ function PitchSpeedCard({pitches}){
     return (
       <div className="card" style={{marginBottom:10}}>
         <div style={{display:'flex',alignItems:'center',marginBottom:6}}>
-          <span style={{fontSize:14,fontWeight:800,color:'#e2e8f0'}}>球種別 球速</span>
+          <span style={{fontSize:14,fontWeight:800,color:'var(--text)'}}>球種別 球速</span>
           <InfoBadge title="球種別球速"
             body={'各球種ごとの球数・平均球速・最速球速を表示。\n球速を入力していない投球は集計対象外。\n試合終盤の球速低下は疲労兆候。'}/>
         </div>
-        <div style={{fontSize:11,color:'#475569',textAlign:'center',padding:10}}>
+        <div style={{fontSize:11,color:'var(--muted-2)',textAlign:'center',padding:10}}>
           球速入力がありません
         </div>
       </div>
@@ -4855,13 +4856,13 @@ function PitchSpeedCard({pitches}){
   return (
     <div className="card" style={{marginBottom:10}}>
       <div style={{display:'flex',alignItems:'center',marginBottom:6}}>
-        <span style={{fontSize:12,fontWeight:700,color:'#94a3b8'}}>球種別 球速</span>
+        <span style={{fontSize:12,fontWeight:700,color:'var(--muted)'}}>球種別 球速</span>
         <InfoBadge title="球種別球速"
           body={'各球種ごとの球数・平均球速・最速球速を表示。\n• MAXが急に落ちる→疲労兆候\n• 平均が低い変化球→打者は見送り対応\n• 直球とのMAX差が小さい→打者は変化に対応しやすい'}/>
       </div>
       <table style={tableStyle}>
         <thead>
-          <tr style={{background:'#0f172a'}}>
+          <tr style={{background:'var(--surface-quiet)'}}>
             <th style={cellHead}>球種</th>
             <th style={cellHead}>球数</th>
             <th style={cellHead}>平均</th>
@@ -4873,7 +4874,7 @@ function PitchSpeedCard({pitches}){
             const d=data[pt.id];
             const isFastest=d.max===overallMax;
             return (
-              <tr key={pt.id} style={{borderBottom:'1px solid #1e293b'}}>
+              <tr key={pt.id} style={{borderBottom:'1px solid var(--border-soft)'}}>
                 <td style={cellLabel}>
                   <span style={{display:'inline-block',width:8,height:8,borderRadius:'50%',
                     background:pt.color,marginRight:5,verticalAlign:'middle'}}/>
@@ -4881,9 +4882,9 @@ function PitchSpeedCard({pitches}){
                     {pt.label}
                   </span>
                 </td>
-                <td style={{...cellVal,color:'#94a3b8'}}>{d.count}</td>
+                <td style={{...cellVal,color:'var(--muted)'}}>{d.count}</td>
                 <td style={{...cellVal,color:'#a78bfa',fontWeight:700}}>
-                  {d.avg}<span style={{fontSize:9,color:'#64748b'}}>km/h</span>
+                  {d.avg}<span style={{fontSize:9,color:'var(--muted)'}}>km/h</span>
                 </td>
                 <td style={{...cellVal,color:isFastest?'#fbbf24':'#c084fc',fontWeight:800,
                   background:isFastest?'rgba(251,191,36,.08)':'transparent'}}>
@@ -4894,7 +4895,7 @@ function PitchSpeedCard({pitches}){
           })}
         </tbody>
       </table>
-      <div style={{fontSize:9,color:'#64748b',marginTop:4}}>
+      <div style={{fontSize:9,color:'var(--muted)',marginTop:4}}>
         ※ 黄色背景=最速球種 / 球速未入力の投球は集計対象外
       </div>
     </div>
@@ -4920,10 +4921,10 @@ function RunnerSituationCard({pitches, groups}){
   if(activeGroups.length===0){
     return (
       <div className="card" style={{marginBottom:10}}>
-        <div style={{fontSize:14,fontWeight:800,color:'#e2e8f0',marginBottom:6}}>
+        <div style={{fontSize:14,fontWeight:800,color:'var(--text)',marginBottom:6}}>
           走者状況別の球種割合
         </div>
-        <div style={{fontSize:11,color:'#475569',textAlign:'center',padding:8}}>
+        <div style={{fontSize:11,color:'var(--muted-2)',textAlign:'center',padding:8}}>
           サンプル不足
         </div>
       </div>
@@ -4946,17 +4947,17 @@ function RunnerSituationCard({pitches, groups}){
   return (
     <div className="card" style={{marginBottom:10}}>
       <div style={{display:'flex',alignItems:'center',marginBottom:6}}>
-        <span style={{fontSize:14,fontWeight:800,color:'#e2e8f0'}}>走者状況別の球種割合</span>
+        <span style={{fontSize:14,fontWeight:800,color:'var(--text)'}}>走者状況別の球種割合</span>
         <InfoBadge title="走者状況別の球種割合"
           body={'走者の出塁状況ごとに球種の選び方が変わる傾向を可視化。\n• 走者なし: リスクなしの配球\n• 一塁: 盗塁警戒の配球\n• 得点圏: 失点リスク高、勝負球\n• 満塁: 安全策\n\n極端な偏り(20pt差以上は赤背景)があれば打者は読みやすい。'}/>
       </div>
       <table style={tableStyle}>
         <thead>
-          <tr style={{background:'#0f172a'}}>
+          <tr style={{background:'var(--surface-quiet)'}}>
             <th style={cellHead}></th>
             {activeGroups.map(g=>(
               <th key={g.k} style={cellHead}>{g.l}<br/>
-                <span style={{fontSize:8,color:'#64748b',fontWeight:400}}>{data[g.k].total}球</span>
+                <span style={{fontSize:8,color:'var(--muted-2)',fontWeight:400}}>{data[g.k].total}球</span>
               </th>
             ))}
           </tr>
@@ -4971,7 +4972,7 @@ function RunnerSituationCard({pitches, groups}){
             const max=Math.max(...pcts), min=Math.min(...pcts);
             const bigSpread=max-min>=20;
             return (
-              <tr key={pt.id} style={{borderBottom:'1px solid #1e293b'}}>
+              <tr key={pt.id} style={{borderBottom:'1px solid var(--border-soft)'}}>
                 <td style={cellLabel}>
                   <span style={{display:'inline-block',width:8,height:8,borderRadius:'50%',
                     background:pt.color,marginRight:5,verticalAlign:'middle'}}/>
@@ -4990,7 +4991,7 @@ function RunnerSituationCard({pitches, groups}){
           })}
         </tbody>
       </table>
-      <div style={{fontSize:9,color:'#64748b',marginTop:4}}>
+      <div style={{fontSize:9,color:'var(--muted-2)',marginTop:4}}>
         ※ 走者状況間で20pt以上の差は赤背景で強調 / 3球未満の状況は非表示
       </div>
     </div>
@@ -5063,7 +5064,7 @@ function ZoneRatioCard({zoneC, total, pitches=[]}){
   const barRow=(label,segments)=>(
     <div style={{marginBottom:6}}>
       <div style={{display:'flex',justifyContent:'space-between',fontSize:10,
-        color:'#94a3b8',marginBottom:3}}>
+        color:'var(--muted)',marginBottom:3}}>
         <span style={{fontWeight:700}}>{label}</span>
         <span>
           {segments.map((s,i)=>(
@@ -5074,7 +5075,7 @@ function ZoneRatioCard({zoneC, total, pitches=[]}){
         </span>
       </div>
       <div style={{display:'flex',height:14,borderRadius:4,overflow:'hidden',
-        background:'#0f172a',border:'1px solid #334155'}}>
+        background:'var(--surface-quiet)',border:'1px solid var(--border)'}}>
         {segments.map((s,i)=>(
           <div key={i} style={{width:`${s.pct}%`,height:'100%',background:s.color,
             display:'flex',alignItems:'center',justifyContent:'center',
@@ -5090,7 +5091,7 @@ function ZoneRatioCard({zoneC, total, pitches=[]}){
   return (
     <div className="card" style={{marginBottom:10}}>
       <div style={{display:'flex',alignItems:'center',marginBottom:6}}>
-        <span style={{fontSize:14,fontWeight:800,color:'#e2e8f0'}}>コース割合（{total}球）</span>
+        <span style={{fontSize:14,fontWeight:800,color:'var(--text)'}}>コース割合（{total}球）</span>
         <InfoBadge title="コース割合(内/外)"
           body={'打者視点での内コース・外コースの割合。\n真ん中(中央列)は集計から除外し、内外のみで比較。\n• 内角に集中→攻める投球\n• 外角に集中→慎重な投球\n• 打者の左右に応じて自動判定'}/>
       </div>
@@ -5099,18 +5100,18 @@ function ZoneRatioCard({zoneC, total, pitches=[]}){
       {sideStats.total>0?(
         <div style={{marginBottom:8}}>
           <div style={{display:'flex',justifyContent:'space-between',fontSize:13,marginBottom:5}}>
-            <span style={{color:'#ef4444',fontWeight:800}}>内 {sideStats.insidePct}%</span>
-            <span style={{color:'#64748b',fontSize:11}}>{sideStats.total}球（内外のみ）</span>
-            <span style={{color:'#3b82f6',fontWeight:800}}>外 {sideStats.outsidePct}%</span>
+            <span style={{color:'#dc2626',fontWeight:800}}>内 {sideStats.insidePct}%</span>
+            <span style={{color:'var(--muted)',fontSize:11}}>{sideStats.total}球（内外のみ）</span>
+            <span style={{color:'#2563eb',fontWeight:800}}>外 {sideStats.outsidePct}%</span>
           </div>
           <div style={{display:'flex',height:22,borderRadius:6,overflow:'hidden',
-            background:'#0f172a',border:'1px solid #334155',marginBottom:6}}>
-            <div style={{width:`${sideStats.insidePct}%`,height:'100%',background:'#ef4444',
+            background:'var(--surface-quiet)',border:'1px solid var(--border)',marginBottom:6}}>
+            <div style={{width:`${sideStats.insidePct}%`,height:'100%',background:'#dc2626',
               display:'flex',alignItems:'center',justifyContent:'center',
               color:'#fff',fontSize:11,fontWeight:800}}>
               {sideStats.insidePct>=12?`内 ${sideStats.insidePct}%`:''}
             </div>
-            <div style={{width:`${sideStats.outsidePct}%`,height:'100%',background:'#3b82f6',
+            <div style={{width:`${sideStats.outsidePct}%`,height:'100%',background:'#2563eb',
               display:'flex',alignItems:'center',justifyContent:'center',
               color:'#fff',fontSize:11,fontWeight:800}}>
               {sideStats.outsidePct>=12?`外 ${sideStats.outsidePct}%`:''}
@@ -5119,18 +5120,18 @@ function ZoneRatioCard({zoneC, total, pitches=[]}){
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:6}}>
             <div style={{textAlign:'center',padding:'5px',background:'rgba(239,68,68,.1)',borderRadius:5,
               border:'1px solid rgba(239,68,68,.3)'}}>
-              <div style={{fontSize:10,color:'#fca5a5'}}>内コース</div>
-              <div style={{fontSize:16,fontWeight:900,color:'#ef4444'}}>{sideStats.inside}球</div>
+              <div style={{fontSize:10,color:'#b91c1c'}}>内コース</div>
+              <div style={{fontSize:16,fontWeight:900,color:'#dc2626'}}>{sideStats.inside}球</div>
             </div>
             <div style={{textAlign:'center',padding:'5px',background:'rgba(59,130,246,.1)',borderRadius:5,
               border:'1px solid rgba(59,130,246,.3)'}}>
-              <div style={{fontSize:10,color:'#93c5fd'}}>外コース</div>
-              <div style={{fontSize:16,fontWeight:900,color:'#3b82f6'}}>{sideStats.outside}球</div>
+              <div style={{fontSize:10,color:'#1d4ed8'}}>外コース</div>
+              <div style={{fontSize:16,fontWeight:900,color:'#2563eb'}}>{sideStats.outside}球</div>
             </div>
           </div>
         </div>
       ):(
-        <div style={{fontSize:11,color:'#475569',textAlign:'center',padding:8}}>
+        <div style={{fontSize:11,color:'var(--muted-2)',textAlign:'center',padding:8}}>
           内/外コースのデータなし
         </div>
       )}
@@ -5146,17 +5147,17 @@ function ZoneRatioCard({zoneC, total, pitches=[]}){
               const pct=total>0?Math.round(cnt/total*100):0;
               return (
                 <div key={z} style={{width:40,height:40,borderRadius:3,
-                  border:isSZ?'2px solid #cbd5e1':'1px solid #334155',
-                  background:`rgba(59,130,246,${heat*0.75+(isSZ?0.06:0.01)})`,
+                  border:isSZ?'2px solid #8fa39a':'1px solid var(--border)',
+                  background:`rgba(37,99,235,${heat*0.55+(isSZ?0.06:0.015)})`,
                   display:'flex',flexDirection:'column',
                   alignItems:'center',justifyContent:'center'}}>
                   {cnt>0?(
                     <>
-                      <div style={{fontSize:10,fontWeight:800,color:'#fff',lineHeight:1}}>{pct}%</div>
-                      <div style={{fontSize:8,color:'rgba(255,255,255,.6)'}}>{cnt}球</div>
+                      <div style={{fontSize:10,fontWeight:800,color:heat>.42?'#fff':'#17231f',lineHeight:1}}>{pct}%</div>
+                      <div style={{fontSize:8,color:heat>.42?'rgba(255,255,255,.78)':'var(--muted)'}}>{cnt}球</div>
                     </>
                   ):(
-                    <div style={{fontSize:8,color:'#475569'}}>{z}</div>
+                    <div style={{fontSize:8,color:'var(--muted-2)'}}>{z}</div>
                   )}
                 </div>
               );
@@ -5164,7 +5165,7 @@ function ZoneRatioCard({zoneC, total, pitches=[]}){
           </div>
         ))}
       </div>
-      <div style={{fontSize:10,color:'#64748b',marginTop:4,textAlign:'center'}}>
+      <div style={{fontSize:10,color:'var(--muted-2)',marginTop:4,textAlign:'center'}}>
         太枠=ストライクゾーン　内/外は打者の左右で自動判定
       </div>
     </div>
@@ -5191,8 +5192,8 @@ function BattedBallTypeCard({pitches, role='pitcher'}){
   if(stats.total===0){
     return (
       <div className="card" style={{marginBottom:10}}>
-        <div style={{fontSize:14,fontWeight:800,color:'#e2e8f0',marginBottom:6}}>打球タイプ</div>
-        <div style={{fontSize:11,color:'#475569',textAlign:'center',padding:8}}>
+        <div style={{fontSize:14,fontWeight:800,color:'var(--text)',marginBottom:6}}>打球タイプ</div>
+        <div style={{fontSize:11,color:'var(--muted-2)',textAlign:'center',padding:8}}>
           打球データなし
         </div>
       </div>
@@ -5211,12 +5212,12 @@ function BattedBallTypeCard({pitches, role='pitcher'}){
   return (
     <div className="card" style={{marginBottom:10}}>
       <div style={{display:'flex',alignItems:'center',marginBottom:6}}>
-        <span style={{fontSize:14,fontWeight:800,color:'#e2e8f0'}}>{title}</span>
+        <span style={{fontSize:14,fontWeight:800,color:'var(--text)'}}>{title}</span>
         <InfoBadge title="打球タイプ" body={helpBody}/>
       </div>
       {/* 積み上げ横バー */}
       <div style={{display:'flex',height:24,borderRadius:5,overflow:'hidden',
-        border:'1px solid #334155',marginBottom:6}}>
+        border:'1px solid var(--border)',background:'var(--surface-quiet)',marginBottom:6}}>
         {items.map(it=>{
           const p=pct(stats.counts[it.k]);
           if(p===0) return null;
@@ -5234,12 +5235,12 @@ function BattedBallTypeCard({pitches, role='pitcher'}){
           <div key={it.k} style={{textAlign:'center',padding:'4px 2px',
             background:`${it.c}15`,border:`1px solid ${it.c}40`,borderRadius:5}}>
             <div style={{fontSize:10,color:it.c,fontWeight:700}}>{it.l}</div>
-            <div style={{fontSize:14,fontWeight:900,color:'#e2e8f0'}}>{pct(stats.counts[it.k])}%</div>
-            <div style={{fontSize:9,color:'#64748b'}}>{stats.counts[it.k]}球</div>
+            <div style={{fontSize:14,fontWeight:900,color:'var(--text)'}}>{pct(stats.counts[it.k])}%</div>
+            <div style={{fontSize:9,color:'var(--muted)'}}>{stats.counts[it.k]}球</div>
           </div>
         ))}
       </div>
-      <div style={{fontSize:9,color:'#64748b',marginTop:4}}>
+      <div style={{fontSize:9,color:'var(--muted-2)',marginTop:4}}>
         集計対象: {stats.total}打球（不明{stats.counts.unknown}球を含む）
       </div>
     </div>
@@ -5264,8 +5265,8 @@ function HittingDirectionCard({pitches, batterHand}){
   if(stats.total===0){
     return (
       <div className="card" style={{marginBottom:10}}>
-        <div style={{fontSize:12,fontWeight:700,color:'#94a3b8',marginBottom:6}}>打球方向タイプ</div>
-        <div style={{fontSize:11,color:'#475569',textAlign:'center',padding:8}}>
+        <div style={{fontSize:12,fontWeight:700,color:'var(--muted)',marginBottom:6}}>打球方向タイプ</div>
+        <div style={{fontSize:11,color:'var(--muted-2)',textAlign:'center',padding:8}}>
           打球方向データなし
         </div>
       </div>
@@ -5284,7 +5285,7 @@ function HittingDirectionCard({pitches, batterHand}){
   return (
     <div className="card" style={{marginBottom:10}}>
       <div style={{display:'flex',alignItems:'center',marginBottom:6}}>
-        <span style={{fontSize:12,fontWeight:700,color:'#94a3b8'}}>打球方向タイプ</span>
+        <span style={{fontSize:12,fontWeight:700,color:'var(--muted)'}}>打球方向タイプ</span>
         <InfoBadge title="打球方向タイプ"
           body={'打者視点での引っ張り/センター/流し打ちの比率。\n50%以上で型を判定。\nシフト守備の参考に。\n• 引っ張り型(R打者なら左方向多い)\n• センター型\n• 流し打ち型(R打者なら右方向多い)'}/>
       </div>
@@ -5292,11 +5293,11 @@ function HittingDirectionCard({pitches, batterHand}){
       <div style={{padding:'8px 10px',background:`${typeColor}15`,borderRadius:6,
         border:`1px solid ${typeColor}40`,marginBottom:8}}>
         <div style={{fontSize:14,fontWeight:900,color:typeColor}}>{type}</div>
-        <div style={{fontSize:10,color:'#94a3b8',marginTop:2}}>{typeDesc}</div>
+        <div style={{fontSize:10,color:'var(--muted)',marginTop:2}}>{typeDesc}</div>
       </div>
       {/* 積み上げ横バー */}
       <div style={{display:'flex',height:22,borderRadius:5,overflow:'hidden',
-        border:'1px solid #334155',marginBottom:6}}>
+        border:'1px solid var(--border)',marginBottom:6}}>
         <div style={{width:`${pullPct}%`,height:'100%',background:'#ef4444',
           display:'flex',alignItems:'center',justifyContent:'center',
           color:'#fff',fontSize:10,fontWeight:800}}>
@@ -5317,17 +5318,17 @@ function HittingDirectionCard({pitches, batterHand}){
         <div style={{textAlign:'center',padding:'3px',background:'rgba(239,68,68,.1)',borderRadius:5}}>
           <div style={{fontSize:9,color:'#fca5a5'}}>引っ張り</div>
           <div style={{fontSize:13,fontWeight:900,color:'#ef4444'}}>{pullPct}%</div>
-          <div style={{fontSize:8,color:'#64748b'}}>{stats.counts.pull}球</div>
+          <div style={{fontSize:8,color:'var(--muted)'}}>{stats.counts.pull}球</div>
         </div>
         <div style={{textAlign:'center',padding:'3px',background:'rgba(34,197,94,.1)',borderRadius:5}}>
           <div style={{fontSize:9,color:'#86efac'}}>センター</div>
           <div style={{fontSize:13,fontWeight:900,color:'#22c55e'}}>{centerPct}%</div>
-          <div style={{fontSize:8,color:'#64748b'}}>{stats.counts.center}球</div>
+          <div style={{fontSize:8,color:'var(--muted)'}}>{stats.counts.center}球</div>
         </div>
         <div style={{textAlign:'center',padding:'3px',background:'rgba(59,130,246,.1)',borderRadius:5}}>
           <div style={{fontSize:9,color:'#93c5fd'}}>流し</div>
           <div style={{fontSize:13,fontWeight:900,color:'#3b82f6'}}>{oppoPct}%</div>
-          <div style={{fontSize:8,color:'#64748b'}}>{stats.counts.oppo}球</div>
+          <div style={{fontSize:8,color:'var(--muted)'}}>{stats.counts.oppo}球</div>
         </div>
       </div>
     </div>
@@ -5357,8 +5358,8 @@ function InningSpeedCard({pitches}){
   if(data.length===0){
     return (
       <div className="card" style={{marginBottom:10}}>
-        <div style={{fontSize:12,fontWeight:700,color:'#94a3b8',marginBottom:6}}>イニング別 球速推移</div>
-        <div style={{fontSize:11,color:'#475569',textAlign:'center',padding:8}}>
+        <div style={{fontSize:12,fontWeight:700,color:'var(--muted)',marginBottom:6}}>イニング別 球速推移</div>
+        <div style={{fontSize:11,color:'var(--muted-2)',textAlign:'center',padding:8}}>
           球速入力がありません
         </div>
       </div>
@@ -5373,13 +5374,13 @@ function InningSpeedCard({pitches}){
   return (
     <div className="card" style={{marginBottom:10}}>
       <div style={{display:'flex',alignItems:'center',marginBottom:6}}>
-        <span style={{fontSize:12,fontWeight:700,color:'#94a3b8'}}>イニング別 球速推移</span>
+        <span style={{fontSize:12,fontWeight:700,color:'var(--muted)'}}>イニング別 球速推移</span>
         <InfoBadge title="球速推移"
           body={'各イニングの平均球速・最速を表示。\n試合終盤に下がる→疲労兆候\n• 序盤と終盤で5km以上低下: 要交代検討\n• 一定: スタミナ十分'}/>
       </div>
       {/* バー表示 */}
       <div style={{display:'flex',gap:3,alignItems:'flex-end',justifyContent:'space-around',
-        padding:'5px 2px',background:'#0f172a',borderRadius:6,
+        padding:'5px 2px',background:'var(--surface-quiet)',borderRadius:6,
         height:120,marginBottom:6,position:'relative'}}>
         {data.map((d,i)=>{
           const avgH=range>0?((d.avg-overallMin)/range)*100:50;
@@ -5399,7 +5400,7 @@ function InningSpeedCard({pitches}){
                 display:'flex',alignItems:'flex-start',justifyContent:'center',paddingTop:2}}>
                 <span style={{fontSize:9,color:'#fff',fontWeight:800}}>{d.avg}</span>
               </div>
-              <div style={{fontSize:8,color:'#64748b',marginTop:2}}>
+              <div style={{fontSize:8,color:'var(--muted)',marginTop:2}}>
                 {d.inning}{d.tb==='top'?'表':'裏'}
               </div>
             </div>
@@ -5452,7 +5453,7 @@ function PitcherTimelineCard({game, pitches}){
   return (
     <div className="card" style={{marginBottom:10}}>
       <div style={{display:'flex',alignItems:'center',marginBottom:6}}>
-        <span style={{fontSize:12,fontWeight:700,color:'#94a3b8'}}>投手交代タイムライン</span>
+        <span style={{fontSize:12,fontWeight:700,color:'var(--muted)'}}>投手交代タイムライン</span>
         <InfoBadge title="投手交代タイムライン"
           body={'試合で登板した投手を時系列順に表示。\n各投手の担当イニング範囲と球数を確認できる。'}/>
       </div>
@@ -5464,17 +5465,17 @@ function PitcherTimelineCard({game, pitches}){
             :`${t.firstInn}回${t.firstTB==='top'?'表':'裏'} 〜 ${t.lastInn}回${t.lastTB==='top'?'表':'裏'}`;
           return (
             <div key={i} style={{display:'flex',alignItems:'center',gap:8,
-              padding:'6px 10px',background:'#0f172a',borderRadius:6,
+              padding:'6px 10px',background:'var(--surface-quiet)',borderRadius:6,
               borderLeft:`3px solid ${teamColor}`}}>
               <span style={{fontSize:10,padding:'2px 6px',background:`${teamColor}25`,
                 color:teamColor,borderRadius:8,fontWeight:800,minWidth:24,textAlign:'center'}}>
                 {i+1}
               </span>
-              <span style={{fontSize:13,fontWeight:700,color:'#e2e8f0',flex:1,
+              <span style={{fontSize:13,fontWeight:700,color:'var(--text)',flex:1,
                 overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>
                 {t.name}
               </span>
-              <span style={{fontSize:11,color:'#94a3b8'}}>{range}</span>
+              <span style={{fontSize:11,color:'var(--muted)'}}>{range}</span>
               <span style={{fontSize:11,color:teamColor,fontWeight:700,minWidth:36,textAlign:'right'}}>
                 {t.pitches}球
               </span>
@@ -5488,9 +5489,9 @@ function PitcherTimelineCard({game, pitches}){
 
 // テーブル共通スタイル
 const tableStyle={width:'100%',borderCollapse:'collapse',fontSize:12};
-const cellHead={padding:'5px 6px',color:'#94a3b8',fontWeight:700,fontSize:11,
-  textAlign:'center',borderBottom:'1px solid #334155'};
-const cellLabel={padding:'6px 6px',color:'#cbd5e1',fontSize:12,textAlign:'left',width:'40%'};
+const cellHead={padding:'5px 6px',color:'var(--muted)',fontWeight:700,fontSize:11,
+  textAlign:'center',borderBottom:'1px solid var(--border)'};
+const cellLabel={padding:'6px 6px',color:'var(--text)',fontSize:12,textAlign:'left',width:'40%'};
 const cellVal={padding:'6px 6px',textAlign:'center',fontSize:12};
 
 // ── Analysis Filter Defaults ──
@@ -5642,7 +5643,7 @@ function AnalysisScreen({game,pitches,onBack}){
       <div className="header">
         <button className="btn btn-secondary btn-sm" onClick={onBack}>← 戻る</button>
         <h2>分析</h2>
-        <span style={{fontSize:13,color:'#64748b'}}>
+        <span style={{fontSize:13,color:'var(--muted)'}}>
           {hasFilter?`${total}/${grandTotal}球`:`${total}球`}
         </span>
       </div>
@@ -5661,12 +5662,12 @@ function AnalysisScreen({game,pitches,onBack}){
               background:'rgba(59,130,246,.15)',border:'1px solid rgba(59,130,246,.4)',
               color:'#93c5fd',fontSize:11,padding:'3px 8px',borderRadius:12,cursor:'pointer',
               fontFamily:'inherit',userSelect:'none'}}>
-            {f.label} <span style={{color:'#64748b'}}>✕</span>
+            {f.label} <span style={{color:'var(--muted)'}}>✕</span>
           </span>
         ))}
         {hasFilter&&(
           <button onClick={resetFilters} style={{background:'transparent',border:'none',
-            color:'#94a3b8',fontSize:11,cursor:'pointer',padding:'3px 6px',fontFamily:'inherit'}}>
+            color:'var(--muted)',fontSize:11,cursor:'pointer',padding:'3px 6px',fontFamily:'inherit'}}>
             全解除
           </button>
         )}
@@ -5690,19 +5691,19 @@ function AnalysisScreen({game,pitches,onBack}){
         <div>
           <div className="card" style={{marginBottom:12}}>
             <div style={{display:'flex',alignItems:'center',marginBottom:8}}>
-              <span style={{fontSize:13,fontWeight:700,color:'#94a3b8'}}>主要指標</span>
+              <span style={{fontSize:13,fontWeight:700,color:'var(--muted)'}}>主要指標</span>
               <InfoBadge title="主要指標の見方"
                 body={'• ストライク率=ストライクと判定された球の割合。50%以上が安定。\n• 総球数=対象期間の全投球数（牽制除く）。\n• ボール数=ボール判定の球数。多すぎる場合は制球が乱れている可能性。'}/>
             </div>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:8,textAlign:'center'}}>
-              <div><div style={{fontSize:26,fontWeight:800,color:'#ef4444'}}>{sRate}%</div><div style={{fontSize:11,color:'#64748b'}}>ストライク率</div></div>
-              <div><div style={{fontSize:26,fontWeight:800}}>{total}</div><div style={{fontSize:11,color:'#64748b'}}>{hasFilter?'対象球数':'総投球数'}</div></div>
-              <div><div style={{fontSize:26,fontWeight:800,color:'#22c55e'}}>{filtered.filter(p=>RESULT_CAT_MAP[p.result]==='ball').length}</div><div style={{fontSize:11,color:'#64748b'}}>ボール数</div></div>
+              <div><div style={{fontSize:26,fontWeight:800,color:'#ef4444'}}>{sRate}%</div><div style={{fontSize:11,color:'var(--muted)'}}>ストライク率</div></div>
+              <div><div style={{fontSize:26,fontWeight:800}}>{total}</div><div style={{fontSize:11,color:'var(--muted)'}}>{hasFilter?'対象球数':'総投球数'}</div></div>
+              <div><div style={{fontSize:26,fontWeight:800,color:'#22c55e'}}>{filtered.filter(p=>RESULT_CAT_MAP[p.result]==='ball').length}</div><div style={{fontSize:11,color:'var(--muted)'}}>ボール数</div></div>
             </div>
           </div>
           <div className="card">
             <div style={{display:'flex',alignItems:'center',marginBottom:8}}>
-              <span style={{fontSize:13,fontWeight:700,color:'#94a3b8'}}>球種分布</span>
+              <span style={{fontSize:13,fontWeight:700,color:'var(--muted)'}}>球種分布</span>
               <InfoBadge title="球種分布"
                 body={'対象期間でどの球種を何球投げたかの割合。\n上位2-3球種で全体の70%以上を占めるのが一般的な投手。配球が偏っていると打者に読まれやすい。'}/>
             </div>
@@ -5713,21 +5714,21 @@ function AnalysisScreen({game,pitches,onBack}){
                   <span style={{fontSize:13}}>{p.label}</span>
                 </div>
                 <div style={{display:'flex',alignItems:'center',gap:8}}>
-                  <div style={{width:72,height:6,background:'#0f172a',borderRadius:3,overflow:'hidden'}}>
+                  <div style={{width:72,height:6,background:'var(--surface-quiet)',borderRadius:3,overflow:'hidden'}}>
                     <div style={{width:`${ptC[p.id]/total*100}%`,height:'100%',background:p.color}}/>
                   </div>
                   <span style={{fontSize:13,fontWeight:700,color:p.color,minWidth:24,textAlign:'right'}}>{ptC[p.id]}</span>
                 </div>
               </div>
             ))}
-            {total===0&&<div style={{fontSize:12,color:'#475569',textAlign:'center',padding:16}}>{emptyMsg}</div>}
+            {total===0&&<div style={{fontSize:12,color:'var(--muted-2)',textAlign:'center',padding:16}}>{emptyMsg}</div>}
           </div>
         </div>
       )}
       {tab==='zone'&&(
         <div className="card">
           <div style={{display:'flex',alignItems:'center',marginBottom:10}}>
-            <span style={{fontSize:13,fontWeight:700,color:'#94a3b8'}}>コース分布（ヒートマップ 5×5）</span>
+            <span style={{fontSize:13,fontWeight:700,color:'var(--muted)'}}>コース分布（ヒートマップ 5×5）</span>
             <InfoBadge title="コース分布ヒートマップ"
               body={'5×5マスでどのコースに投げたかを集計。色が濃いほど投球数が多い。\n太枠内=ストライクゾーン(3×3)、外枠=ボールゾーン。\n• 外角・内角に偏る投手は対策が立てやすい\n• 真ん中(Z5)が多い投手はリスク高\n• 高め/低めに集中=狙いどころがはっきりしている'}/>
           </div>
@@ -5751,13 +5752,13 @@ function AnalysisScreen({game,pitches,onBack}){
               </div>
             ))}
           </div>
-          <div style={{fontSize:11,color:'#64748b',textAlign:'center',marginTop:6}}>太枠=ストライクゾーン</div>
+          <div style={{fontSize:11,color:'var(--muted)',textAlign:'center',marginTop:6}}>太枠=ストライクゾーン</div>
         </div>
       )}
       {tab==='pitch'&&(
         <div className="card">
           <div style={{display:'flex',alignItems:'center',marginBottom:8}}>
-            <span style={{fontSize:13,fontWeight:700,color:'#94a3b8'}}>球種別詳細</span>
+            <span style={{fontSize:13,fontWeight:700,color:'var(--muted)'}}>球種別詳細</span>
             <InfoBadge title="球種別S率の見方"
               body={'各球種ごとに投球数とストライク率を表示。\n• 直球S率が低い→制球難の可能性\n• 変化球のS率が極端に低い→打者は変化球を見送れば良い\n• 主力球種のS率が60%以上=信頼できる決め球'}/>
           </div>
@@ -5771,17 +5772,17 @@ function AnalysisScreen({game,pitches,onBack}){
                   <PitchDot ptId={p.id} size={14}/>
                   <span style={{fontSize:13}}>{p.label}</span>
                 </div>
-                <span style={{fontSize:12,color:'#94a3b8'}}>{cnt}球 / S率{cnt>0?Math.round(sk/cnt*100):0}%</span>
+                <span style={{fontSize:12,color:'var(--muted)'}}>{cnt}球 / S率{cnt>0?Math.round(sk/cnt*100):0}%</span>
               </div>
             );
           })}
-          {total===0&&<div style={{fontSize:12,color:'#475569',textAlign:'center',padding:16}}>{emptyMsg}</div>}
+          {total===0&&<div style={{fontSize:12,color:'var(--muted-2)',textAlign:'center',padding:16}}>{emptyMsg}</div>}
         </div>
       )}
       {tab==='result'&&(
         <div className="card">
           <div style={{display:'flex',alignItems:'center',marginBottom:8}}>
-            <span style={{fontSize:13,fontWeight:700,color:'#94a3b8'}}>結果別集計</span>
+            <span style={{fontSize:13,fontWeight:700,color:'var(--muted)'}}>結果別集計</span>
             <InfoBadge title="結果別集計"
               body={'19種類の投球結果（見逃し/空振り/ファール/単打/二塁打/凡打/三振等）の発生回数を一覧化。\n• 「ファール多い→粘られている」\n• 「内野ゴロが多い→ゴロ型投手」\n• 「外野フライ多い→フライ打球が増える時間帯あり」など'}/>
           </div>
@@ -5791,7 +5792,7 @@ function AnalysisScreen({game,pitches,onBack}){
               <span style={{fontSize:14,fontWeight:700}}>{resC[r.id]}</span>
             </div>
           ))}
-          {total===0&&<div style={{fontSize:12,color:'#475569',textAlign:'center',padding:16}}>{emptyMsg}</div>}
+          {total===0&&<div style={{fontSize:12,color:'var(--muted-2)',textAlign:'center',padding:16}}>{emptyMsg}</div>}
         </div>
       )}
       {tab==='pitchers'&&(
@@ -5816,14 +5817,14 @@ function AnalysisScreen({game,pitches,onBack}){
         <div>
           <div className="card" style={{marginBottom:10}}>
             <div style={{display:'flex',alignItems:'center',marginBottom:8}}>
-              <span style={{fontSize:13,fontWeight:700,color:'#94a3b8'}}> ラインスコア（投球履歴から自動計算）</span>
+              <span style={{fontSize:13,fontWeight:700,color:'var(--muted)'}}> ラインスコア（投球履歴から自動計算）</span>
               <InfoBadge title="ラインスコア"
                 body={'1回〜9回までのイニング別の得点(R)・安打(H)を表示。\n投球履歴から自動再生して計算しているので、手動で点を入れた場合と若干ズレることがあります(その時はスコア修正ボタンで補正)。\n下段の投球内訳でイニング毎の球数・S率・三振・四死球も確認できます。'}/>
             </div>
             <LineScore pitches={nonPickoff} game={game} gs={game.gs}/>
           </div>
           <div className="card">
-            <div style={{fontSize:12,fontWeight:700,color:'#94a3b8',marginBottom:8}}>イニング別 投球内訳</div>
+            <div style={{fontSize:12,fontWeight:700,color:'var(--muted)',marginBottom:8}}>イニング別 投球内訳</div>
             {(()=>{
               const byInn={};
               nonPickoff.forEach(p=>{
@@ -5837,12 +5838,12 @@ function AnalysisScreen({game,pitches,onBack}){
                 if(cat==='so') byInn[k].so++;
               });
               const rows=Object.values(byInn).sort((a,b)=>a.inning-b.inning||(a.tb==='top'?-1:1));
-              if(rows.length===0) return <div style={{fontSize:12,color:'#475569',textAlign:'center'}}>記録なし</div>;
+              if(rows.length===0) return <div style={{fontSize:12,color:'var(--muted-2)',textAlign:'center'}}>記録なし</div>;
               return rows.map((r,i)=>(
                 <div key={i} style={{display:'flex',justifyContent:'space-between',
                   fontSize:11,padding:'4px 0',borderBottom:'1px solid #0f172a'}}>
-                  <span style={{color:'#94a3b8'}}>{r.inning}回{r.tb==='top'?'表':'裏'}</span>
-                  <span style={{color:'#cbd5e1'}}>
+                  <span style={{color:'var(--muted)'}}>{r.inning}回{r.tb==='top'?'表':'裏'}</span>
+                  <span style={{color:'var(--text)'}}>
                     {r.t}球 / S{r.t>0?Math.round(r.s/r.t*100):0}% / 安{r.h} 三{r.so} 四{r.bb}
                   </span>
                 </div>
@@ -5855,14 +5856,14 @@ function AnalysisScreen({game,pitches,onBack}){
       {/* ── カウント別ヒートマップ ── */}
       {tab==='count'&&(
         <div>
-          <div style={{fontSize:11,color:'#64748b',marginBottom:8,padding:'6px 10px',
-            background:'#1e293b',borderRadius:6,display:'flex',alignItems:'center'}}>
+          <div style={{fontSize:11,color:'var(--muted)',marginBottom:8,padding:'6px 10px',
+            background:'var(--surface-quiet)',borderRadius:6,display:'flex',alignItems:'center'}}>
             <span>カウント状況ごとのコース傾向を可視化。攻める/逃げるパターンが見えます。</span>
             <InfoBadge title="カウント別ヒートマップとは"
               body={'カウントごとに「どのコースに投げているか」を分解。\n• 初球(0-0): 試合の入り方が分かる\n• 2ストライク: 決め球コース\n• 3ボール: ストライクを取りに来るコース\n• ヒッターズC(2-0,3-0,3-1): 投手不利な時のコース\n• ピッチャーズC(0-2,1-2): 攻めの幅が見える'}/>
           </div>
           {total===0?(
-            <div style={{textAlign:'center',color:'#475569',padding:20,fontSize:12}}>{emptyMsg}</div>
+            <div style={{textAlign:'center',color:'var(--muted-2)',padding:20,fontSize:12}}>{emptyMsg}</div>
           ):(
             <CountHeatmap pitches={filtered}/>
           )}
@@ -5872,14 +5873,14 @@ function AnalysisScreen({game,pitches,onBack}){
       {/* ── 配球シーケンス予測 ── */}
       {tab==='seq'&&(
         <div>
-          <div style={{fontSize:12,color:'#94a3b8',marginBottom:8,padding:'8px 10px',
-            background:'#1e293b',borderRadius:6,display:'flex',alignItems:'center'}}>
+          <div style={{fontSize:12,color:'var(--muted)',marginBottom:8,padding:'8px 10px',
+            background:'var(--surface-quiet)',borderRadius:6,display:'flex',alignItems:'center'}}>
             <span>投手の球種パターン傾向。初球の選択・前球からの遷移確率を表示</span>
             <InfoBadge title="配球シーケンス予測"
               body={'初球の球種傾向と、ある球種の「次に何を投げるか」の確率を表示。\n例「直球後 → スライダー 65%」=直球の後はスライダーが65%の確率。\n• 投手の「決まったパターン」を発見できる\n• 打者は次の球種を予測しやすくなる\n• 6回以降に傾向が変わる投手もいる'}/>
           </div>
           {pitcherStats.length===0?(
-            <div style={{textAlign:'center',color:'#475569',padding:20,fontSize:12}}>{emptyMsg}</div>
+            <div style={{textAlign:'center',color:'var(--muted-2)',padding:20,fontSize:12}}>{emptyMsg}</div>
           ):(
             pitcherStats.map(ps=>(
               <div key={ps.name} style={{marginBottom:16}}>
@@ -5887,8 +5888,8 @@ function AnalysisScreen({game,pitches,onBack}){
                   padding:'8px 12px',background:'rgba(168,85,247,.1)',borderRadius:10,
                   border:'1px solid rgba(168,85,247,.25)'}}>
                   <span style={{fontSize:18}}></span>
-                  <span style={{fontSize:15,fontWeight:800,color:'#e2e8f0',flex:1}}>{ps.name}</span>
-                  <span style={{fontSize:12,color:'#64748b'}}>{ps.total}球</span>
+                  <span style={{fontSize:15,fontWeight:800,color:'var(--text)',flex:1}}>{ps.name}</span>
+                  <span style={{fontSize:12,color:'var(--muted)'}}>{ps.total}球</span>
                 </div>
                 <PitchSequenceChart pitches={filtered} pitcherName={ps.name}/>
               </div>
@@ -5901,12 +5902,12 @@ function AnalysisScreen({game,pitches,onBack}){
       {tab==='spray'&&(
         <div className="card">
           <div style={{display:'flex',alignItems:'center',marginBottom:8}}>
-            <span style={{fontSize:14,fontWeight:800,color:'#e2e8f0'}}>打球分布（スプレーチャート）</span>
+            <span style={{fontSize:14,fontWeight:800,color:'var(--text)'}}>打球分布（スプレーチャート）</span>
             <InfoBadge title="スプレーチャート"
               body={'打球を野手位置にプロット。\n• 引っ張り打ち中心？流し打ち中心？\n• 外野フライが特定方向に偏る打者は守備シフトの対象\n• 内野ゴロが多い投手はゴロ型、外野フライが多いとフライ型'}/>
           </div>
           {total===0?(
-            <div style={{textAlign:'center',color:'#475569',padding:20,fontSize:12}}>{emptyMsg}</div>
+            <div style={{textAlign:'center',color:'var(--muted-2)',padding:20,fontSize:12}}>{emptyMsg}</div>
           ):(
             <SprayChart pitches={filtered}/>
           )}
@@ -5923,9 +5924,9 @@ function AnalysisScreen({game,pitches,onBack}){
           return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${String(cs).padStart(2,'0')}`;
         };
         if(times.length===0) return(
-          <div className="card" style={{textAlign:'center',color:'#475569',padding:32,fontSize:13}}>
+          <div className="card" style={{textAlign:'center',color:'var(--muted-2)',padding:32,fontSize:13}}>
             送球タイムの記録がありません<br/>
-            <span style={{fontSize:11,color:'#334155',marginTop:6,display:'block'}}>
+            <span style={{fontSize:11,color:'var(--muted-2)',marginTop:6,display:'block'}}>
               ⏱ 時計タブで計測 → 「送球タイム」を選択して記録ボタンで追加できます
             </span>
           </div>
@@ -5937,39 +5938,39 @@ function AnalysisScreen({game,pitches,onBack}){
         return(
           <div>
             <div className="card" style={{marginBottom:10}}>
-              <div style={{fontSize:12,fontWeight:700,color:'#94a3b8',marginBottom:10}}>
+              <div style={{fontSize:12,fontWeight:700,color:'var(--muted)',marginBottom:10}}>
                 イニング間送球タイム サマリー ({times.length}件)
               </div>
               <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:8,textAlign:'center'}}>
                 <div>
                   <div style={{fontSize:22,fontWeight:800,color:'#a5b4fc',fontFamily:'monospace'}}>{fmtMs(avg)}</div>
-                  <div style={{fontSize:10,color:'#64748b',marginTop:2}}>平均</div>
+                  <div style={{fontSize:10,color:'var(--muted)',marginTop:2}}>平均</div>
                 </div>
                 <div>
                   <div style={{fontSize:22,fontWeight:800,color:'#4ade80',fontFamily:'monospace'}}>{fmtMs(mn)}</div>
-                  <div style={{fontSize:10,color:'#64748b',marginTop:2}}>最速</div>
+                  <div style={{fontSize:10,color:'var(--muted)',marginTop:2}}>最速</div>
                 </div>
                 <div>
                   <div style={{fontSize:22,fontWeight:800,color:'#f87171',fontFamily:'monospace'}}>{fmtMs(mx)}</div>
-                  <div style={{fontSize:10,color:'#64748b',marginTop:2}}>最遅</div>
+                  <div style={{fontSize:10,color:'var(--muted)',marginTop:2}}>最遅</div>
                 </div>
               </div>
             </div>
             <div className="card">
-              <div style={{fontSize:12,fontWeight:700,color:'#94a3b8',marginBottom:8}}>記録一覧</div>
+              <div style={{fontSize:12,fontWeight:700,color:'var(--muted)',marginBottom:8}}>記録一覧</div>
               {[...times].reverse().map((t,i)=>{
                 const rank=t.time===mn?'最速':t.time===mx?'最遅':'';
                 const c=t.time===mn?'#4ade80':t.time===mx?'#f87171':'#a5b4fc';
                 return(
                   <div key={t.id} style={{display:'flex',alignItems:'center',gap:8,
                     padding:'8px 0',borderBottom:i<times.length-1?'1px solid #0f172a':'none'}}>
-                    <span style={{fontSize:12,color:'#475569',width:28}}>#{times.length-i}</span>
+                    <span style={{fontSize:12,color:'var(--muted-2)',width:28}}>#{times.length-i}</span>
                     <span style={{flex:1,fontSize:17,fontFamily:'monospace',fontWeight:800,color:c}}>
                       {t.formatted}
                     </span>
                     {rank&&<span style={{fontSize:10,padding:'2px 7px',borderRadius:8,
                       background:`${c}22`,color:c,fontWeight:700}}>{rank}</span>}
-                    <span style={{fontSize:10,color:'#334155'}}>
+                    <span style={{fontSize:10,color:'var(--muted-2)'}}>
                       {new Date(t.timestamp).toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'})}
                     </span>
                   </div>
@@ -6011,7 +6012,7 @@ function FilterModal({filters,setFilters,pitcherList,batterList,matchCount,total
 
   const ChoiceRow=({label,value,options,onChange})=>(
     <div style={{marginBottom:14}}>
-      <div style={{fontSize:11,fontWeight:700,color:'#94a3b8',marginBottom:6}}>{label}</div>
+      <div style={{fontSize:11,fontWeight:700,color:'var(--muted)',marginBottom:6}}>{label}</div>
       <div style={{display:'flex',flexWrap:'wrap',gap:4}}>
         {options.map(([k,l])=>(
           <button key={k} onClick={()=>onChange(k)} style={chipStyle(value===k)}>{l}</button>
@@ -6032,10 +6033,10 @@ function FilterModal({filters,setFilters,pitcherList,batterList,matchCount,total
           <button className="btn btn-secondary btn-sm" onClick={onClose}>✕</button>
         </div>
 
-        <div style={{fontSize:11,color:'#94a3b8',marginBottom:14,padding:'8px 10px',
+        <div style={{fontSize:11,color:'var(--muted)',marginBottom:14,padding:'8px 10px',
           background:'rgba(59,130,246,.08)',borderRadius:6,textAlign:'center'}}>
           対象: <span style={{color:'#fff',fontWeight:800,fontSize:14}}>{matchCount}</span>
-          <span style={{color:'#64748b'}}> / {totalCount} 球</span>
+          <span style={{color:'var(--muted)'}}> / {totalCount} 球</span>
         </div>
 
         <ChoiceRow label="打者の左右" value={filters.bh}
@@ -6047,7 +6048,7 @@ function FilterModal({filters,setFilters,pitcherList,batterList,matchCount,total
           onChange={v=>set('ph',v)}/>
 
         <div style={{marginBottom:14}}>
-          <div style={{fontSize:11,fontWeight:700,color:'#94a3b8',marginBottom:6}}>カウント（プリセット）</div>
+          <div style={{fontSize:11,fontWeight:700,color:'var(--muted)',marginBottom:6}}>カウント（プリセット）</div>
           <div style={{display:'flex',flexWrap:'wrap',gap:4}}>
             {[
               ['all','全て'],
@@ -6061,7 +6062,7 @@ function FilterModal({filters,setFilters,pitcherList,batterList,matchCount,total
               <button key={k} onClick={()=>set('count',k)} style={chipStyle(filters.count===k)}>{l}</button>
             ))}
           </div>
-          <div style={{fontSize:11,fontWeight:700,color:'#94a3b8',margin:'12px 0 6px'}}>カウント（個別 B-S）</div>
+          <div style={{fontSize:11,fontWeight:700,color:'var(--muted)',margin:'12px 0 6px'}}>カウント（個別 B-S）</div>
           <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:4}}>
             {countGrid.map(c=>(
               <button key={c} onClick={()=>set('count',c)} style={{...chipStyle(filters.count===c),padding:'7px 0',textAlign:'center',fontWeight:700}}>{c}</button>
@@ -6078,7 +6079,7 @@ function FilterModal({filters,setFilters,pitcherList,batterList,matchCount,total
           onChange={v=>set('inning',v)}/>
 
         <div style={{marginBottom:14}}>
-          <div style={{fontSize:11,fontWeight:700,color:'#94a3b8',marginBottom:6}}>投手</div>
+          <div style={{fontSize:11,fontWeight:700,color:'var(--muted)',marginBottom:6}}>投手</div>
           <select value={filters.pitcher} onChange={e=>set('pitcher',e.target.value)}>
             <option value="all">全ての投手</option>
             {pitcherList.map(n=><option key={n} value={n}>{n}</option>)}
@@ -6086,7 +6087,7 @@ function FilterModal({filters,setFilters,pitcherList,batterList,matchCount,total
         </div>
 
         <div style={{marginBottom:14}}>
-          <div style={{fontSize:11,fontWeight:700,color:'#94a3b8',marginBottom:6}}>打者</div>
+          <div style={{fontSize:11,fontWeight:700,color:'var(--muted)',marginBottom:6}}>打者</div>
           <select value={filters.batter} onChange={e=>set('batter',e.target.value)}>
             <option value="all">全ての打者</option>
             {batterList.map(n=><option key={n} value={n}>{n}</option>)}
@@ -6094,7 +6095,7 @@ function FilterModal({filters,setFilters,pitcherList,batterList,matchCount,total
         </div>
 
         <div style={{display:'flex',gap:8,marginTop:16,position:'sticky',bottom:0,
-          background:'#1e293b',paddingTop:10}}>
+          background:'var(--surface-quiet)',paddingTop:10}}>
           <button className="btn btn-secondary" style={{flex:1}} onClick={onReset}>リセット</button>
           <button className="btn btn-primary" style={{flex:1}} onClick={onClose}>適用</button>
         </div>
@@ -6127,7 +6128,7 @@ function PitchEditModal({pitch, onSave, onClose}){
           <h3 style={{fontSize:16}}> 投球データ修正</h3>
           <button className="btn btn-secondary btn-sm" onClick={onClose}>✕</button>
         </div>
-        <div style={{fontSize:11,color:'#64748b',marginBottom:10,padding:'6px 10px',background:'rgba(59,130,246,.08)',borderRadius:6}}>
+        <div style={{fontSize:11,color:'var(--muted)',marginBottom:10,padding:'6px 10px',background:'rgba(59,130,246,.08)',borderRadius:6}}>
           この球のみ修正します。前後の投球データは保持されます。
         </div>
 
@@ -6135,7 +6136,7 @@ function PitchEditModal({pitch, onSave, onClose}){
           <div>
             {/* ゾーン */}
             <div style={{marginBottom:12}}>
-              <div style={{fontSize:12,color:'#94a3b8',fontWeight:700,marginBottom:6}}>コース（ゾーン）</div>
+              <div style={{fontSize:12,color:'var(--muted)',fontWeight:700,marginBottom:6}}>コース（ゾーン）</div>
               <div style={{display:'flex',alignItems:'center',gap:10}}>
                 <div style={{fontSize:24,fontWeight:900,color:'#3b82f6',minWidth:36,textAlign:'center',
                   background:'rgba(59,130,246,.1)',borderRadius:8,padding:'4px 8px'}}>
@@ -6147,7 +6148,7 @@ function PitchEditModal({pitch, onSave, onClose}){
 
             {/* 球種 */}
             <div style={{marginBottom:12}}>
-              <div style={{fontSize:12,color:'#94a3b8',fontWeight:700,marginBottom:6}}>球種</div>
+              <div style={{fontSize:12,color:'var(--muted)',fontWeight:700,marginBottom:6}}>球種</div>
               <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:4}}>
                 {PT.map(p=>(
                   <button key={p.id} onClick={()=>setPPt(p.id)}
@@ -6163,7 +6164,7 @@ function PitchEditModal({pitch, onSave, onClose}){
 
             {/* 結果 */}
             <div style={{marginBottom:12}}>
-              <div style={{fontSize:12,color:'#94a3b8',fontWeight:700,marginBottom:6}}>結果</div>
+              <div style={{fontSize:12,color:'var(--muted)',fontWeight:700,marginBottom:6}}>結果</div>
               {RESULT_CATS.map(cat=>(
                 <div key={cat.id} style={{marginBottom:8}}>
                   <div style={{fontSize:10,fontWeight:700,color:cat.color,
@@ -6189,9 +6190,9 @@ function PitchEditModal({pitch, onSave, onClose}){
             {/* 打球方向 */}
             {needsDir&&(
               <div style={{marginBottom:12}}>
-                <div style={{fontSize:12,color:'#94a3b8',fontWeight:700,marginBottom:6}}>打球方向</div>
+                <div style={{fontSize:12,color:'var(--muted)',fontWeight:700,marginBottom:6}}>打球方向</div>
                 <div style={{display:'flex',alignItems:'center',gap:10}}>
-                  <span style={{fontSize:14,fontWeight:700,color:'#e2e8f0'}}>
+                  <span style={{fontSize:14,fontWeight:700,color:'var(--text)'}}>
                     {pDir?FP[pDir]?.l||pDir:'未選択'}
                   </span>
                   <button className="btn btn-secondary btn-sm" onClick={()=>setView('dir')}>変更 →</button>
@@ -6212,7 +6213,7 @@ function PitchEditModal({pitch, onSave, onClose}){
         {view==='zone'&&(
           <div>
             <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:8,marginBottom:10}}>
-              <div style={{fontSize:13,fontWeight:700,color:'#94a3b8'}}>コース選択</div>
+              <div style={{fontSize:13,fontWeight:700,color:'var(--muted)'}}>コース選択</div>
               <ZonePerspectiveToggle value={zonePerspective} onChange={setZonePerspective}/>
             </div>
             <ZoneChart value={pZone} onChange={z=>{setPZone(z);setView('main');}}
@@ -6223,7 +6224,7 @@ function PitchEditModal({pitch, onSave, onClose}){
 
         {view==='dir'&&(
           <div>
-            <div style={{fontSize:13,fontWeight:700,color:'#94a3b8',marginBottom:10}}>打球方向選択</div>
+            <div style={{fontSize:13,fontWeight:700,color:'var(--muted)',marginBottom:10}}>打球方向選択</div>
             <FieldDiagram value={pDir} onChange={d=>{setPDir(d);setView('main');}}/>
             <button className="btn btn-secondary" style={{width:'100%',marginTop:10}} onClick={()=>setView('main')}>戻る</button>
           </div>
@@ -6297,17 +6298,17 @@ function HistoryScreen({pitches,onBack,onPitchEdit,undoStack,onUndo}){
 
   return (
     <div style={{display:'flex',flexDirection:'column',height:'100vh',overflow:'hidden',
-      background:'#0f172a',maxWidth:540,margin:'0 auto',boxSizing:'border-box'}}>
+      background:'var(--surface-quiet)',maxWidth:540,margin:'0 auto',boxSizing:'border-box'}}>
       {/* ヘッダー */}
       <div className="header" style={{flexShrink:0}}>
         <button className="btn btn-secondary btn-sm" onClick={onBack}>← 戻る</button>
         <h2>投球履歴</h2>
-        <span style={{fontSize:13,color:'#64748b'}}>{pitches.filter(p=>!p.isPickoff && !p.isAdvance).length}球</span>
+        <span style={{fontSize:13,color:'var(--muted)'}}>{pitches.filter(p=>!p.isPickoff && !p.isAdvance).length}球</span>
       </div>
 
       {/* スクロール可能コンテンツエリア */}
       <div style={{flex:1,overflowY:'auto',padding:'0 12px 8px'}}>
-      {sorted.length===0&&<div style={{textAlign:'center',color:'#475569',marginTop:48,fontSize:15}}>投球記録がありません</div>}
+      {sorted.length===0&&<div style={{textAlign:'center',color:'var(--muted-2)',marginTop:48,fontSize:15}}>投球記録がありません</div>}
 
       {/* 球順表示 */}
       {mode==='chrono'&&sorted.length>0&&(
@@ -6329,7 +6330,7 @@ function HistoryScreen({pitches,onBack,onPitchEdit,undoStack,onUndo}){
             }[linked?.result]||'#67e8f9';
             return (
               <div key={p.id} className="history-item" style={{opacity}}>
-                <span style={{fontSize:12,color:'#475569',width:22,flexShrink:0,textAlign:'center'}}>{sorted.length-i}</span>
+                <span style={{fontSize:12,color:'var(--muted-2)',width:22,flexShrink:0,textAlign:'center'}}>{sorted.length-i}</span>
                 {p.isPickoff
                   ? <span style={{fontSize:11,padding:'2px 6px',borderRadius:4,background:'rgba(59,130,246,.15)',color:'#60a5fa',fontWeight:700,flexShrink:0}}>牽</span>
                   : isAdv
@@ -6349,7 +6350,7 @@ function HistoryScreen({pitches,onBack,onPitchEdit,undoStack,onUndo}){
                       </span>
                     )}
                   </div>
-                  <div style={{fontSize:11,color:'#64748b',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>
+                  <div style={{fontSize:11,color:'var(--muted)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>
                     {p.inning}回{p.topBottom==='top'?'表':'裏'}
                     {!isAdv&&!p.isPickoff&&` / Z${p.zone||'-'} / ${resInfo?.label||p.result}`}
                     {p.dir&&!isAdv&&` / ${FP[p.dir]?.l||p.dir}`}
@@ -6371,7 +6372,7 @@ function HistoryScreen({pitches,onBack,onPitchEdit,undoStack,onUndo}){
                     ↩ 取り消す
                   </button>
                 )}
-                <span style={{fontSize:11,color:'#475569',flexShrink:0,minWidth:30,textAlign:'right'}}>{p.batter||''}</span>
+                <span style={{fontSize:11,color:'var(--muted-2)',flexShrink:0,minWidth:30,textAlign:'right'}}>{p.batter||''}</span>
               </div>
             );
           })}
@@ -6394,34 +6395,34 @@ function HistoryScreen({pitches,onBack,onPitchEdit,undoStack,onUndo}){
                 {/* ヘッダー: 回・打者・結果 */}
                 <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8,flexWrap:'wrap'}}>
                   <span style={{fontSize:10,padding:'2px 6px',borderRadius:4,
-                    background:'#0f172a',color:'#94a3b8',fontWeight:700}}>
+                    background:'var(--surface-quiet)',color:'var(--muted)',fontWeight:700}}>
                     #{atBatGroups.length-gi}
                   </span>
-                  <span style={{fontSize:11,color:'#94a3b8'}}>
+                  <span style={{fontSize:11,color:'var(--muted)'}}>
                     {g.inning}回{g.topBottom==='top'?'表':'裏'}
                   </span>
-                  <span style={{fontSize:13,fontWeight:700,color:'#e2e8f0'}}>
-                    {g.batter}<span style={{fontSize:9,color:'#64748b',marginLeft:3}}>({g.bh}打)</span>
+                  <span style={{fontSize:13,fontWeight:700,color:'var(--text)'}}>
+                    {g.batter}<span style={{fontSize:9,color:'var(--muted)',marginLeft:3}}>({g.bh}打)</span>
                   </span>
                   <span style={{flex:1}}/>
-                  {g.pitcher&&<span style={{fontSize:10,color:'#64748b'}}>vs {g.pitcher}</span>}
+                  {g.pitcher&&<span style={{fontSize:10,color:'var(--muted)'}}>vs {g.pitcher}</span>}
                 </div>
                 {/* 結果 */}
                 <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:8,
                   padding:'5px 8px',background:`${resColor}15`,borderRadius:6,
                   border:`1px solid ${resColor}40`}}>
-                  <span style={{fontSize:11,color:'#94a3b8'}}>結果:</span>
+                  <span style={{fontSize:11,color:'var(--muted)'}}>結果:</span>
                   <span style={{fontSize:14,fontWeight:800,color:resColor}}>{resLabel}</span>
-                  {g.dir&&<span style={{fontSize:11,color:'#cbd5e1'}}>→{FP[g.dir]?.l||g.dir}</span>}
+                  {g.dir&&<span style={{fontSize:11,color:'var(--text)'}}>→{FP[g.dir]?.l||g.dir}</span>}
                   {g.hitType&&<span style={{fontSize:11,padding:'2px 6px',borderRadius:8,
                     background:'rgba(167,139,250,.15)',color:'#a78bfa'}}>
                     {HIT_TYPE_LABELS[g.hitType]}
                   </span>}
                   <span style={{flex:1}}/>
-                  <span style={{fontSize:10,color:'#64748b'}}>{g.pitches.length}球</span>
+                  <span style={{fontSize:10,color:'var(--muted)'}}>{g.pitches.length}球</span>
                 </div>
                 {/* 配球シーケンス: ドット表示（タップで修正） */}
-                <div style={{fontSize:9,color:'#475569',marginBottom:4}}>配球（タップで修正）</div>
+                <div style={{fontSize:9,color:'var(--muted-2)',marginBottom:4}}>配球（タップで修正）</div>
                 <div style={{display:'flex',gap:4,alignItems:'flex-start',marginBottom:8,flexWrap:'wrap'}}>
                   {g.pitches.map((p,i)=>{
                     const pt=PT.find(x=>x.id===p.pt);
@@ -6438,7 +6439,7 @@ function HistoryScreen({pitches,onBack,onPitchEdit,undoStack,onUndo}){
                         style={{display:'flex',flexDirection:'column',alignItems:'center',gap:1,
                           cursor:canEdit&&!isAdv?'pointer':'default',
                           opacity:isAdv?0.55:1}}>
-                        <div style={{fontSize:8,color:'#64748b'}}>{i+1}</div>
+                        <div style={{fontSize:8,color:'var(--muted)'}}>{i+1}</div>
                         <div style={{width:22,height:22,borderRadius:'50%',
                           background:isAdv?'#0f172a':(pt?.color||'#64748b'),
                           border:`2.5px solid ${ring}`,
@@ -6447,7 +6448,7 @@ function HistoryScreen({pitches,onBack,onPitchEdit,undoStack,onUndo}){
                           title={`${pt?.label||'-'} / ${ALL_RESULTS.find(x=>x.id===p.result)?.label||p.result}${p.speed?' / '+p.speed+'km':''}`}>
                           {isAdv&&<span style={{fontSize:7,color:'#67e8f9',fontWeight:700}}>作</span>}
                         </div>
-                        <div style={{fontSize:7,color:'#94a3b8',maxWidth:22,textAlign:'center',
+                        <div style={{fontSize:7,color:'var(--muted)',maxWidth:22,textAlign:'center',
                           overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>
                           {isAdv?(ALL_RESULTS.find(x=>x.id===p.result)?.label||'作戦').slice(0,3):pt?.short?.slice(0,2)||'-'}
                         </div>
@@ -6466,7 +6467,7 @@ function HistoryScreen({pitches,onBack,onPitchEdit,undoStack,onUndo}){
       </div>{/* /スクロールエリア */}
 
       {/* ── タブバー（画面下部固定）── */}
-      <div style={{flexShrink:0,borderTop:'1px solid #1e293b',background:'#0f172a',
+      <div style={{flexShrink:0,borderTop:'1px solid var(--border-soft)',background:'var(--surface-quiet)',
         padding:'4px 12px',display:'flex',gap:4}}>
         <button className={`tab ${mode==='chrono'?'active':''}`}
           style={{flex:1,fontSize:13,padding:'10px 4px',fontWeight:700}}
@@ -6524,13 +6525,13 @@ function SubstitutionModal({game,gs,onConfirm,onClose}){
         {type==='pitcher'&&(
           <div>
             {curPitcher?.name&&(
-              <div style={{fontSize:12,color:'#64748b',marginBottom:8}}>
+              <div style={{fontSize:12,color:'var(--muted)',marginBottom:8}}>
                 現在: #{curPitcher.number} {curPitcher.name}（{curPitcher.hand}投
                 {curPitcher.arm&&` / ${PITCHER_ARM_LABELS[curPitcher.arm]}`}
                 {curPitcher.plate&&` / プレート${PITCHER_PLATE_LABELS[curPitcher.plate]}`}）
               </div>
             )}
-            <div style={{fontSize:12,color:'#94a3b8',fontWeight:600,marginBottom:6}}>新しい投手</div>
+            <div style={{fontSize:12,color:'var(--muted)',fontWeight:600,marginBottom:6}}>新しい投手</div>
             <div style={{display:'flex',gap:6,marginBottom:6}}>
               <input value={newPitcher.number} onChange={e=>setNewPitcher(p=>({...p,number:e.target.value}))}
                 placeholder="#" style={{width:44,fontSize:12,padding:'6px 7px',flexShrink:0}}/>
@@ -6543,13 +6544,13 @@ function SubstitutionModal({game,gs,onConfirm,onClose}){
             </div>
             {/* ① 投球フォーム / プレート位置 */}
             <div style={{display:'flex',gap:6,alignItems:'center'}}>
-              <span style={{fontSize:10,color:'#64748b'}}>投げ方</span>
+              <span style={{fontSize:10,color:'var(--muted)'}}>投げ方</span>
               <select value={newPitcher.arm||'three'}
                 onChange={e=>setNewPitcher(p=>({...p,arm:e.target.value}))}
                 style={{flex:1,fontSize:11,padding:'5px 4px'}}>
                 {PITCHER_ARMS.map(a=><option key={a.v} value={a.v}>{a.l}</option>)}
               </select>
-              <span style={{fontSize:10,color:'#64748b'}}>プレート</span>
+              <span style={{fontSize:10,color:'var(--muted)'}}>プレート</span>
               <select value={newPitcher.plate||'center'}
                 onChange={e=>setNewPitcher(p=>({...p,plate:e.target.value}))}
                 style={{width:70,fontSize:11,padding:'5px 4px',flexShrink:0}}>
@@ -6560,7 +6561,7 @@ function SubstitutionModal({game,gs,onConfirm,onClose}){
         )}
         {type!=='pitcher'&&(
           <div>
-            <div style={{fontSize:11,color:'#64748b',marginBottom:6}}>
+            <div style={{fontSize:11,color:'var(--muted)',marginBottom:6}}>
               {type==='defense'
                 ? `守備側（${isTop?(game.homeTeam||'後攻'):(game.awayTeam||'先攻')}）のラインナップを変更`
                 : `攻撃側（${isTop?(game.awayTeam||'先攻'):(game.homeTeam||'後攻')}）のラインナップを変更`}
@@ -6587,7 +6588,7 @@ function SubstitutionModal({game,gs,onConfirm,onClose}){
               <div>
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
                   <div>
-                    <div style={{fontSize:11,color:'#94a3b8',marginBottom:3}}>対象打順</div>
+                    <div style={{fontSize:11,color:'var(--muted)',marginBottom:3}}>対象打順</div>
                     <select value={pcOrder} onChange={e=>setPcOrder(+e.target.value)} style={{fontSize:12,width:'100%'}}>
                       {[1,2,3,4,5,6,7,8,9].map(n=>{
                         const cur=defLineup.find(p=>p.order===n);
@@ -6596,7 +6597,7 @@ function SubstitutionModal({game,gs,onConfirm,onClose}){
                     </select>
                   </div>
                   <div>
-                    <div style={{fontSize:11,color:'#94a3b8',marginBottom:3}}>新しい守備位置</div>
+                    <div style={{fontSize:11,color:'var(--muted)',marginBottom:3}}>新しい守備位置</div>
                     <select value={pcNewPos} onChange={e=>setPcNewPos(e.target.value)} style={{fontSize:12,width:'100%'}}>
                       {POSITIONS.map(p=><option key={p} value={p}>{p}</option>)}
                     </select>
@@ -6616,7 +6617,7 @@ function SubstitutionModal({game,gs,onConfirm,onClose}){
               /* 通常の選手交代 */
               <div>
                 <div style={{marginBottom:8}}>
-                  <div style={{fontSize:12,color:'#94a3b8',fontWeight:600,marginBottom:4}}>対象打順</div>
+                  <div style={{fontSize:12,color:'var(--muted)',fontWeight:600,marginBottom:4}}>対象打順</div>
                   <select value={targetOrder} onChange={e=>setTargetOrder(+e.target.value)} style={{fontSize:12}}>
                     {[1,2,3,4,5,6,7,8,9].map(n=>{
                       const cur=targetLineup.find(p=>p.order===n);
@@ -6624,7 +6625,7 @@ function SubstitutionModal({game,gs,onConfirm,onClose}){
                     })}
                   </select>
                 </div>
-                <div style={{fontSize:12,color:'#94a3b8',fontWeight:600,marginBottom:4}}>交代選手</div>
+                <div style={{fontSize:12,color:'var(--muted)',fontWeight:600,marginBottom:4}}>交代選手</div>
                 <div style={{display:'flex',gap:6,marginBottom:4}}>
                   <input value={newPlayer.number} onChange={e=>setNewPlayer(p=>({...p,number:e.target.value}))}
                     placeholder="#" style={{width:44,fontSize:12,padding:'6px 7px',flexShrink:0}}/>
@@ -6637,7 +6638,7 @@ function SubstitutionModal({game,gs,onConfirm,onClose}){
                 </div>
                 {type==='defense'&&(
                   <div style={{display:'flex',gap:6,alignItems:'center',marginTop:4}}>
-                    <span style={{fontSize:11,color:'#64748b'}}>守備位置</span>
+                    <span style={{fontSize:11,color:'var(--muted)'}}>守備位置</span>
                     <select value={newPlayer.pos} onChange={e=>setNewPlayer(p=>({...p,pos:e.target.value}))}
                       style={{flex:1,fontSize:12,padding:'5px 4px'}}>
                       {['投手','捕手','一塁','二塁','三塁','遊撃','左翼','中堅','右翼','DH'].map(pos=>(
@@ -7112,7 +7113,7 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
           animation:'fadeIn .2s ease',
           whiteSpace:'nowrap',
         }}>
-          <span style={{fontSize:13,color:'#e2e8f0',fontWeight:600}}>
+          <span style={{fontSize:13,color:'var(--text)',fontWeight:600}}>
             {advToast}を記録しました
           </span>
           <button onClick={undo}
@@ -7253,7 +7254,7 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
           </span>
           <button onClick={()=>setPendingAdvance(null)}
             style={{padding:'1px 6px',borderRadius:4,border:'1px solid #475569',
-              background:'transparent',color:'#94a3b8',fontSize:10,cursor:'pointer',fontFamily:'inherit'}}>
+              background:'transparent',color:'var(--muted)',fontSize:10,cursor:'pointer',fontFamily:'inherit'}}>
             ×
           </button>
         </div>
@@ -7265,7 +7266,7 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
           <div className="card" style={{marginBottom:6,padding:'9px'}}>
             <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:6,marginBottom:6}}>
               <div style={{display:'flex',alignItems:'center',gap:6,flexWrap:'wrap'}}>
-                <span style={{fontSize:11,fontWeight:700,color:'#94a3b8'}}>コース選択</span>
+                <span style={{fontSize:11,fontWeight:700,color:'var(--muted)'}}>コース選択</span>
                 <ZonePerspectiveToggle value={zonePerspective} onChange={setZonePerspective}/>
               </div>
               <div style={{display:'flex',gap:4,flexShrink:0}}>
@@ -7303,7 +7304,7 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
                     <button key={t.id}
                       onClick={()=>handleSetPending(t.id)}
                       style={{padding:'8px 3px',borderRadius:6,border:'1.5px solid #06b6d4',
-                        background:'#0f172a',color:'#67e8f9',fontSize:10,fontWeight:700,
+                        background:'var(--surface-quiet)',color:'#67e8f9',fontSize:10,fontWeight:700,
                         cursor:'pointer',fontFamily:'inherit',lineHeight:1.2}}>
                       {t.l}
                     </button>
@@ -7337,14 +7338,14 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
                 <span style={{fontSize:11,fontWeight:800,color:'#22d3ee'}}>
                   {'🚀 '+({steal:'盗塁',double_steal:'ダブルスチール',delayed:'ディレード',hitrun:'エンドラン',pb:'PB',wp:'WP',
                     tag_out:'刺殺',caught_stealing:'盗塁死'})[pendingAdvance.type]+' を選択中'}
-                  {pendingAdvance.runnerKey&&<span style={{fontSize:9,color:'#94a3b8',marginLeft:4}}>
+                  {pendingAdvance.runnerKey&&<span style={{fontSize:9,color:'var(--muted)',marginLeft:4}}>
                     {`(${({first:'1塁',second:'2塁',third:'3塁'})[pendingAdvance.runnerKey]}走者)`}
                   </span>}
                 </span>
                 <span style={{flex:1}}/>
                 <button onClick={()=>setPendingAdvance(null)}
                   style={{padding:'2px 8px',borderRadius:5,border:'1px solid #475569',
-                    background:'transparent',color:'#94a3b8',fontSize:11,cursor:'pointer',fontFamily:'inherit'}}>
+                    background:'transparent',color:'var(--muted)',fontSize:11,cursor:'pointer',fontFamily:'inherit'}}>
                   × キャンセル
                 </button>
               </div>
@@ -7367,7 +7368,7 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
         <div className="card" style={{padding:'9px'}}>
           <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:6}}>
             <button className="btn btn-secondary btn-sm" onClick={()=>setStep('zone')}>← 戻る</button>
-            <span style={{fontSize:11,fontWeight:700,color:'#94a3b8'}}>② 球種（Z:{pZone}）</span>
+            <span style={{fontSize:11,fontWeight:700,color:'var(--muted)'}}>② 球種（Z:{pZone}）</span>
           </div>
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr 1fr',gap:4}}>
             {PT.map(p=>(
@@ -7423,7 +7424,7 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
         <div className="card">
           <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:10}}>
             <button className="btn btn-secondary btn-sm" onClick={()=>setStep('result')}>← 戻る</button>
-            <span style={{fontSize:13,fontWeight:700,color:'#94a3b8'}}>
+            <span style={{fontSize:13,fontWeight:700,color:'var(--muted)'}}>
               ④ 打球方向 —「{ALL_RESULTS.find(r=>r.id===pResult)?.label}」
             </span>
           </div>
@@ -7447,7 +7448,7 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
         <div className="card">
           <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:10}}>
             <button className="btn btn-secondary btn-sm" onClick={()=>setStep('detail')}>← 戻る</button>
-            <span style={{fontSize:13,fontWeight:700,color:'#94a3b8'}}>
+            <span style={{fontSize:13,fontWeight:700,color:'var(--muted)'}}>
               ⑤ 打球タイプ —「{ALL_RESULTS.find(r=>r.id===pResult)?.label}」
               {pDir&&` / ${FP[pDir]?.l||pDir}方向`}
             </span>
@@ -7477,14 +7478,14 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
         <div className="card">
           <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:12}}>
             <button className="btn btn-secondary btn-sm" onClick={()=>setStep('result')}>← 戻る</button>
-            <span style={{fontSize:13,fontWeight:700,color:'#94a3b8'}}>④ 確認</span>
+            <span style={{fontSize:13,fontWeight:700,color:'var(--muted)'}}>④ 確認</span>
           </div>
           <div style={{textAlign:'center',padding:'16px 0'}}>
             <div style={{fontSize:36,marginBottom:8}}></div>
             <div style={{fontSize:18,fontWeight:700,color:'#ef4444'}}>
               {ALL_RESULTS.find(r=>r.id===pResult)?.label}
             </div>
-            <div style={{fontSize:13,color:'#64748b',marginTop:6}}>
+            <div style={{fontSize:13,color:'var(--muted)',marginTop:6}}>
               {PT.find(x=>x.id===pPt)?.label} / ゾーン:{pZone}
             </div>
           </div>
@@ -7508,11 +7509,11 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
             <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}>
               <h3 style={{fontSize:16}}>
                 {({steal:'盗塁',double_steal:'ダブルスチール',delayed:'ディレード',tag_out:'刺殺',caught_stealing:'盗塁死',pickoff_out:'牽制死',squeeze_out:'スクイズ(走者アウト)',single_ro:'単打+走者アウト',double_ro:'二塁打+走者アウト',triple_ro:'三塁打+走者アウト'}[runnerSelector.tactic]||runnerSelector.tactic)}
-                <span style={{fontSize:11,color:'#94a3b8',marginLeft:8}}>対象走者を選択</span>
+                <span style={{fontSize:11,color:'var(--muted)',marginLeft:8}}>対象走者を選択</span>
               </h3>
               <button className="btn btn-secondary btn-sm" onClick={()=>setRunnerSelector(null)}>×</button>
             </div>
-            <div style={{fontSize:11,color:'#94a3b8',marginBottom:12,textAlign:'center'}}>
+            <div style={{fontSize:11,color:'var(--muted)',marginBottom:12,textAlign:'center'}}>
               {['squeeze_out','single_ro','double_ro','triple_ro'].includes(runnerSelector.tactic)
                 ? 'アウト（走塁死）になった走者はどれですか？'
                 : `どの走者の ${({steal:'盗塁',delayed:'ディレード',tag_out:'刺殺',caught_stealing:'盗塁死',pickoff_out:'牽制死'}[runnerSelector.tactic])} ですか？`}
@@ -7560,7 +7561,7 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
               <h3 style={{fontSize:16}}>牽制プレー</h3>
               <button className="btn btn-secondary btn-sm" onClick={()=>setShowPickoff(false)}>×</button>
             </div>
-            <div style={{fontSize:12,color:'#94a3b8',marginBottom:14,textAlign:'center'}}>
+            <div style={{fontSize:12,color:'var(--muted)',marginBottom:14,textAlign:'center'}}>
               牽制プレーの結果を選択してください
             </div>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
@@ -7681,7 +7682,7 @@ function ReplayScreen({game, pitches, onBack}){
           <button className="btn btn-secondary btn-sm" onClick={onBack}>← 戻る</button>
           <h2>リプレイ</h2>
         </div>
-        <div style={{textAlign:'center',color:'#475569',marginTop:48,fontSize:15}}>
+        <div style={{textAlign:'center',color:'var(--muted-2)',marginTop:48,fontSize:15}}>
           記録された投球がありません
         </div>
       </div>
@@ -7694,7 +7695,7 @@ function ReplayScreen({game, pitches, onBack}){
       <div className="header">
         <button className="btn btn-secondary btn-sm" onClick={onBack}>← 戻る</button>
         <h2> リプレイ</h2>
-        <span style={{fontSize:12,color:'#64748b'}}>{idx+1} / {sorted.length}</span>
+        <span style={{fontSize:12,color:'var(--muted)'}}>{idx+1} / {sorted.length}</span>
       </div>
 
       {/* 状態表示 */}
@@ -7702,13 +7703,13 @@ function ReplayScreen({game, pitches, onBack}){
         <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
           <div style={{fontSize:13}}>
             <span style={{color:'#f97316',fontWeight:700}}>{replayState.score.away}</span>
-            <span style={{color:'#64748b',margin:'0 6px'}}>{replayState.inning}回{replayState.topBottom==='top'?'表':'裏'}</span>
+            <span style={{color:'var(--muted)',margin:'0 6px'}}>{replayState.inning}回{replayState.topBottom==='top'?'表':'裏'}</span>
             <span style={{color:'#3b82f6',fontWeight:700}}>{replayState.score.home}</span>
           </div>
           <CountDisplay gs={replayState}/>
           <BaseDiamond runners={replayState.runners}/>
         </div>
-        <div style={{fontSize:11,color:'#94a3b8',marginTop:6}}>
+        <div style={{fontSize:11,color:'var(--muted)',marginTop:6}}>
           {cur.batter?`打者:${cur.batter}(${cur.bh}打)`:''} {cur.pitcher?` / 投手:${cur.pitcher}`:''}
         </div>
       </div>
@@ -7782,7 +7783,7 @@ function ReplayScreen({game, pitches, onBack}){
           onChange={e=>setIdx(+e.target.value)}
           style={{width:'100%',accentColor:'#3b82f6'}}/>
         <div style={{display:'flex',gap:4,justifyContent:'center',marginTop:8}}>
-          <span style={{fontSize:10,color:'#64748b',alignSelf:'center'}}>再生速度:</span>
+          <span style={{fontSize:10,color:'var(--muted)',alignSelf:'center'}}>再生速度:</span>
           {[2500,1500,800,400].map(s=>(
             <button key={s} onClick={()=>setSpeed(s)}
               style={{padding:'3px 8px',borderRadius:5,
@@ -7854,10 +7855,10 @@ function MobileSetupModal({onClose}){
         color:'#fff',fontSize:14,fontWeight:900,display:'flex',
         alignItems:'center',justifyContent:'center',flexShrink:0}}>{n}</div>
       <div style={{flex:1}}>
-        <div style={{fontSize:13,fontWeight:700,color:'#e2e8f0',marginBottom:3}}>
+        <div style={{fontSize:13,fontWeight:700,color:'var(--text)',marginBottom:3}}>
           {icon} {title}
         </div>
-        <div style={{fontSize:11,color:'#94a3b8',lineHeight:1.6,whiteSpace:'pre-line'}}>{body}</div>
+        <div style={{fontSize:11,color:'var(--muted)',lineHeight:1.6,whiteSpace:'pre-line'}}>{body}</div>
       </div>
     </div>
   );
@@ -7900,7 +7901,7 @@ function MobileSetupModal({onClose}){
             <div style={{display:'flex',alignItems:'center',gap:10}}>
               <div ref={qrRef} style={{flexShrink:0,background:'#f8fafc',padding:6,borderRadius:6}}/>
               <div style={{flex:1}}>
-                <div style={{fontSize:10,color:'#94a3b8',marginBottom:4}}>LAN URL</div>
+                <div style={{fontSize:10,color:'var(--muted)',marginBottom:4}}>LAN URL</div>
                 <div style={{fontSize:11,color:'#67e8f9',fontFamily:'monospace',
                   wordBreak:'break-all',marginBottom:6,fontWeight:700}}>
                   {lanUrl}
@@ -7912,7 +7913,7 @@ function MobileSetupModal({onClose}){
                 </button>
               </div>
             </div>
-            <div style={{fontSize:10,color:'#64748b',marginTop:6,lineHeight:1.5}}>
+            <div style={{fontSize:10,color:'var(--muted)',marginTop:6,lineHeight:1.5}}>
               ※ このPCと同じWi-Fiに接続したスマホのブラウザで上のURLを開いてください
             </div>
           </div>
@@ -7920,12 +7921,12 @@ function MobileSetupModal({onClose}){
 
         {!lanUrl&&(
           /* 現在のURL表示 (LANでない場合) */
-          <div style={{padding:8,background:'#0f172a',borderRadius:6,marginBottom:14,
-            border:'1px solid #334155'}}>
-            <div style={{fontSize:10,color:'#94a3b8',marginBottom:4}}>現在のURL</div>
+          <div style={{padding:8,background:'var(--surface-quiet)',borderRadius:6,marginBottom:14,
+            border:'1px solid var(--border)'}}>
+            <div style={{fontSize:10,color:'var(--muted)',marginBottom:4}}>現在のURL</div>
             <div style={{display:'flex',gap:10,alignItems:'flex-start'}}>
               <div style={{flex:1}}>
-                <div style={{fontSize:11,color:'#cbd5e1',wordBreak:'break-all',
+                <div style={{fontSize:11,color:'var(--text)',wordBreak:'break-all',
                   fontFamily:'monospace',marginBottom:6,maxHeight:60,overflow:'auto'}}>
                   {url}
                 </div>
@@ -7970,12 +7971,12 @@ function MobileSetupModal({onClose}){
         )}
 
         {/* ホスティング案内 */}
-        <div style={{marginTop:18,padding:10,background:'#1e293b',borderRadius:8,
-          border:'1px solid #334155'}}>
-          <div style={{fontSize:12,fontWeight:700,color:'#cbd5e1',marginBottom:8}}>
+        <div style={{marginTop:18,padding:10,background:'var(--surface-quiet)',borderRadius:8,
+          border:'1px solid var(--border)'}}>
+          <div style={{fontSize:12,fontWeight:700,color:'var(--text)',marginBottom:8}}>
              もっと簡単にチーム全員へ配るには
           </div>
-          <div style={{fontSize:11,color:'#94a3b8',lineHeight:1.6}}>
+          <div style={{fontSize:11,color:'var(--muted)',lineHeight:1.6}}>
             <div style={{marginBottom:8}}>
               <strong style={{color:'#60a5fa'}}>方法B: 無料ホスティング(おすすめ)</strong><br/>
               <a href="https://app.netlify.com/drop" target="_blank" rel="noopener"
@@ -7987,7 +7988,7 @@ function MobileSetupModal({onClose}){
               Google Drive / iCloud Drive にHTMLを保存し、共有リンクを送る。
               受け取った人はリンクを開く → Safariで開く → 上の手順でホーム追加。
             </div>
-            <div style={{padding:6,background:'#0f172a',borderRadius:4,fontSize:10}}>
+            <div style={{padding:6,background:'var(--surface-quiet)',borderRadius:4,fontSize:10}}>
               <strong>注:</strong> 方法B/Cなら「クラウド同期(Firebase)」も問題なく動作します。
               ファイル直接共有(file://)の場合、一部機能が制限されます。
             </div>
@@ -8020,7 +8021,7 @@ function GitHubUrlCard(){
     doCopy();
   };
   return (
-    <div style={{background:'#0f172a',border:'1.5px solid #1e3a5f',borderRadius:12,
+    <div style={{background:'var(--surface-quiet)',border:'1.5px solid #1e3a5f',borderRadius:12,
       padding:'12px 14px',marginBottom:16}}>
       <div style={{fontSize:13,fontWeight:800,color:'#38bdf8',marginBottom:10}}>
          アクセスURL
@@ -8122,15 +8123,15 @@ function LanAccessCard(){
   // 検出中表示
   if(needsDetect&&detecting){
     return (
-      <div style={{background:'#0f172a',border:'1.5px solid #1e3a5f',borderRadius:12,
+      <div style={{background:'var(--surface-quiet)',border:'1.5px solid #1e3a5f',borderRadius:12,
         padding:'14px',marginBottom:16,textAlign:'center'}}>
-        <div style={{fontSize:12,color:'#64748b'}}>📡 スマホ用URLを検出中…</div>
+        <div style={{fontSize:12,color:'var(--muted)'}}>📡 スマホ用URLを検出中…</div>
       </div>
     );
   }
 
   return (
-    <div style={{background:'#0f172a',border:'1.5px solid #1e3a5f',borderRadius:12,
+    <div style={{background:'var(--surface-quiet)',border:'1.5px solid #1e3a5f',borderRadius:12,
       padding:'12px 14px',marginBottom:16}}>
       <div style={{fontSize:13,fontWeight:800,color:'#38bdf8',marginBottom:10,
         display:'flex',alignItems:'center',gap:6}}>
@@ -8144,7 +8145,7 @@ function LanAccessCard(){
           <div style={{fontSize:11,color:'#f59e0b',marginBottom:5}}>
             IPアドレスの自動検出ができませんでした（Chromeの制限）
           </div>
-          <div style={{fontSize:10,color:'#64748b',marginBottom:4}}>
+          <div style={{fontSize:10,color:'var(--muted)',marginBottom:4}}>
             システム設定 › ネットワーク › Wi-Fi でIPを確認して入力
           </div>
           <input
@@ -8152,8 +8153,8 @@ function LanAccessCard(){
             onChange={e=>setManualIP(e.target.value)}
             placeholder="例: 192.168.1.10"
             style={{width:'100%',padding:'8px 10px',borderRadius:7,boxSizing:'border-box',
-              background:'#1e293b',border:'1px solid #475569',
-              color:'#e2e8f0',fontSize:13,fontFamily:'monospace',outline:'none'}}
+              background:'var(--surface-quiet)',border:'1px solid #475569',
+              color:'var(--text)',fontSize:13,fontFamily:'monospace',outline:'none'}}
           />
         </div>
       )}
@@ -8180,12 +8181,12 @@ function LanAccessCard(){
               <div ref={qrRef}/>
             </div>
           </div>
-          <div style={{fontSize:10,color:'#475569',textAlign:'center',marginTop:6}}>
+          <div style={{fontSize:10,color:'var(--muted-2)',textAlign:'center',marginTop:6}}>
             QRをスマホのカメラで読み取るか、URLを直接入力
           </div>
         </div>
       ):(
-        <div style={{textAlign:'center',padding:'12px 0',color:'#475569',fontSize:12}}>
+        <div style={{textAlign:'center',padding:'12px 0',color:'var(--muted-2)',fontSize:12}}>
           IPアドレスを入力するとURLとQRコードが表示されます
         </div>
       )}
@@ -8223,7 +8224,7 @@ function HomeScreen({onSelect,onCreate}){
       <div style={{textAlign:'center',padding:'32px 0 24px'}}>
         <div style={{fontSize:52,lineHeight:1,marginBottom:10}}></div>
         <div style={{fontSize:22,fontWeight:800,letterSpacing:'-.5px',marginBottom:4}}>配球アナリストPRO</div>
-        <div style={{fontSize:13,color:'#64748b'}}>高校野球 配球記録アプリ</div>
+        <div style={{fontSize:13,color:'var(--muted)'}}>高校野球 配球記録アプリ</div>
       </div>
 
       {/* ① 試合の入力を始める */}
@@ -8239,14 +8240,14 @@ function HomeScreen({onSelect,onCreate}){
       {/* ② 過去の試合一覧 */}
       <div style={{marginBottom:20}}>
         {loading?(
-          <div style={{textAlign:'center',color:'#334155',padding:16,fontSize:13}}>読み込み中…</div>
+          <div style={{textAlign:'center',color:'var(--muted-2)',padding:16,fontSize:13}}>読み込み中…</div>
         ):games.length===0?(
-          <div style={{textAlign:'center',color:'#334155',padding:'12px 0',fontSize:13}}>
+          <div style={{textAlign:'center',color:'var(--muted-2)',padding:'12px 0',fontSize:13}}>
             まだ試合の記録がありません
           </div>
         ):(
           <div>
-            <div style={{fontSize:12,fontWeight:700,color:'#64748b',textTransform:'uppercase',
+            <div style={{fontSize:12,fontWeight:700,color:'var(--muted)',textTransform:'uppercase',
               letterSpacing:'1px',marginBottom:10}}>過去の試合</div>
             {games.map(g=>{
               const away=(g.gs?.score?.away||0)+(g.gs?.scoreAdj?.away||0);
@@ -8277,19 +8278,19 @@ function HomeScreen({onSelect,onCreate}){
                           background:'rgba(34,197,94,.2)',color:'#4ade80',fontWeight:800,flexShrink:0}}>終了</span>}
                         <span style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{g.name||'名称未設定'}</span>
                       </div>
-                      <div style={{fontSize:12,color:'#64748b',marginTop:3}}>
+                      <div style={{fontSize:12,color:'var(--muted)',marginTop:3}}>
                         {g.date||''}{g.stadium?` ${g.stadium}`:''}{g.battingFirst?` / 先攻:${g.battingFirst}`:''}
                       </div>
                     </div>
                     <div style={{textAlign:'right',marginLeft:8,flexShrink:0}}>
-                      <div style={{fontSize:18,fontWeight:800,color:'#e2e8f0'}}>{away} - {home}</div>
-                      <div style={{fontSize:11,color:'#64748b'}}>{g.gs?.pitchCount||0}球 / {g.gs?.inning||1}回{g.gs?.topBottom==='top'?'表':'裏'}</div>
+                      <div style={{fontSize:18,fontWeight:800,color:'var(--text)'}}>{away} - {home}</div>
+                      <div style={{fontSize:11,color:'var(--muted)'}}>{g.gs?.pitchCount||0}球 / {g.gs?.inning||1}回{g.gs?.topBottom==='top'?'表':'裏'}</div>
                     </div>
                     <button onClick={deleteGame}
                       title="削除"
                       style={{marginLeft:8,padding:'8px 10px',borderRadius:8,
                         background:'transparent',border:'1px solid #64748b',
-                        color:'#94a3b8',fontSize:14,cursor:'pointer',
+                        color:'var(--muted)',fontSize:14,cursor:'pointer',
                         fontFamily:'inherit',flexShrink:0,transition:'all .15s'}}
                       onMouseEnter={e=>{
                         e.currentTarget.style.background='rgba(239,68,68,.15)';
@@ -8328,8 +8329,8 @@ function HomeScreen({onSelect,onCreate}){
               <div style={{minWidth:24,height:24,borderRadius:'50%',background:'rgba(168,85,247,.3)',
                 display:'flex',alignItems:'center',justifyContent:'center',
                 fontSize:12,fontWeight:800,color:'#c084fc',flexShrink:0}}>1</div>
-              <div style={{fontSize:12,color:'#94a3b8',lineHeight:1.6}}>
-                <span style={{color:'#e2e8f0',fontWeight:700}}>送る側：</span>
+              <div style={{fontSize:12,color:'var(--muted)',lineHeight:1.6}}>
+                <span style={{color:'var(--text)',fontWeight:700}}>送る側：</span>
                 試合を開いて 下部メニュー「共有」→「JSONで書き出し」→ファイルをLINE/メール等で送信
               </div>
             </div>
@@ -8337,8 +8338,8 @@ function HomeScreen({onSelect,onCreate}){
               <div style={{minWidth:24,height:24,borderRadius:'50%',background:'rgba(168,85,247,.3)',
                 display:'flex',alignItems:'center',justifyContent:'center',
                 fontSize:12,fontWeight:800,color:'#c084fc',flexShrink:0}}>2</div>
-              <div style={{fontSize:12,color:'#94a3b8',lineHeight:1.6}}>
-                <span style={{color:'#e2e8f0',fontWeight:700}}>受け取る側：</span>
+              <div style={{fontSize:12,color:'var(--muted)',lineHeight:1.6}}>
+                <span style={{color:'var(--text)',fontWeight:700}}>受け取る側：</span>
                 送られてきたJSONファイルを端末に保存
               </div>
             </div>
@@ -8346,8 +8347,8 @@ function HomeScreen({onSelect,onCreate}){
               <div style={{minWidth:24,height:24,borderRadius:'50%',background:'rgba(168,85,247,.3)',
                 display:'flex',alignItems:'center',justifyContent:'center',
                 fontSize:12,fontWeight:800,color:'#c084fc',flexShrink:0}}>3</div>
-              <div style={{fontSize:12,color:'#94a3b8',lineHeight:1.6}}>
-                <span style={{color:'#e2e8f0',fontWeight:700}}>受け取る側：</span>
+              <div style={{fontSize:12,color:'var(--muted)',lineHeight:1.6}}>
+                <span style={{color:'var(--text)',fontWeight:700}}>受け取る側：</span>
                 下のボタンを押してJSONファイルを選択 → 試合データが取り込まれます
               </div>
             </div>
@@ -8401,7 +8402,7 @@ function HomeScreen({onSelect,onCreate}){
       </div>
 
       {/* ⑤ リセットボタン */}
-      <div style={{paddingTop:20,borderTop:'1px solid #1e293b'}}>
+      <div style={{paddingTop:20,borderTop:'1px solid var(--border-soft)'}}>
         <button
           onClick={async()=>{
             if(!confirm('入力してある記録を全てリセットしますか？\n\n・全ての試合データ\n・全ての投球記録\n\nが消えます。')) return;
@@ -8455,7 +8456,7 @@ function LineupForm({teamLabel,teamColor,lineup,setLineup,pitcher,setPitcher}){
         </div>
         {/* ① 2行目: 投球フォーム / プレート位置 */}
         <div style={{display:'flex',gap:5,alignItems:'center'}}>
-          <span style={{fontSize:10,color:'#64748b',width:44,flexShrink:0,textAlign:'right',paddingRight:4}}>
+          <span style={{fontSize:10,color:'var(--muted)',width:44,flexShrink:0,textAlign:'right',paddingRight:4}}>
             投げ方
           </span>
           <select value={pitcher.arm||'three'}
@@ -8463,7 +8464,7 @@ function LineupForm({teamLabel,teamColor,lineup,setLineup,pitcher,setPitcher}){
             style={{flex:1,fontSize:11,padding:'5px 4px'}}>
             {PITCHER_ARMS.map(a=><option key={a.v} value={a.v}>{a.l}</option>)}
           </select>
-          <span style={{fontSize:10,color:'#64748b',flexShrink:0,paddingLeft:4}}>プレート</span>
+          <span style={{fontSize:10,color:'var(--muted)',flexShrink:0,paddingLeft:4}}>プレート</span>
           <select value={pitcher.plate||'center'}
             onChange={e=>setPitcher(p=>({...p,plate:e.target.value}))}
             style={{width:70,fontSize:11,padding:'5px 4px',flexShrink:0}}>
@@ -8474,12 +8475,12 @@ function LineupForm({teamLabel,teamColor,lineup,setLineup,pitcher,setPitcher}){
 
       {/* 打順 1-9 */}
       <div className="card" style={{borderLeft:`3px solid ${teamColor}`}}>
-        <div style={{fontSize:13,fontWeight:700,color:'#94a3b8',marginBottom:6}}>
+        <div style={{fontSize:13,fontWeight:700,color:'var(--muted)',marginBottom:6}}>
           {teamLabel} 打順・スタメン
         </div>
         {/* 列ヘッダー */}
         <div style={{display:'grid',gridTemplateColumns:'16px 44px 1fr 40px 34px',
-          gap:4,fontSize:10,color:'#64748b',marginBottom:5,paddingLeft:2}}>
+          gap:4,fontSize:10,color:'var(--muted)',marginBottom:5,paddingLeft:2}}>
           <span>#</span><span>背番</span><span>名前</span><span>守備</span><span>打席</span>
         </div>
         {lineup.map((p,i)=>(
@@ -8730,7 +8731,7 @@ function GameSetupScreen({existingGame, onConfirm, onBack}){
   );
 }
 
-const labelStyle={fontSize:12,color:'#94a3b8',marginBottom:5,fontWeight:600};
+const labelStyle={fontSize:12,color:'var(--muted)',marginBottom:5,fontWeight:600};
 
 // ── StopwatchScreen ──
 function StopwatchScreen({onBack, game, onGameUpdate, pitches}){
@@ -8851,14 +8852,14 @@ function StopwatchScreen({onBack, game, onGameUpdate, pitches}){
       <div style={{textAlign:'center',padding:'44px 0 36px',
         background:'linear-gradient(180deg,#0f172a,#1e293b)',
         borderRadius:16,marginBottom:20,
-        border:'1px solid #1e293b'}}>
+        border:'1px solid var(--border)'}}>
         <div style={{fontFamily:'monospace',fontSize:62,fontWeight:800,
           color:running?'#e2e8f0':'#94a3b8',letterSpacing:'2px',lineHeight:1,
           transition:'color .2s'}}>
           {fmt(display)}
         </div>
         {laps.length>0&&(
-          <div style={{marginTop:12,fontFamily:'monospace',fontSize:15,color:'#475569'}}>
+          <div style={{marginTop:12,fontFamily:'monospace',fontSize:15,color:'var(--muted-2)'}}>
             Lap {laps.length} &nbsp;+{split(laps,0)}
           </div>
         )}
@@ -8869,7 +8870,7 @@ function StopwatchScreen({onBack, game, onGameUpdate, pitches}){
         {/* ラップ */}
         <button onClick={lap}
           style={{flex:1,padding:'18px 4px',fontSize:15,fontWeight:700,
-            borderRadius:12,border:'1px solid #334155',
+            borderRadius:12,border:'1px solid var(--border)',
             background:running?'#1e293b':'transparent',
             color:running?'#cbd5e1':'#334155',
             cursor:running?'pointer':'default',fontFamily:'inherit'}}>
@@ -8888,7 +8889,7 @@ function StopwatchScreen({onBack, game, onGameUpdate, pitches}){
         {/* リセット */}
         <button onClick={reset}
           style={{flex:1,padding:'18px 4px',fontSize:15,fontWeight:700,
-            borderRadius:12,border:'1px solid #334155',
+            borderRadius:12,border:'1px solid var(--border)',
             background:!running&&display>0?'#1e293b':'transparent',
             color:!running&&display>0?'#cbd5e1':'#334155',
             cursor:!running&&display>0?'pointer':'default',fontFamily:'inherit'}}>
@@ -8927,7 +8928,7 @@ function StopwatchScreen({onBack, game, onGameUpdate, pitches}){
               {batterNames.length>0?(
                 <select value={selectedBatter} onChange={e=>setSelectedBatter(e.target.value)}
                   style={{width:'100%',padding:'10px',borderRadius:8,
-                    border:'1px solid #4ade8066',background:'#0f172a',color:'#e2e8f0',
+                    border:'1px solid #4ade8066',background:'var(--surface-quiet)',color:'var(--text)',
                     fontSize:14,fontFamily:'inherit'}}>
                   {batterNames.map(n=><option key={n} value={n}>{n}</option>)}
                 </select>
@@ -8935,7 +8936,7 @@ function StopwatchScreen({onBack, game, onGameUpdate, pitches}){
                 <input value={selectedBatter} onChange={e=>setSelectedBatter(e.target.value)}
                   placeholder="打者名を入力"
                   style={{width:'100%',boxSizing:'border-box',padding:'10px',borderRadius:8,
-                    border:'1px solid #4ade8066',background:'#0f172a',color:'#e2e8f0',
+                    border:'1px solid #4ade8066',background:'var(--surface-quiet)',color:'var(--text)',
                     fontSize:14,fontFamily:'inherit'}}/>
               )}
             </div>
@@ -8946,7 +8947,7 @@ function StopwatchScreen({onBack, game, onGameUpdate, pitches}){
               {pitcherNames.length>0?(
                 <select value={selectedPitcher} onChange={e=>setSelectedPitcher(e.target.value)}
                   style={{width:'100%',padding:'10px',borderRadius:8,
-                    border:'1px solid #f59e0b66',background:'#0f172a',color:'#e2e8f0',
+                    border:'1px solid #f59e0b66',background:'var(--surface-quiet)',color:'var(--text)',
                     fontSize:14,fontFamily:'inherit'}}>
                   {pitcherNames.map(n=><option key={n} value={n}>{n}</option>)}
                 </select>
@@ -8954,7 +8955,7 @@ function StopwatchScreen({onBack, game, onGameUpdate, pitches}){
                 <input value={selectedPitcher} onChange={e=>setSelectedPitcher(e.target.value)}
                   placeholder="投手名を入力"
                   style={{width:'100%',boxSizing:'border-box',padding:'10px',borderRadius:8,
-                    border:'1px solid #f59e0b66',background:'#0f172a',color:'#e2e8f0',
+                    border:'1px solid #f59e0b66',background:'var(--surface-quiet)',color:'var(--text)',
                     fontSize:14,fontFamily:'inherit'}}/>
               )}
               {/* 球種選択: ストレート / 変化球 */}
@@ -8997,7 +8998,7 @@ function StopwatchScreen({onBack, game, onGameUpdate, pitches}){
           })()}
 
           {savedMsg&&(
-            <div style={{textAlign:'center',fontSize:12,color:'#94a3b8',marginTop:6,fontWeight:700}}>
+            <div style={{textAlign:'center',fontSize:12,color:'var(--muted)',marginTop:6,fontWeight:700}}>
               ✓ {savedMsg}
             </div>
           )}
@@ -9025,8 +9026,8 @@ function StopwatchScreen({onBack, game, onGameUpdate, pitches}){
                     <div key={t.id} style={{display:'flex',alignItems:'center',gap:6,
                       fontSize:13,fontFamily:'monospace',
                       padding:'4px 0',borderBottom:i<arr.length-1?`1px solid ${cfg.c}22`:'none'}}>
-                      <span style={{color:'#64748b',fontSize:11}}>#{arr.length-i}</span>
-                      {cfg.subKey&&<span style={{color:'#94a3b8',fontSize:11,fontFamily:'inherit'}}>{t[cfg.subKey]}</span>}
+                      <span style={{color:'var(--muted)',fontSize:11}}>#{arr.length-i}</span>
+                      {cfg.subKey&&<span style={{color:'var(--muted)',fontSize:11,fontFamily:'inherit'}}>{t[cfg.subKey]}</span>}
                       {timeType==='quick'&&t.pitchType&&(
                         <span style={{fontSize:9,padding:'1px 5px',borderRadius:4,fontFamily:'inherit',
                           background:t.pitchType==='st'?'rgba(245,158,11,.2)':'rgba(99,102,241,.2)',
@@ -9048,19 +9049,19 @@ function StopwatchScreen({onBack, game, onGameUpdate, pitches}){
       {/* ラップ一覧 */}
       {laps.length>0&&(
         <div className="card">
-          <div style={{fontSize:12,fontWeight:700,color:'#94a3b8',marginBottom:8}}>
+          <div style={{fontSize:12,fontWeight:700,color:'var(--muted)',marginBottom:8}}>
             ラップ記録 （{laps.length}件）
           </div>
           {laps.map((lp,i)=>(
             <div key={lp.no} style={{display:'flex',alignItems:'center',
               padding:'9px 0',borderBottom:i<laps.length-1?'1px solid #0f172a':'none'}}>
-              <span style={{fontSize:12,color:'#475569',width:36}}>
+              <span style={{fontSize:12,color:'var(--muted-2)',width:36}}>
                 #{lp.no}
               </span>
-              <span style={{flex:1,fontSize:16,fontFamily:'monospace',fontWeight:700,color:'#e2e8f0'}}>
+              <span style={{flex:1,fontSize:16,fontFamily:'monospace',fontWeight:700,color:'var(--text)'}}>
                 {fmt(lp.total)}
               </span>
-              <span style={{fontSize:13,fontFamily:'monospace',color:'#64748b'}}>
+              <span style={{fontSize:13,fontFamily:'monospace',color:'var(--muted)'}}>
                 +{split(laps,i)}
               </span>
             </div>
@@ -9151,7 +9152,7 @@ function App(){
 
   if(!game||!gs)
     return <div style={{display:'flex',alignItems:'center',justifyContent:'center',
-      height:'100vh',fontSize:16,color:'#64748b'}}>読み込み中...</div>;
+      height:'100vh',fontSize:16,color:'var(--muted)'}}>読み込み中...</div>;
 
   if(screen==='input')
     return <InputScreen game={game} pitches={pitches} gs={gs} setGs={setGs}
