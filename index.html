@@ -255,6 +255,7 @@ const RESULT_CATS=[
      {id:'sac_bunt', label:'犠打（送りバント）'},
      {id:'sac_fly', label:'犠飛（犠牲フライ）'},
      {id:'squeeze_out', label:'スクイズ(走者アウト・打者セーフ)', noDir:true},
+     {id:'squeeze_batter_out', label:'スクイズ(打者アウト)', noDir:true},
    ]},
   {id:'reached',label:'出塁（エラー・FC等）',color:'#14b8a6', cls:'reached',
    items:[
@@ -274,6 +275,7 @@ const RESULT_CATS=[
      {id:'double_steal', label:'ダブルスチール',  noDir:true, isAdvance:true},
      {id:'delayed',      label:'ディレード',      noDir:true, isAdvance:true},
      {id:'hitrun',       label:'エンドラン',      noDir:true, isAdvance:true},
+     {id:'safety_squeeze', label:'セーフティスクイズ', noDir:true, isAdvance:true},
      {id:'pb',           label:'PB',             noDir:true, isAdvance:true},
      {id:'wp',           label:'WP',             noDir:true, isAdvance:true},
      {id:'balk',         label:'ボーク',          noDir:true, isAdvance:true},
@@ -484,6 +486,13 @@ function nextState(result,g,extra={}){
     addRun(advance(1)); // アウトになった走者を除いた残り走者が1進塁
     runners.first=true; // 打者1塁セーフ
     atEnd=true; balls=0; strikes=0;
+  } else if(r==='squeeze_batter_out'){
+    // スクイズ: 打者アウト・走者は1進塁（三走は得点）
+    outs++;
+    if(runners.third){ runners.third=false; addRun(1); }
+    if(runners.second){ runners.second=false; runners.third=true; }
+    if(runners.first){ runners.first=false; runners.second=true; }
+    atEnd=true; balls=0; strikes=0;
   } else if(r==='sac_fly'){
     outs++;
     if(runners.third){ runners.third=false; addRun(1); }
@@ -561,7 +570,7 @@ function nextState(result,g,extra={}){
     if(runners.first){ runners.second=true; runners.first=false; }
     atEnd=false;
   // ── エンドラン（作戦記録のみ・走者状態は手動調整）──
-  } else if(r==='hitrun'){
+  } else if(r==='hitrun'||r==='safety_squeeze'){
     atEnd=false; // 打席継続・状態変化なし
   }
 
@@ -619,7 +628,7 @@ function getBatterStats(pitches, batterName){
   });
   const ABS=['walk','hbp','single','double','double_adv','triple','hr','looking','swinging',
     'if_go','if_fly','of_fly','if_liner','of_liner','bunt_fly','safety_out',
-    'sac_bunt','sac_fly','bat_int','def_int',
+    'sac_bunt','sac_fly','squeeze_out','squeeze_batter_out','bat_int','def_int',
     'if_go_err','if_fly_err','of_fly_err','bunt_err','fc','dp_broken','uncaught_k','throw_err','obstruction','infield_fly','force_home','inside_hr','ground_rule_2b','ibb',
     'single_adv2','single_adv3','single_ro','double_ro','triple_ro',
     'dp_643','dp_463','dp_543','dp_563','dp_663','dp_143','dp_163','dp_363','dp_443','dp_553','dp_263','dp_243',
@@ -706,7 +715,7 @@ function getMatchupStats(pitches, pitcherName, batterName){
   });
   const ABS=['walk','hbp','single','double','double_adv','triple','hr','looking','swinging',
     'if_go','if_fly','of_fly','if_liner','of_liner','bunt_fly','safety_out',
-    'sac_bunt','sac_fly','bat_int','def_int',
+    'sac_bunt','sac_fly','squeeze_out','squeeze_batter_out','bat_int','def_int',
     'if_go_err','if_fly_err','of_fly_err','bunt_err','fc','dp_broken','uncaught_k','throw_err','obstruction','infield_fly','force_home','inside_hr','ground_rule_2b','ibb',
     'single_adv2','single_adv3','single_ro','double_ro','triple_ro',
     'dp_643','dp_463','dp_543','dp_563','dp_663','dp_143','dp_163','dp_363','dp_443','dp_553','dp_263','dp_243',
@@ -1249,7 +1258,7 @@ function getBattedBallType(p){
   const r=p.result;
   if(!r) return null;
   // ゴロ系
-  if(r==='if_go'||r==='sac_bunt'||r==='if_go_err'||r==='bunt_err'||r==='safety_out'||r==='force_home') return 'gd';
+  if(r==='if_go'||r==='sac_bunt'||r==='squeeze_out'||r==='squeeze_batter_out'||r==='if_go_err'||r==='bunt_err'||r==='safety_out'||r==='force_home') return 'gd';
   // インフィールドフライ → フライ系
   if(r==='infield_fly') return 'fl';
   // フライ系
@@ -2451,6 +2460,7 @@ function DetailResultPicker({pZone, pPt, gs, onBack, onSelect}){
     {id:'double_steal',   l:'ダブルスチール',    color:'#22d3ee',bg:'#021a1e'},
     {id:'delayed',        l:'ディレード',       color:'#67e8f9',bg:'#021a1e'},
     {id:'hitrun',         l:'エンドラン',       color:'#67e8f9',bg:'#021a1e'},
+    {id:'safety_squeeze', l:'セーフティスクイズ', color:'#67e8f9',bg:'#021a1e'},
     {id:'tiebreak_12',    l:'タイブレーク(1・2塁)', color:'#fbbf24',bg:'#2a1800'},
     {id:'tiebreak_23',    l:'タイブレーク(2・3塁)', color:'#fbbf24',bg:'#2a1800'},
   ];
@@ -2458,6 +2468,7 @@ function DetailResultPicker({pZone, pPt, gs, onBack, onSelect}){
     {id:'sac_bunt',    l:'犠打',               color:'#a78bfa',bg:'#2d1b4e'},
     {id:'sac_fly',     l:'犠飛',               color:'#a78bfa',bg:'#2d1b4e'},
     {id:'squeeze_out', l:'スクイズ(走者アウト)',color:'#c084fc',bg:'#2d1b4e'},
+    {id:'squeeze_batter_out', l:'スクイズ(打者アウト)', color:'#c084fc',bg:'#2d1b4e'},
   ];
   const DP_CHOICES=[
     {id:'dp_643',     l:'6-4-3',      color:'#dc2626',bg:'#3f0a0a'},
@@ -2639,6 +2650,8 @@ function QuickInputBar({onQuickResult, gs}){
     {id:'safety_out',label:'セーフティ凡退'},
     {id:'sac_bunt', label:'犠打'},
     {id:'sac_fly', label:'犠飛'},
+    {id:'squeeze_out', label:'スクイズ(走者アウト)'},
+    {id:'squeeze_batter_out', label:'スクイズ(打者アウト)'},
   ];
   const HIT_ITEMS=[
     {id:'single',label:'単打'},
@@ -3712,7 +3725,7 @@ function BatterDetailPanel({allPitches, batterName, game}){
       else if(['looking','swinging'].includes(a.result)) r.so++;
       else if(a.result==='walk'||a.result==='ibb') r.bb++;
       else if(a.result==='hbp') r.hbp++;
-      else if(['sac_bunt','sac_fly'].includes(a.result)) r.sac++;
+      else if(['sac_bunt','sac_fly','squeeze_out','squeeze_batter_out'].includes(a.result)) r.sac++;
       else if(['if_go_err','if_fly_err','of_fly_err','bunt_err','fc','dp_broken','uncaught_k','throw_err','obstruction'].includes(a.result)) r.reached++;
       else r.outs++;
     });
@@ -5039,137 +5052,142 @@ function getCourseHeight(zone){
   return 'middle';
 }
 
-// コース割合（5×5 ヒートマップ + 外/内 集計）
+// コース割合（打者左右別 5×5 ヒートマップ + 外/内 集計）
 function ZoneRatioCard({zoneC, total, pitches=[]}){
-  const max=Math.max(...Object.values(zoneC),1);
-
-  // 内/外集計（真ん中は除外。打者左右考慮）
-  const sideStats=useMemo(()=>{
-    const c={inside:0, outside:0};
-    pitches.forEach(p=>{
-      if(!p.zone) return;
-      const s=getCourseSide(p.zone, p.bh||'R');
-      if(s==='inside') c.inside++;
-      else if(s==='outside') c.outside++;
-    });
-    const t=c.inside+c.outside;
-    return {
-      ...c, total:t,
-      insidePct:t>0?Math.round(c.inside/t*100):0,
-      outsidePct:t>0?Math.round(c.outside/t*100):0,
+  const groups=useMemo(()=>{
+    const makeGroup=(key,label,hand,color,items)=>{
+      const counts={};
+      for(let i=1;i<=25;i++) counts[i]=0;
+      const side={inside:0,outside:0};
+      items.forEach(p=>{
+        if(!p.zone) return;
+        counts[p.zone]=(counts[p.zone]||0)+1;
+        const s=getCourseSide(p.zone, hand);
+        if(s==='inside') side.inside++;
+        else if(s==='outside') side.outside++;
+      });
+      const sideTotal=side.inside+side.outside;
+      return {
+        key,label,color,counts,pitchTotal:items.length,
+        max:Math.max(...Object.values(counts),1),
+        side:{
+          ...side,total:sideTotal,
+          insidePct:sideTotal>0?Math.round(side.inside/sideTotal*100):0,
+          outsidePct:sideTotal>0?Math.round(side.outside/sideTotal*100):0,
+        },
+      };
     };
+    return [
+      makeGroup('R','対右打者','R','#f97316',pitches.filter(p=>(p.bh||'R')==='R')),
+      makeGroup('L','対左打者','L','#60a5fa',pitches.filter(p=>p.bh==='L')),
+    ];
   },[pitches]);
 
-  const barRow=(label,segments)=>(
-    <div style={{marginBottom:6}}>
-      <div style={{display:'flex',justifyContent:'space-between',fontSize:10,
-        color:'#94a3b8',marginBottom:3}}>
-        <span style={{fontWeight:700}}>{label}</span>
-        <span>
-          {segments.map((s,i)=>(
-            <span key={i} style={{color:s.color,marginLeft:8,fontWeight:700}}>
-              {s.label} {s.pct}%
-            </span>
-          ))}
-        </span>
+  const overallTotal=Number.isFinite(total)?total:pitches.length;
+
+  const renderGroup=(g)=>(
+    <div key={g.key} style={{marginTop:8,padding:8,borderRadius:7,
+      background:'#0f172a',border:'1px solid #334155'}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:7}}>
+        <span style={{fontSize:12,fontWeight:900,color:g.color}}>{g.label}</span>
+        <span style={{fontSize:10,color:'#94a3b8'}}>{g.pitchTotal}球</span>
       </div>
-      <div style={{display:'flex',height:14,borderRadius:4,overflow:'hidden',
-        background:'#0f172a',border:'1px solid #334155'}}>
-        {segments.map((s,i)=>(
-          <div key={i} style={{width:`${s.pct}%`,height:'100%',background:s.color,
-            display:'flex',alignItems:'center',justifyContent:'center',
-            color:'#fff',fontSize:10,fontWeight:800,
-            borderRight:i<segments.length-1?'1px solid rgba(0,0,0,.3)':'none'}}>
-            {s.pct>=10?`${s.pct}%`:''}
+
+      {g.pitchTotal>0?(
+        <>
+          {g.side.total>0?(
+            <div style={{marginBottom:8}}>
+              <div style={{display:'flex',justifyContent:'space-between',fontSize:12,marginBottom:4}}>
+                <span style={{color:'#ef4444',fontWeight:800}}>内 {g.side.insidePct}%</span>
+                <span style={{color:'#64748b',fontSize:10}}>{g.side.total}球（内外のみ）</span>
+                <span style={{color:'#3b82f6',fontWeight:800}}>外 {g.side.outsidePct}%</span>
+              </div>
+              <div style={{display:'flex',height:18,borderRadius:5,overflow:'hidden',
+                background:'#020617',border:'1px solid #334155',marginBottom:6}}>
+                <div style={{width:`${g.side.insidePct}%`,height:'100%',background:'#ef4444',
+                  display:'flex',alignItems:'center',justifyContent:'center',
+                  color:'#fff',fontSize:10,fontWeight:800}}>
+                  {g.side.insidePct>=14?`内 ${g.side.insidePct}%`:''}
+                </div>
+                <div style={{width:`${g.side.outsidePct}%`,height:'100%',background:'#3b82f6',
+                  display:'flex',alignItems:'center',justifyContent:'center',
+                  color:'#fff',fontSize:10,fontWeight:800}}>
+                  {g.side.outsidePct>=14?`外 ${g.side.outsidePct}%`:''}
+                </div>
+              </div>
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:6}}>
+                <div style={{textAlign:'center',padding:'4px',background:'rgba(239,68,68,.1)',borderRadius:5,
+                  border:'1px solid rgba(239,68,68,.3)'}}>
+                  <div style={{fontSize:9,color:'#fca5a5'}}>内コース</div>
+                  <div style={{fontSize:14,fontWeight:900,color:'#ef4444'}}>{g.side.inside}球</div>
+                </div>
+                <div style={{textAlign:'center',padding:'4px',background:'rgba(59,130,246,.1)',borderRadius:5,
+                  border:'1px solid rgba(59,130,246,.3)'}}>
+                  <div style={{fontSize:9,color:'#93c5fd'}}>外コース</div>
+                  <div style={{fontSize:14,fontWeight:900,color:'#3b82f6'}}>{g.side.outside}球</div>
+                </div>
+              </div>
+            </div>
+          ):(
+            <div style={{fontSize:10,color:'#475569',textAlign:'center',padding:'4px 0 8px'}}>
+              内/外コースのデータなし
+            </div>
+          )}
+
+          <div style={{display:'flex',flexDirection:'column',gap:2,alignItems:'center',marginTop:5}}>
+            {ZONE_GRID.map((row,ri)=>(
+              <div key={ri} style={{display:'flex',gap:2}}>
+                {row.map(z=>{
+                  const cnt=g.counts[z]||0;
+                  const heat=g.max>0?cnt/g.max:0;
+                  const isSZ=STRIKE_ZONES.has(z);
+                  const pct=g.pitchTotal>0?Math.round(cnt/g.pitchTotal*100):0;
+                  return (
+                    <div key={z} style={{width:38,height:38,borderRadius:3,
+                      border:isSZ?'2px solid #cbd5e1':'1px solid #334155',
+                      background:`rgba(59,130,246,${heat*0.75+(isSZ?0.06:0.01)})`,
+                      display:'flex',flexDirection:'column',
+                      alignItems:'center',justifyContent:'center'}}>
+                      {cnt>0?(
+                        <>
+                          <div style={{fontSize:10,fontWeight:800,color:'#fff',lineHeight:1}}>{pct}%</div>
+                          <div style={{fontSize:8,color:'rgba(255,255,255,.6)'}}>{cnt}球</div>
+                        </>
+                      ):(
+                        <div style={{fontSize:8,color:'#475569'}}>{z}</div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      ):(
+        <div style={{fontSize:11,color:'#475569',textAlign:'center',padding:16}}>
+          データなし
+        </div>
+      )}
     </div>
   );
 
   return (
     <div className="card" style={{marginBottom:10}}>
-      <div style={{display:'flex',alignItems:'center',marginBottom:6}}>
-        <span style={{fontSize:14,fontWeight:800,color:'#e2e8f0'}}>コース割合（{total}球）</span>
-        <span style={{fontSize:10,fontWeight:800,color:'#67e8f9',marginLeft:7,
+      <div style={{display:'flex',alignItems:'center',marginBottom:6,flexWrap:'wrap',gap:6}}>
+        <span style={{fontSize:14,fontWeight:800,color:'#e2e8f0'}}>コース割合（右/左打者別）</span>
+        <span style={{fontSize:10,color:'#64748b',fontWeight:800}}>{overallTotal}球</span>
+        <span style={{fontSize:10,fontWeight:800,color:'#67e8f9',
           padding:'2px 6px',borderRadius:999,background:'rgba(6,182,212,.12)',
           border:'1px solid rgba(6,182,212,.35)',whiteSpace:'nowrap'}}>
           捕手目線
         </span>
         <InfoBadge title="コース割合(内/外)"
-          body={'打者視点での内コース・外コースの割合。\n真ん中(中央列)は集計から除外し、内外のみで比較。\n• 内角に集中→攻める投球\n• 外角に集中→慎重な投球\n• 打者の左右に応じて自動判定'}/>
+          body={'捕手目線のコースを、右打者・左打者に分けて表示。\n内/外は打者の左右に応じて自動判定し、真ん中(中央列)は内外集計から除外。\n各マスの%は、その打者側への全投球に対する割合。'}/>
       </div>
 
-      {/* 内/外 集計バー（真ん中は除外） */}
-      {sideStats.total>0?(
-        <div style={{marginBottom:8}}>
-          <div style={{display:'flex',justifyContent:'space-between',fontSize:13,marginBottom:5}}>
-            <span style={{color:'#ef4444',fontWeight:800}}>内 {sideStats.insidePct}%</span>
-            <span style={{color:'#64748b',fontSize:11}}>{sideStats.total}球（内外のみ）</span>
-            <span style={{color:'#3b82f6',fontWeight:800}}>外 {sideStats.outsidePct}%</span>
-          </div>
-          <div style={{display:'flex',height:22,borderRadius:6,overflow:'hidden',
-            background:'#0f172a',border:'1px solid #334155',marginBottom:6}}>
-            <div style={{width:`${sideStats.insidePct}%`,height:'100%',background:'#ef4444',
-              display:'flex',alignItems:'center',justifyContent:'center',
-              color:'#fff',fontSize:11,fontWeight:800}}>
-              {sideStats.insidePct>=12?`内 ${sideStats.insidePct}%`:''}
-            </div>
-            <div style={{width:`${sideStats.outsidePct}%`,height:'100%',background:'#3b82f6',
-              display:'flex',alignItems:'center',justifyContent:'center',
-              color:'#fff',fontSize:11,fontWeight:800}}>
-              {sideStats.outsidePct>=12?`外 ${sideStats.outsidePct}%`:''}
-            </div>
-          </div>
-          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:6}}>
-            <div style={{textAlign:'center',padding:'5px',background:'rgba(239,68,68,.1)',borderRadius:5,
-              border:'1px solid rgba(239,68,68,.3)'}}>
-              <div style={{fontSize:10,color:'#fca5a5'}}>内コース</div>
-              <div style={{fontSize:16,fontWeight:900,color:'#ef4444'}}>{sideStats.inside}球</div>
-            </div>
-            <div style={{textAlign:'center',padding:'5px',background:'rgba(59,130,246,.1)',borderRadius:5,
-              border:'1px solid rgba(59,130,246,.3)'}}>
-              <div style={{fontSize:10,color:'#93c5fd'}}>外コース</div>
-              <div style={{fontSize:16,fontWeight:900,color:'#3b82f6'}}>{sideStats.outside}球</div>
-            </div>
-          </div>
-        </div>
-      ):(
-        <div style={{fontSize:11,color:'#475569',textAlign:'center',padding:8}}>
-          内/外コースのデータなし
-        </div>
-      )}
+      {groups.map(renderGroup)}
 
-      {/* 5×5 ヒートマップ */}
-      <div style={{display:'flex',flexDirection:'column',gap:2,alignItems:'center',marginTop:6}}>
-        {ZONE_GRID.map((row,ri)=>(
-          <div key={ri} style={{display:'flex',gap:2}}>
-            {row.map(z=>{
-              const cnt=zoneC[z]||0;
-              const heat=max>0?cnt/max:0;
-              const isSZ=STRIKE_ZONES.has(z);
-              const pct=total>0?Math.round(cnt/total*100):0;
-              return (
-                <div key={z} style={{width:40,height:40,borderRadius:3,
-                  border:isSZ?'2px solid #cbd5e1':'1px solid #334155',
-                  background:`rgba(59,130,246,${heat*0.75+(isSZ?0.06:0.01)})`,
-                  display:'flex',flexDirection:'column',
-                  alignItems:'center',justifyContent:'center'}}>
-                  {cnt>0?(
-                    <>
-                      <div style={{fontSize:10,fontWeight:800,color:'#fff',lineHeight:1}}>{pct}%</div>
-                      <div style={{fontSize:8,color:'rgba(255,255,255,.6)'}}>{cnt}球</div>
-                    </>
-                  ):(
-                    <div style={{fontSize:8,color:'#475569'}}>{z}</div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        ))}
-      </div>
-      <div style={{fontSize:10,color:'#64748b',marginTop:4,textAlign:'center'}}>
+      <div style={{fontSize:10,color:'#64748b',marginTop:6,textAlign:'center'}}>
         ヒートマップ=捕手目線　太枠=ストライクゾーン　内/外は打者の左右で自動判定
       </div>
     </div>
@@ -5619,7 +5637,7 @@ function AnalysisScreen({game,pitches,onBack}){
       });
       const ABS=['walk','hbp','single','double','double_adv','triple','hr','looking','swinging',
         'if_go','if_fly','of_fly','if_liner','of_liner','bunt_fly','safety_out',
-        'sac_bunt','sac_fly','bat_int','def_int',
+        'sac_bunt','sac_fly','squeeze_out','squeeze_batter_out','bat_int','def_int',
         'if_go_err','if_fly_err','of_fly_err','bunt_err','fc','dp_broken','uncaught_k','throw_err','obstruction','infield_fly','force_home','inside_hr','ground_rule_2b','ibb',
         'single_adv2','single_adv3','single_ro','double_ro','triple_ro',
         'dp_643','dp_463','dp_543','dp_563','dp_663','dp_143','dp_163','dp_363','dp_443','dp_553','dp_263','dp_243',
@@ -6283,7 +6301,7 @@ function HistoryScreen({pitches,onBack,onPitchEdit,undoStack,onUndo}){
     // 打席結果(last pitch)を判定
     const ABS=['walk','hbp','single','double','double_adv','triple','hr','looking','swinging',
       'if_go','if_fly','of_fly','if_liner','of_liner','bunt_fly','safety_out',
-      'sac_bunt','sac_fly','bat_int','def_int',
+      'sac_bunt','sac_fly','squeeze_out','squeeze_batter_out','bat_int','def_int',
       'if_go_err','if_fly_err','of_fly_err','bunt_err','fc','dp_broken','uncaught_k','throw_err','obstruction','infield_fly','force_home','inside_hr','ground_rule_2b','ibb',
       'single_adv2','single_adv3','single_ro','double_ro','triple_ro',
       'dp_643','dp_463','dp_543','dp_563','dp_663','dp_143','dp_163','dp_363','dp_443','dp_553','dp_263','dp_243',
@@ -6324,11 +6342,11 @@ function HistoryScreen({pitches,onBack,onPitchEdit,undoStack,onUndo}){
             const resInfo=ALL_RESULTS.find(x=>x.id===p.result);
             const isAdv=p.isAdvance;
             const opacity=p.isPickoff?0.65:(isAdv?0.75:1);
-            const advLabels={steal:'盗塁',double_steal:'ダブルスチール',delayed:'ディレード',hitrun:'エンドラン',pb:'PB',wp:'WP',tag_out:'刺殺',caught_stealing:'盗塁死'};
+            const advLabels={steal:'盗塁',double_steal:'ダブルスチール',delayed:'ディレード',hitrun:'エンドラン',safety_squeeze:'セーフティスクイズ',pb:'PB',wp:'WP',tag_out:'刺殺',caught_stealing:'盗塁死'};
             // この投球に紐付いた進塁イベント
             const linked=linkedAdvMap[p.id];
             const linkedColor={
-              steal:'#22d3ee',double_steal:'#22d3ee',delayed:'#22d3ee',hitrun:'#67e8f9',
+              steal:'#22d3ee',double_steal:'#22d3ee',delayed:'#22d3ee',hitrun:'#67e8f9',safety_squeeze:'#67e8f9',
               pb:'#94a3b8',wp:'#94a3b8',
               caught_stealing:'#f87171',tag_out:'#f87171',
             }[linked?.result]||'#67e8f9';
@@ -6731,6 +6749,7 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
   const persistPitch=useCallback(async(zone,pt,result,dir=null,hitType=null,runnerKey=null)=>{
     const speedNum=currentSpeed?parseInt(currentSpeed,10):null;
     const isAdvance = result==='steal'||result==='delayed'||result==='hitrun'||
+                      result==='safety_squeeze'||
                       result==='double_steal'||
                       result==='pb'||result==='wp'||result==='balk'||
                       result==='tag_out'||result==='caught_stealing'||
@@ -7253,7 +7272,7 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
           padding:'5px 8px',borderRadius:7,
           background:'rgba(6,182,212,.12)',border:'1px solid rgba(6,182,212,.4)'}}>
           <span style={{fontSize:10,fontWeight:800,color:'#22d3ee',flex:1}}>
-            {'🚀 '+({steal:'盗塁',double_steal:'ダブルスチール',delayed:'ディレード',hitrun:'エンドラン',pb:'PB',wp:'WP',
+            {'🚀 '+({steal:'盗塁',double_steal:'ダブルスチール',delayed:'ディレード',hitrun:'エンドラン',safety_squeeze:'セーフティスクイズ',pb:'PB',wp:'WP',
               tag_out:'刺殺',caught_stealing:'盗塁死'})[pendingAdvance.type]+' 選択中 → 投球完了で同時記録'}
           </span>
           <button onClick={()=>setPendingAdvance(null)}
@@ -7298,12 +7317,13 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
                 <div style={{fontSize:9,color:'#67e8f9',fontWeight:700,marginBottom:4}}>
                   ▶ 投球と同時に記録（保留）
                 </div>
-                <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:4,marginBottom:8}}>
+                <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:4,marginBottom:8}}>
                   {[
                     {id:'steal',        l:'盗塁'},
                     {id:'double_steal', l:'ダブルスチール'},
                     {id:'delayed',      l:'ディレード'},
                     {id:'hitrun',       l:'エンドラン'},
+                    {id:'safety_squeeze', l:'セーフティスクイズ'},
                   ].map(t=>(
                     <button key={t.id}
                       onClick={()=>handleSetPending(t.id)}
@@ -7340,7 +7360,7 @@ function InputScreen({game,pitches,gs,setGs,onNav,refreshPitches,onGameUpdate,
                 padding:'6px 10px',borderRadius:7,
                 background:'rgba(6,182,212,.12)',border:'1.5px solid rgba(6,182,212,.5)'}}>
                 <span style={{fontSize:11,fontWeight:800,color:'#22d3ee'}}>
-                  {'🚀 '+({steal:'盗塁',double_steal:'ダブルスチール',delayed:'ディレード',hitrun:'エンドラン',pb:'PB',wp:'WP',
+                  {'🚀 '+({steal:'盗塁',double_steal:'ダブルスチール',delayed:'ディレード',hitrun:'エンドラン',safety_squeeze:'セーフティスクイズ',pb:'PB',wp:'WP',
                     tag_out:'刺殺',caught_stealing:'盗塁死'})[pendingAdvance.type]+' を選択中'}
                   {pendingAdvance.runnerKey&&<span style={{fontSize:9,color:'#94a3b8',marginLeft:4}}>
                     {`(${({first:'1塁',second:'2塁',third:'3塁'})[pendingAdvance.runnerKey]}走者)`}
